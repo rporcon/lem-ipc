@@ -6,7 +6,7 @@
 /*   By: rporcon <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/29 10:18:21 by rporcon           #+#    #+#             */
-/*   Updated: 2017/09/04 18:14:42 by rporcon          ###   ########.fr       */
+/*   Updated: 2017/12/11 13:57:08 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -208,8 +208,6 @@ int					strisdigit(char *str);
 int					strisalnum(char *str);
 int					strisalpha(char *str);
 void				*memcat(char *s1, size_t s1_size, char *s2, size_t s2_size);
-void				*insert_mem(char *src, size_t src_size, char *dest,
-						size_t dest_size, unsigned int pos);
 void				sstrfree(char **sstr);
 size_t				sstrlen(char **sstr);
 unsigned char		sstrchr(char **sstr, char *chr);

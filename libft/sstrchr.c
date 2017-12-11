@@ -1,12 +1,33 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sstrchr.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/12/11 11:16:06 by rporcon           #+#    #+#             */
+/*   Updated: 2017/12/11 12:28:53 by rporcon          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 
-unsigned char sstrchr(char **sstr, char *chr)
+/*
+**	sstr must behave like strchr
+*/
+
+unsigned char	sstrchr(char **sstr, char *chr)
 {
+	size_t	i;
+
 	if (sstr == NULL)
 		return (0);
-	for (size_t i = 0; sstr[i] != NULL; i++) {
+	i = 0;
+	while (sstr[i] != NULL)
+	{
 		if (ft_strcmp(sstr[i], chr) == 0)
 			return (1);
+		i++;
 	}
 	return (0);
 }

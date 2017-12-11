@@ -6,7 +6,7 @@
 #    By: rporcon <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/11/29 15:14:43 by rporcon           #+#    #+#              #
-#    Updated: 2017/09/04 18:14:33 by rporcon          ###   ########.fr        #
+#    Updated: 2017/12/11 13:56:52 by rporcon          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ SRC = ft_atoi.c ft_bzero.c ft_char_count.c ft_isalnum.c ft_isalpha.c \
 	ft_insert_str.c ft_natoi.c ft_exec_to_str.c ft_charnpos.c ft_read_fd.c \
 	ft_ulong_size.c ft_putnbr_max_fd.c ft_fprintf.c ft_basename.c \
 	charlastpos.c memmemchr.c memsub.c strreplace.c charpos.c strisdigit.c \
-	natoi_base.c memcat.c insert_mem.c strisalnum.c strisalpha.c sstrlen.c \
+	natoi_base.c memcat.c strisalnum.c strisalpha.c sstrlen.c \
 	sstrfree.c sstrchr.c
 
 OBJ = $(SRC:%.c=%.o)

@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/08/12 15:48:29 by rporcon           #+#    #+#             */
-/*   Updated: 2017/08/12 15:49:23 by rporcon          ###   ########.fr       */
+/*   Updated: 2017/12/11 13:53:50 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 int		charpos(char *str, char c)
 {
-	size_t	i = 0;
+	size_t	i;
 
+	i = 0;
 	if (str == NULL)
 		return (-1);
 	while (str[i] != '\0')

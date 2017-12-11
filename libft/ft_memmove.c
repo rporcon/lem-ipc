@@ -6,7 +6,7 @@
 /*   By: rporcon <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/25 14:54:55 by rporcon           #+#    #+#             */
-/*   Updated: 2015/11/27 12:02:38 by rporcon          ###   ########.fr       */
+/*   Updated: 2017/12/11 13:54:21 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ void	*ft_memmove(void *dst, const void *src, size_t len)
 			len--;
 		}
 	}
-	else {
+	else
+	{
 		while (i < len)
 		{
 			c_dst[i] = c_src[i];
