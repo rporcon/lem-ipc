@@ -1,35 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_basename.c                                      :+:      :+:    :+:   */
+/*   ft_swap_str.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/08/19 18:54:03 by rporcon           #+#    #+#             */
-/*   Updated: 2017/08/19 18:54:06 by rporcon          ###   ########.fr       */
+/*   Created: 2017/05/22 19:01:22 by rporcon           #+#    #+#             */
+/*   Updated: 2017/06/09 16:03:49 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_basename(char *path)
+void	swap_str(char **str1, char **str2)
 {
-	char	**split;
-	char	*basename;
-	int		i;
+	char	*tmp;
 
-	i = 0;
-	if ((split = strsplit(path, '/')) == NULL)
-		return (ft_strdup(path));
-	while (split[i + 1] != NULL)
-		i++;
-	basename = ft_strdup(split[i]);
-	i = 0;
-	while (split[i] != NULL)
-	{
-		free(split[i]);
-		i++;
-	}
-	free(split);
-	return (basename);
+	if (str1 == NULL || str2 == NULL)
+		return ;
+	tmp = *str1;
+	*str1 = *str2;
+	*str2 = tmp;
 }

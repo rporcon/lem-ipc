@@ -1,35 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_basename.c                                      :+:      :+:    :+:   */
+/*   ft_putstr_leading_zero.c                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/08/19 18:54:03 by rporcon           #+#    #+#             */
-/*   Updated: 2017/08/19 18:54:06 by rporcon          ###   ########.fr       */
+/*   Created: 2017/05/17 14:59:04 by rporcon           #+#    #+#             */
+/*   Updated: 2017/05/18 14:56:43 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_basename(char *path)
+void	puts_leading_zero(char *str, unsigned int nb)
 {
-	char	**split;
-	char	*basename;
-	int		i;
+	unsigned int	i;
 
 	i = 0;
-	if ((split = strsplit(path, '/')) == NULL)
-		return (ft_strdup(path));
-	while (split[i + 1] != NULL)
-		i++;
-	basename = ft_strdup(split[i]);
-	i = 0;
-	while (split[i] != NULL)
+	while (i < nb - ft_strlen(str))
 	{
-		free(split[i]);
+		ft_putchar('0');
 		i++;
 	}
-	free(split);
-	return (basename);
+	ft_putstr(str);
 }

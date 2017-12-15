@@ -1,35 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_basename.c                                      :+:      :+:    :+:   */
+/*   ft_vvoid_da_add_elem.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/08/19 18:54:03 by rporcon           #+#    #+#             */
-/*   Updated: 2017/08/19 18:54:06 by rporcon          ###   ########.fr       */
+/*   Created: 2017/05/22 14:24:54 by rporcon           #+#    #+#             */
+/*   Updated: 2017/05/27 18:17:25 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_basename(char *path)
-{
-	char	**split;
-	char	*basename;
-	int		i;
 
+void	dynarray_add(t_dyn_array *array, void *new_elem)
+{
+	void	**array_tmp;
+	size_t	i;
+
+	array_tmp = NULL;
 	i = 0;
-	if ((split = strsplit(path, '/')) == NULL)
-		return (ft_strdup(path));
-	while (split[i + 1] != NULL)
-		i++;
-	basename = ft_strdup(split[i]);
-	i = 0;
-	while (split[i] != NULL)
+	if (array->size == array->len)
 	{
-		free(split[i]);
-		i++;
+		array_tmp = malloc(sizeof(void *) * (array->size * 2));
+		while (i < array->size)
+		{
+			array_tmp[i] = array->elems[i];
+			i++;
+		}
+		free(array->elems);
+		array->elems = array_tmp;
+		array->len = array->size * 2;
 	}
-	free(split);
-	return (basename);
+	array->elems[array->size] = new_elem;
+	array->size++;
 }

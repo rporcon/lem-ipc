@@ -24,8 +24,8 @@ char	*ft_insert_str(char *src, char *dest, unsigned int pos)
 	else if (!dest || pos >= ft_strlen(src))
 		return (src);
 	str_len = ft_strlen(src) + ft_strlen(dest);
-	before = ft_strsub(src, 0, pos);
-	after = ft_strsub(src, pos, str_len);
+	before = strsub(src, 0, pos);
+	after = strsub(src, pos, str_len);
 	new_str = ft_strnew(str_len);
 	ft_strcat(new_str, before);
 	ft_strcat(new_str, dest);

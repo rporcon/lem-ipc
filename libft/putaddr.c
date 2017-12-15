@@ -1,43 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*   ft_putaddr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rporcon <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/11/25 14:54:55 by rporcon           #+#    #+#             */
-/*   Updated: 2017/12/11 13:54:21 by rporcon          ###   ########.fr       */
+/*   Created: 2017/02/20 21:05:50 by rporcon           #+#    #+#             */
+/*   Updated: 2017/03/17 13:00:26 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memmove(void *dst, const void *src, size_t len)
+void	putaddr(const void *addr)
 {
-	size_t			i;
-	unsigned char	*c_src;
-	unsigned char	*c_dst;
+	unsigned char			dec_byte;
+	int						hex_addr_len;
 
-	i = 0;
-	c_src = (unsigned char *)src;
-	c_dst = (unsigned char *)dst;
-	/* if (dst < (src + len) && src < dst) */
-	if (dst > src)
+	if (addr == NULL)
 	{
-		ft_printf("aa\n");
-		while (i < len)
-		{
-			c_dst[len - 1] = c_src[len - 1];
-			len--;
-		}
+		ft_putstr("(nil)");
+		return ;
 	}
-	else
+	dec_byte = 0;
+	hex_addr_len = 5;
+	ft_putstr("0x");
+	while (hex_addr_len >= 0)
 	{
-		while (i < len)
-		{
-			c_dst[i] = c_src[i];
-			i++;
-		}
+		dec_byte = ((unsigned char*)&addr)[hex_addr_len];
+		putaddr_byte(dec_byte);
+		hex_addr_len--;
 	}
-	return (dst);
 }

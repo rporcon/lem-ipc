@@ -1,35 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_basename.c                                      :+:      :+:    :+:   */
+/*   ft_uint8_swap_bits.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/08/19 18:54:03 by rporcon           #+#    #+#             */
-/*   Updated: 2017/08/19 18:54:06 by rporcon          ###   ########.fr       */
+/*   Created: 2017/05/31 13:56:32 by rporcon           #+#    #+#             */
+/*   Updated: 2017/05/31 15:10:43 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_basename(char *path)
+unsigned char	swap_u8b(unsigned char byte)
 {
-	char	**split;
-	char	*basename;
-	int		i;
-
-	i = 0;
-	if ((split = strsplit(path, '/')) == NULL)
-		return (ft_strdup(path));
-	while (split[i + 1] != NULL)
-		i++;
-	basename = ft_strdup(split[i]);
-	i = 0;
-	while (split[i] != NULL)
-	{
-		free(split[i]);
-		i++;
-	}
-	free(split);
-	return (basename);
+	return ((byte >> 4) | (byte << 4));
 }

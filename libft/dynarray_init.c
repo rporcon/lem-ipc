@@ -1,35 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_basename.c                                      :+:      :+:    :+:   */
+/*   ft_vvoid_da_init.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/08/19 18:54:03 by rporcon           #+#    #+#             */
-/*   Updated: 2017/08/19 18:54:06 by rporcon          ###   ########.fr       */
+/*   Created: 2017/05/27 17:13:56 by rporcon           #+#    #+#             */
+/*   Updated: 2017/05/27 17:17:46 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_basename(char *path)
+void	dynarray_init(t_dyn_array *array, size_t size, size_t len)
 {
-	char	**split;
-	char	*basename;
-	int		i;
-
-	i = 0;
-	if ((split = strsplit(path, '/')) == NULL)
-		return (ft_strdup(path));
-	while (split[i + 1] != NULL)
-		i++;
-	basename = ft_strdup(split[i]);
-	i = 0;
-	while (split[i] != NULL)
-	{
-		free(split[i]);
-		i++;
-	}
-	free(split);
-	return (basename);
+	array->size = size;
+	array->len = len;
+	array->elems = malloc(sizeof(void *) * len);
 }

@@ -27,7 +27,7 @@ void	format(char **fmt, va_list ap)
 	else if (ft_strncmp(*fmt, "zu", 2) == 0 && (*fmt)++)
 		ft_putnbr_max(va_arg(ap, size_t));
 	else if (**fmt == 'p')
-		ft_putaddr(va_arg(ap, void*));
+		putaddr(va_arg(ap, void*));
 	else if (**fmt == '%')
 		ft_putchar('%');
 }

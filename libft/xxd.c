@@ -1,35 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_basename.c                                      :+:      :+:    :+:   */
+/*   ft_xxd.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/08/19 18:54:03 by rporcon           #+#    #+#             */
-/*   Updated: 2017/08/19 18:54:06 by rporcon          ###   ########.fr       */
+/*   Created: 2017/05/29 12:40:49 by rporcon           #+#    #+#             */
+/*   Updated: 2017/05/29 12:41:11 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_basename(char *path)
+void	xxd(void *mem, size_t size)
 {
-	char	**split;
-	char	*basename;
-	int		i;
+	size_t	i;
 
 	i = 0;
-	if ((split = strsplit(path, '/')) == NULL)
-		return (ft_strdup(path));
-	while (split[i + 1] != NULL)
-		i++;
-	basename = ft_strdup(split[i]);
-	i = 0;
-	while (split[i] != NULL)
+	if (size == 0)
+		return ;
+	while (++i <= size)
 	{
-		free(split[i]);
-		i++;
+		putaddr_byte(((unsigned char*)mem)[i - 1]);
+		if (i % 16 == 0)
+		{
+			ft_putstr(" \n");
+			if (i == size)
+				return ;
+		}
+		if (i != 16)
+			ft_putchar(' ');
 	}
-	free(split);
-	return (basename);
+	ft_putchar('\n');
+	return ;
 }

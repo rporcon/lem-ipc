@@ -1,35 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_basename.c                                      :+:      :+:    :+:   */
+/*   ft_putaddr_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/08/19 18:54:03 by rporcon           #+#    #+#             */
-/*   Updated: 2017/08/19 18:54:06 by rporcon          ###   ########.fr       */
+/*   Created: 2017/03/13 14:06:40 by rporcon           #+#    #+#             */
+/*   Updated: 2017/03/17 13:00:33 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_basename(char *path)
+void	putaddr_fd(const void *addr, int fd)
 {
-	char	**split;
-	char	*basename;
-	int		i;
+	unsigned char			dec_byte;
+	int						hex_addr_len;
 
-	i = 0;
-	if ((split = strsplit(path, '/')) == NULL)
-		return (ft_strdup(path));
-	while (split[i + 1] != NULL)
-		i++;
-	basename = ft_strdup(split[i]);
-	i = 0;
-	while (split[i] != NULL)
+	if (addr == NULL)
 	{
-		free(split[i]);
-		i++;
+		ft_putstr_fd("(nil)", fd);
+		return ;
 	}
-	free(split);
-	return (basename);
+	dec_byte = 0;
+	hex_addr_len = 5;
+	ft_putstr_fd("0x", fd);
+	while (hex_addr_len >= 0)
+	{
+		dec_byte = ((unsigned char*)&addr)[hex_addr_len];
+		putaddr_byte_fd(dec_byte, fd);
+		hex_addr_len--;
+	}
 }

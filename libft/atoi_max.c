@@ -1,35 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_basename.c                                      :+:      :+:    :+:   */
+/*   ft_atoi_max.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/08/19 18:54:03 by rporcon           #+#    #+#             */
-/*   Updated: 2017/08/19 18:54:06 by rporcon          ###   ########.fr       */
+/*   Created: 2017/06/09 16:04:17 by rporcon           #+#    #+#             */
+/*   Updated: 2017/06/09 16:19:04 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_basename(char *path)
+size_t	atoi_max(const char *str)
 {
-	char	**split;
-	char	*basename;
-	int		i;
+	size_t	total;
+	size_t	i;
 
 	i = 0;
-	if ((split = strsplit(path, '/')) == NULL)
-		return (ft_strdup(path));
-	while (split[i + 1] != NULL)
+	total = 0;
+	while (str[i] == ' ' || str[i] == '\n' || str[i] == '\v' || str[i] == '\t'
+			|| str[i] == '\r' || str[i] == '\f')
 		i++;
-	basename = ft_strdup(split[i]);
-	i = 0;
-	while (split[i] != NULL)
+	if (str[i] == '+')
+		i++;
+	while (str[i] >= '0' && str[i] <= '9')
 	{
-		free(split[i]);
+		total = total * 10 + str[i] - '0';
 		i++;
 	}
-	free(split);
-	return (basename);
+	return (total);
 }

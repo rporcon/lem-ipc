@@ -1,35 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_basename.c                                      :+:      :+:    :+:   */
+/*   ft_words_alpha_sort.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/08/19 18:54:03 by rporcon           #+#    #+#             */
-/*   Updated: 2017/08/19 18:54:06 by rporcon          ###   ########.fr       */
+/*   Created: 2017/05/22 19:01:53 by rporcon           #+#    #+#             */
+/*   Updated: 2017/05/22 19:21:34 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_basename(char *path)
+void	words_alpha_sort(char **sstr, size_t len)
 {
-	char	**split;
-	char	*basename;
-	int		i;
+	size_t	i;
+	size_t	j;
 
 	i = 0;
-	if ((split = strsplit(path, '/')) == NULL)
-		return (ft_strdup(path));
-	while (split[i + 1] != NULL)
-		i++;
-	basename = ft_strdup(split[i]);
-	i = 0;
-	while (split[i] != NULL)
+	j = 0;
+	if (sstr == NULL || len <= 1)
+		return ;
+	while (i < len)
 	{
-		free(split[i]);
+		j = i + 1;
+		while (j < len)
+		{
+			if (ft_strcmp(sstr[i], sstr[j]) > 0)
+				swap_str(&sstr[i], &sstr[j]);
+			j++;
+		}
 		i++;
 	}
-	free(split);
-	return (basename);
 }

@@ -1,35 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_basename.c                                      :+:      :+:    :+:   */
+/*   ft_natoi.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/08/19 18:54:03 by rporcon           #+#    #+#             */
-/*   Updated: 2017/08/19 18:54:06 by rporcon          ###   ########.fr       */
+/*   Created: 2017/08/12 15:47:42 by rporcon           #+#    #+#             */
+/*   Updated: 2017/08/12 15:47:44 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_basename(char *path)
+int		natoi(const char *str, unsigned int len)
 {
-	char	**split;
-	char	*basename;
-	int		i;
+	int				negative;
+	int				total;
+	unsigned int	i;
 
+	negative = 0;
 	i = 0;
-	if ((split = strsplit(path, '/')) == NULL)
-		return (ft_strdup(path));
-	while (split[i + 1] != NULL)
+	total = 0;
+	negative = str[i] == '-' ? 1 : 0;
+	if (str[i] == '+' || str[i] == '-')
 		i++;
-	basename = ft_strdup(split[i]);
-	i = 0;
-	while (split[i] != NULL)
+	while (str[i] >= '0' && str[i] <= '9' && i < len)
 	{
-		free(split[i]);
+		total = total * 10 + str[i] - '0';
 		i++;
 	}
-	free(split);
-	return (basename);
+	if (negative == 1)
+		return (-total);
+	else
+		return (total);
 }

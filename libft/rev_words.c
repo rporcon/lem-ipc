@@ -1,35 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_basename.c                                      :+:      :+:    :+:   */
+/*   ft_rev_words.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/08/19 18:54:03 by rporcon           #+#    #+#             */
-/*   Updated: 2017/08/19 18:54:06 by rporcon          ###   ########.fr       */
+/*   Created: 2017/06/09 16:15:13 by rporcon           #+#    #+#             */
+/*   Updated: 2017/06/09 16:18:29 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_basename(char *path)
+void	rev_words(char **sstr, size_t len)
 {
-	char	**split;
-	char	*basename;
-	int		i;
+	size_t	i;
+	size_t	mid_str;
 
+	if (sstr == NULL || len <= 1)
+		return ;
 	i = 0;
-	if ((split = strsplit(path, '/')) == NULL)
-		return (ft_strdup(path));
-	while (split[i + 1] != NULL)
-		i++;
-	basename = ft_strdup(split[i]);
-	i = 0;
-	while (split[i] != NULL)
+	mid_str = len / 2;
+	while (i < mid_str && len-- > 0)
 	{
-		free(split[i]);
+		swap_str(&sstr[i], &sstr[len]);
 		i++;
 	}
-	free(split);
-	return (basename);
 }

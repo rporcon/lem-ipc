@@ -1,43 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*   ft_strsub.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rporcon <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2015/11/25 14:54:55 by rporcon           #+#    #+#             */
-/*   Updated: 2017/12/11 13:54:21 by rporcon          ###   ########.fr       */
+/*   Created: 2015/11/26 14:42:15 by rporcon           #+#    #+#             */
+/*   Updated: 2015/11/30 11:11:25 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-void	*ft_memmove(void *dst, const void *src, size_t len)
+char	*strsub(char const *s, unsigned int start, size_t len)
 {
-	size_t			i;
-	unsigned char	*c_src;
-	unsigned char	*c_dst;
+	char		*str_allocate;
+	size_t		i;
 
 	i = 0;
-	c_src = (unsigned char *)src;
-	c_dst = (unsigned char *)dst;
-	/* if (dst < (src + len) && src < dst) */
-	if (dst > src)
+	if (s)
 	{
-		ft_printf("aa\n");
-		while (i < len)
+		if ((str_allocate = (char *)malloc(sizeof(char) * (len + 1))) == NULL)
+			return (NULL);
+		while (i < len && s[start] != '\0')
 		{
-			c_dst[len - 1] = c_src[len - 1];
-			len--;
-		}
-	}
-	else
-	{
-		while (i < len)
-		{
-			c_dst[i] = c_src[i];
+			str_allocate[i] = s[start];
 			i++;
+			start++;
 		}
+		str_allocate[i] = '\0';
+		return (str_allocate);
 	}
-	return (dst);
+	return (NULL);
 }
