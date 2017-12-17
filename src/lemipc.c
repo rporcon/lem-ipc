@@ -1,18 +1,5 @@
 #include "lemipc.h"
 
-void	init_map(t_cell cells[MAP_LEN][MAP_LEN])
-{
-	size_t		i;
-
-	i = 0;
-	ft_memset(cells, 0, MAP_LEN);
-	while (i < MAP_LEN)
-	{
-		ft_memset(cells[i], 0, MAP_LEN);
-		i++;
-	}
-}
-
 void	write_shm(t_cell cells[MAP_LEN][MAP_LEN])
 {
 	int		fd;
@@ -29,11 +16,10 @@ void	write_shm(t_cell cells[MAP_LEN][MAP_LEN])
 			| PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED)
 		perr_exit("write mmap");
 	close(fd);
-
 	ft_memcpy(mem, cells, sizeof (t_cell) * MAP_SIZE);
 }
 
-void	update_cells(void *mem, t_cell cells[MAP_LEN][MAP_LEN])
+void	fill_cells(void *mem, t_cell cells[MAP_LEN][MAP_LEN])
 {
 	t_inc			inc;
 
@@ -47,6 +33,29 @@ void	update_cells(void *mem, t_cell cells[MAP_LEN][MAP_LEN])
 			inc.j++;
 			inc.k++;
 		}
+		inc.i++;
+	}
+}
+
+void	print_map(t_cell cells[MAP_LEN][MAP_LEN])
+{
+	t_inc			inc;
+
+	ft_memset(&inc, 0, sizeof inc);
+	while (inc.i < MAP_LEN)
+	{
+		inc.j = 0;
+		while (inc.j < MAP_LEN)
+		{
+			if (cells[inc.i][inc.j].team_id == 0)
+				ft_putchar('o');
+			else
+				printf("%zu", cells[inc.i][inc.j].team_id);
+			fflush(stdout);
+			ft_putstr("   ");
+			inc.j++;
+		}
+		ft_putstr("\n\n");
 		inc.i++;
 	}
 }
@@ -65,15 +74,16 @@ void	read_shm()
 			) == MAP_FAILED)
 		perr_exit("read mmap");
 	close(fd);
-	update_cells(mem, cells);
+	fill_cells(mem, cells);
 	munmap(mem, st.st_size);
+	print_map(cells);
 }
 
 int		main(void)
 {
 	t_cell cells[MAP_LEN][MAP_LEN];
 
-	init_map(cells);
+	ft_memset(cells, 0, sizeof (t_cell) * MAP_SIZE);
 	write_shm(cells);
 	read_shm();
 	return (0);
