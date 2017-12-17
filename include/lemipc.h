@@ -13,4 +13,10 @@ typedef struct	s_cell {
 	uint32_t	pid;
 }				t_cell;
 
+typedef struct	s_inc {
+	size_t		i;
+	size_t		j;
+	size_t		k;
+}				t_inc;
+
 #endif
