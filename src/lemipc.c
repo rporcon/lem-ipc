@@ -1,22 +1,26 @@
 #include "lemipc.h"
 
-void	write_shm(t_cell cells[MAP_LEN][MAP_LEN])
+int		write_shm(t_cell cells[MAP_LEN][MAP_LEN])
 {
 	int		fd;
 	size_t	len;
 	void	*mem;
 
-	len = sizeof(t_cell) * MAP_SIZE;
 	shm_unlink("/shm-lemipc_map"); //
-	if ((fd = shm_open("/shm-lemipc_map", O_RDWR | O_CREAT, 0666)) == -1)
-		perr_exit("write shm_open");;
-	if (ftruncate(fd, len) == -1)
-		perr_exit("write ftruncate");
-	if ((mem = mmap(NULL, next_powerchr(len, getpagesize()), PROT_READ
-			| PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED)
-		perr_exit("write mmap");
-	close(fd);
-	ft_memcpy(mem, cells, sizeof (t_cell) * MAP_SIZE);
+	if ((fd = shm_open("/shm-lemipc_map", O_RDWR | O_CREAT | O_EXCL, 0666)) != -1)
+		perr_exit("write shm_open");
+	{
+		len = sizeof(t_cell) * MAP_SIZE;
+		if (ftruncate(fd, len) == -1)
+			perr_exit("write ftruncate");
+		if ((mem = mmap(NULL, next_powerchr(len, getpagesize()), PROT_READ
+				| PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED)
+			perr_exit("write mmap");
+		close(fd);
+		ft_memcpy(mem, cells, sizeof (t_cell) * MAP_SIZE);
+		return (1);
+	}
+	return (0);
 }
 
 void	fill_cells(void *mem, t_cell cells[MAP_LEN][MAP_LEN])
@@ -38,7 +42,6 @@ void	fill_cells(void *mem, t_cell cells[MAP_LEN][MAP_LEN])
 }
 
 void	print_map(t_cell cells[MAP_LEN][MAP_LEN])
-{
 	t_inc			inc;
 
 	ft_memset(&inc, 0, sizeof inc);
@@ -84,7 +87,10 @@ int		main(void)
 	t_cell cells[MAP_LEN][MAP_LEN];
 
 	ft_memset(cells, 0, sizeof (t_cell) * MAP_SIZE);
-	write_shm(cells);
-	read_shm();
+	if (write_shm(cells) == 1)
+	{
+		read_shm();
+		while (1);
+	}
 	return (0);
 }
