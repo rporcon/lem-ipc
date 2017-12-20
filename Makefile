@@ -8,7 +8,7 @@ LFT_NAME = libft.a
 
 LFT_DIR = ./libft
 
-SRC_FILE = lemipc.c
+SRC_FILE = args.c lemipc.c
 
 SRC = $(addprefix $(SRCS_DIR), $(SRC_FILE))
 

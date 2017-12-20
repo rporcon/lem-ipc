@@ -19,4 +19,12 @@ typedef struct	s_inc {
 	size_t		k;
 }				t_inc;
 
+typedef struct	s_opt {
+	size_t		teamid;
+}				t_opt;
+
+extern t_opt	g_opt;
+
+void	get_args(int ac, char **av);
+
 #endif

@@ -1,5 +1,7 @@
 #include "lemipc.h"
 
+t_opt	g_opt = {0};
+
 int		write_shm(t_cell cells[MAP_LEN][MAP_LEN])
 {
 	int		fd;
@@ -42,6 +44,7 @@ void	fill_cells(void *mem, t_cell cells[MAP_LEN][MAP_LEN])
 }
 
 void	print_map(t_cell cells[MAP_LEN][MAP_LEN])
+{
 	t_inc			inc;
 
 	ft_memset(&inc, 0, sizeof inc);
@@ -82,10 +85,11 @@ void	read_shm()
 	print_map(cells);
 }
 
-int		main(void)
+int		main(int ac, char **av)
 {
 	t_cell cells[MAP_LEN][MAP_LEN];
 
+	get_args(ac, av);
 	ft_memset(cells, 0, sizeof (t_cell) * MAP_SIZE);
 	if (write_shm(cells) == 1)
 	{
