@@ -4,6 +4,7 @@
 #include "libft.h"
 #include <stdint.h>
 #include <sys/mman.h>
+#include <signal.h>
 
 # define MAP_LEN 8
 # define MAP_SIZE MAP_LEN * MAP_LEN
@@ -20,11 +21,16 @@ typedef struct	s_inc {
 }				t_inc;
 
 typedef struct	s_opt {
-	size_t		teamid;
+	size_t		team_id;
 }				t_opt;
 
 extern t_opt	g_opt;
 
 void	get_args(int ac, char **av);
+void	sighandle();
+int		map_init(void **map_mem);
+void	map_erase();
+void	map_read(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN]);
+void	map_addplayer(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN]);
 
 #endif
