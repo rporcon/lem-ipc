@@ -6,11 +6,29 @@ void		print_help()
 	exit(0);
 }
 
+void	req_args(int ac, char **av)
+{
+	int		reqarg_nb;
+	int		i;
+
+	reqarg_nb = 0;
+	i = 1;
+	while (i < ac)
+	{
+		if (reqarg_nb == 0)
+			g_opt.team_id = atoi_max(av[i]);
+		else if (reqarg_nb > 1)
+			err_exit("too many args", 1);
+		reqarg_nb++;
+		i++;
+	}
+	if (reqarg_nb != 1)
+		print_help();
+}
+
 void	get_args(int ac, char **av)
 {
 	char	c;
-	int		reqarg_nb;
-	int		i;
 
 	while ((c = getopt (ac, av, "6hrke:g")) != -1) {
 		switch (c)
@@ -29,18 +47,5 @@ void	get_args(int ac, char **av)
 				break ;
 		}
 	}
-	reqarg_nb = 0;
-	i = 1;
-	while (i < ac)
-	{
-		if (reqarg_nb == 0)
-			g_opt.teamid = atoi_max(av[i]);
-		else if (reqarg_nb > 1)
-			err_exit("too many args", 1);
-		reqarg_nb++;
-		i++;
-	}
-	if (reqarg_nb != 1)
-		print_help();
-	exit(0); //
+	req_args(ac, av);
 }
