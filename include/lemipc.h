@@ -20,11 +20,16 @@ typedef struct	s_inc {
 	size_t		k;
 }				t_inc;
 
-typedef struct	s_opt {
-	size_t		team_id;
-}				t_opt;
+typedef struct	s_coord {
+	size_t		x;
+	size_t		y;
+}				t_coord;
 
-extern t_opt	g_opt;
+typedef struct	s_data {
+	size_t		team_id;
+}				t_data;
+
+extern t_data	g_data;
 
 void	get_args(int ac, char **av);
 void	sighandle();

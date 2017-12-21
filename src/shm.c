@@ -22,11 +22,35 @@ int		map_init(void **map_mem)
 
 void	map_addplayer(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 {
-	// verif if team id not already exist
-	// position player with some logic (for example no different team side by side)
-	// need a team limit according to map size
-	cells[0][0].team_id = g_opt.team_id;
-	cells[0][0].pid = getpid();
+	t_coord		coords;
+	char		usercoord[8];
+	char		**coords_str;
+
+	ft_memset(usercoord, 0, sizeof usercoord);
+	// getcoords func
+	while (1)
+	{
+		gets(usercoord);
+		coords_str = strsplit(usercoord, ',');
+		if (sstrlen(coords_str) != 2) {
+			fprintf(stderr, "invalid coord (must be x, y)\n");
+			ft_memset(usercoord, 0, sizeof usercoord);
+			continue;
+		}
+		coords.x = atoi_max(coords_str[0]);
+		coords.y = atoi_max(coords_str[1]);
+		if (coords.x > (MAP_LEN - 1) || coords.y > (MAP_LEN - 1)) {
+			fprintf(stderr, "invalid coord (must be within 0 - %u"
+				" range\n", MAP_LEN);
+			ft_memset(usercoord, 0, sizeof usercoord);
+			continue;
+		}
+		else
+			break ;
+	}
+	sstrfree(coords_str);
+	cells[coords.x][coords.y].team_id = g_data.team_id;
+	cells[coords.x][coords.y].pid = getpid();
 	ft_memcpy(map_mem, cells, sizeof (t_cell) * MAP_SIZE);
 }
 

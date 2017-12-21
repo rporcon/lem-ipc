@@ -16,7 +16,7 @@ void	req_args(int ac, char **av)
 	while (i < ac)
 	{
 		if (reqarg_nb == 0)
-			g_opt.team_id = atoi_max(av[i]);
+			g_data.team_id = atoi_max(av[i]);
 		else if (reqarg_nb > 1)
 			err_exit("too many args", 1);
 		reqarg_nb++;

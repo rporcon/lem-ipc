@@ -1,6 +1,6 @@
 #include "lemipc.h"
 
-t_opt	g_opt = {0};
+t_data	g_data = {0};
 
 
 int		main(int ac, char **av)
