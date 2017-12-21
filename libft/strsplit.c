@@ -37,13 +37,12 @@ char	**strsplit(char const *s, char c)
 		sstr[1] = NULL;
 		return (sstr);
 	}
-	while (pos != NULL)
+	while ((pos = ft_strchr(s, c)) != NULL)
 	{
 		sstr[i] = malloc((sizeof(char) * (pos - s)) + 1);
 		sstr[i] = ft_strncpy(sstr[i], s, pos - s);
 		sstr[i][pos - s] = '\0';
 		s = pos + 1;
-		pos = ft_strchr(s, c);
 		i++;
 	}
 	alloc_last(&i, &sstr[i], s);

@@ -20,35 +20,50 @@ int		map_init(void **map_mem)
 	return (0);
 }
 
-void	map_addplayer(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
+void	get_coords_err(int errtype, char usercoord[8], size_t usercoord_len)
 {
-	t_coord		coords;
+	if (errtype == 1) {
+		fprintf(stderr, "invalid coord (must be x, y)\n");
+	}
+	else if (errtype == 2) {
+		fprintf(stderr, "invalid coord (must be within 0 - %u"
+			" range\n", MAP_LEN);
+	}
+	ft_memset(usercoord, 0, usercoord_len);
+}
+
+void	get_coords(t_coord *coords)
+{
 	char		usercoord[8];
 	char		**coords_str;
 
 	ft_memset(usercoord, 0, sizeof usercoord);
-	// getcoords func
+	printf("Enter your coords (must be x, y) :\n");
 	while (1)
 	{
-		gets(usercoord);
+		fgets(usercoord, sizeof usercoord, stdin);
 		coords_str = strsplit(usercoord, ',');
 		if (sstrlen(coords_str) != 2) {
-			fprintf(stderr, "invalid coord (must be x, y)\n");
-			ft_memset(usercoord, 0, sizeof usercoord);
+			get_coords_err(1, usercoord, sizeof usercoord);
 			continue;
 		}
-		coords.x = atoi_max(coords_str[0]);
-		coords.y = atoi_max(coords_str[1]);
-		if (coords.x > (MAP_LEN - 1) || coords.y > (MAP_LEN - 1)) {
-			fprintf(stderr, "invalid coord (must be within 0 - %u"
-				" range\n", MAP_LEN);
-			ft_memset(usercoord, 0, sizeof usercoord);
+		coords->x = atoi_max(coords_str[0]);
+		coords->y = atoi_max(coords_str[1]);
+		if (coords->x > (MAP_LEN - 1) || coords->y > (MAP_LEN - 1)) {
+			get_coords_err(2, usercoord, sizeof usercoord);
 			continue;
 		}
 		else
 			break ;
 	}
 	sstrfree(coords_str);
+}
+
+void	map_addplayer(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
+{
+	t_coord		coords;
+
+	get_coords(&coords);
 	cells[coords.x][coords.y].team_id = g_data.team_id;
 	cells[coords.x][coords.y].pid = getpid();
 	ft_memcpy(map_mem, cells, sizeof (t_cell) * MAP_SIZE);
