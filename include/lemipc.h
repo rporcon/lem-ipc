@@ -7,7 +7,7 @@
 #include <signal.h>
 
 # define MAP_LEN 8
-# define MAP_SIZE MAP_LEN * MAP_LEN
+# define MAP_SIZE sizeof (t_cell) * (MAP_LEN * MAP_LEN)
 
 typedef struct	s_cell {
 	size_t		team_id;
@@ -39,5 +39,7 @@ void	map_read(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN]);
 void	map_addplayer(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN]);
 void	map_get(void **map_mem);
 void	map_print(t_cell cells[MAP_LEN][MAP_LEN]);
+int		cells_cmp(t_cell cells1[MAP_LEN][MAP_LEN],
+			t_cell cells2[MAP_LEN][MAP_LEN]);
 
 #endif
