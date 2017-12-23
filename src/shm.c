@@ -5,19 +5,34 @@ int		map_init(void **map_mem)
 	int		fd;
 	size_t	len;
 
-	shm_unlink("/shm-lemipc_map"); //
-	if ((fd = shm_open("/shm-lemipc_map", O_RDWR | O_CREAT | O_EXCL, 0666)) != -1)
+	/* shm_unlink("/shm-lemipc_map");// */
+	if ((fd = shm_open("/shm-lemipc_map", O_RDWR | O_CREAT | O_EXCL, 0666))
+			!= -1)
 	{
 		len = sizeof(t_cell) * MAP_SIZE;
 		if (ftruncate(fd, len) == -1)
-			perr_exit("write ftruncate");
+			perr_exit("map_get ftruncate");
 		if ((*map_mem = mmap(NULL, next_powerchr(len, getpagesize()), PROT_READ
 				| PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED)
-			perr_exit("write mmap");
+			perr_exit("map_get mmap");
 		close(fd);
 		return (1);
 	}
 	return (0);
+}
+
+void	map_get(void **map_mem)
+{
+	int		fd;
+	size_t	len;
+
+	if ((fd = shm_open("/shm-lemipc_map", O_RDWR, 0666)) == -1)
+		perr_exit("map_get shm_open");
+	len = sizeof(t_cell) * MAP_SIZE;
+	if ((*map_mem = mmap(NULL, next_powerchr(len, getpagesize()), PROT_READ
+				| PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED)
+		perr_exit("map_get mmap");
+	close(fd);
 }
 
 void	get_coords_err(int errtype, char usercoord[8], size_t usercoord_len)
@@ -125,4 +140,6 @@ void	map_erase()
 		perr_exit("read mmap");
 	close(fd);
 	munmap(mem, st.st_size);
+	shm_unlink("/shm-lemipc_map");
+	exit(0);
 }

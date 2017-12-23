@@ -4,7 +4,7 @@ void	sighandler(int sig)
 {
 	if (sig == SIGINT)
 	{
-		shm_erase();
+		map_erase();
 	}
 }
 
