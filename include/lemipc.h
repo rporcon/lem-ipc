@@ -38,5 +38,6 @@ void	map_erase();
 void	map_read(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN]);
 void	map_addplayer(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN]);
 void	map_get(void **map_mem);
+void	map_print(t_cell cells[MAP_LEN][MAP_LEN]);
 
 #endif

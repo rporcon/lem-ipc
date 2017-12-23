@@ -123,7 +123,6 @@ void	map_read(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 		}
 		inc.i++;
 	}
-	map_print(cells);
 }
 
 void	map_erase()

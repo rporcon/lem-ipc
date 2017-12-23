@@ -17,12 +17,14 @@ int		main(int ac, char **av)
 		while (1)
 		{
 			map_read(map_mem, cells);
+			map_print(cells);
 			sleep(1);
 		};
 	}
 	else {
 		printf("second\n");
 		map_get(&map_mem);
+		map_read(map_mem, cells);
 		map_addplayer(map_mem, cells);
 		while (1);
 	}
