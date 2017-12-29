@@ -5,7 +5,6 @@ int		map_init(void **map_mem)
 	int		fd;
 	size_t	len;
 
-	/* shm_unlink("/shm-lemipc_map");// */
 	if ((fd = shm_open("/shm-lemipc_map", O_RDWR | O_CREAT | O_EXCL, 0666))
 			!= -1)
 	{
@@ -102,33 +101,13 @@ void	map_print(t_cell cells[MAP_LEN][MAP_LEN])
 			fflush(stdout);
 			ft_putstr("   ");
 			inc.j++;
-		}
+	}
 		ft_putstr("\n\n");
 		inc.i++;
 	}
-	ft_putstr("--------------------------------\n");
+	ft_putstr("--------------------------------\n"
+			"Press enter to launch the game\n");
 }
-
-/* int		cells_cmp(t_cell cells1[MAP_LEN][MAP_LEN], */
-/* 			t_cell cells2[MAP_LEN][MAP_LEN]) */
-/* { */
-/* 	t_inc			inc; */
-
-/* 	ft_memset(&inc, 0, sizeof inc); */
-/* 	while (inc.i < MAP_LEN) */
-/* 	{ */
-/* 		inc.j = 0; */
-/* 		while (inc.j < MAP_LEN) */
-/* 		{ */
-/* 			if (cells1[inc.i][inc.j] != cells2[inc.i][inc.j]) */
-/* 				return (0); */
-/* 			inc.j++; */
-/* 			inc.k++; */
-/* 		} */
-/* 		inc.i++; */
-/* 	} */
-/* 	return (1); */
-/* } */
 
 void	map_read(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 {

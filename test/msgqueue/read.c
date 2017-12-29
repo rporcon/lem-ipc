@@ -20,7 +20,7 @@ int main(void)
 	int msqid;
 	key_t key;
 
-	if ((key = ftok("kirk.c", 'B')) == -1) {  /* same key as kirk.c */
+	if ((key = ftok("read.c", 'B')) == -1) {  /* same key as kirk.c */
 		perror("ftok");
 		exit(1);
 	}
@@ -30,7 +30,7 @@ int main(void)
 		exit(1);
 	}
 	
-	printf("spock: ready to receive messages, captain.\n");
+	printf("ready to receive messages\n");
 
 	for(;;) { /* Spock never quits! */
 		if (msgrcv(msqid, &buf, sizeof buf.mtext, 0, 0) == -1) {

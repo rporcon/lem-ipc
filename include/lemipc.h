@@ -2,6 +2,7 @@
 # define LEMIPC_H
 
 #include "libft.h"
+#include <poll.h>
 #include <stdint.h>
 #include <sys/mman.h>
 #include <signal.h>

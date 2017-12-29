@@ -21,7 +21,7 @@ int main(void)
 	int msqid;
 	key_t key;
 
-	if ((key = ftok("kirk.c", 'B')) == -1) {
+	if ((key = ftok("read.c", 'B')) == -1) {
 		perror("ftok");
 		exit(1);
 	}
