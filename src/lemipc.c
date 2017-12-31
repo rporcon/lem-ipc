@@ -14,7 +14,7 @@ void	game_init()
 			fgets(enter, sizeof enter, stdin);
 			if (enter[0] == '\n')
 				printf("one move");
-			// one move each enter
+			// one move each enter ??
 		}
 	}
 }
@@ -25,6 +25,7 @@ int		main(int ac, char **av)
 	t_cell	cells[MAP_LEN][MAP_LEN];
 	t_cell	cells_tmp[MAP_LEN][MAP_LEN];
 
+	// ! test if two processes can read shared memory at the same time
 	map_mem = NULL;
 	ft_memset(cells, 0, MAP_SIZE);
 	get_args(ac, av);

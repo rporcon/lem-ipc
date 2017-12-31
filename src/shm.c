@@ -14,6 +14,8 @@ int		map_init(void **map_mem)
 		if ((*map_mem = mmap(NULL, next_powerchr(len, getpagesize()), PROT_READ
 				| PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED)
 			perr_exit("map_get mmap");
+		if (sem_open("/sem-lemipc_map", O_CREAT, 0666, 1) == SEM_FAILED)
+			perr_exit("map_init sem_open");
 		close(fd);
 		return (1);
 	}
@@ -76,11 +78,18 @@ void	get_coords(t_coord *coords)
 void	map_addplayer(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 {
 	t_coord		coords;
+    sem_t		*sem;
 
+    if ((sem = sem_open("/sem-lemipc_map", 0)) == SEM_FAILED)
+        perr_exit("map_addplayer sem_open");
+    if (sem_wait(sem) == -1)
+        perr_exit("map_addplayer  sem_wait");
 	get_coords(&coords);
 	cells[coords.x][coords.y].team_id = g_data.team_id;
 	cells[coords.x][coords.y].pid = getpid();
 	ft_memcpy(map_mem, cells, MAP_SIZE);
+    if (sem_post(sem) == -1)
+        perr_exit("map_addplayer sem_post");
 }
 
 void	map_print(t_cell cells[MAP_LEN][MAP_LEN])
@@ -142,5 +151,6 @@ void	map_erase()
 	close(fd);
 	munmap(mem, st.st_size);
 	shm_unlink("/shm-lemipc_map");
+    sem_unlink("/sem-lemipc_map");
 	exit(0);
 }

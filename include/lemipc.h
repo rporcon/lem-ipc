@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <sys/mman.h>
 #include <signal.h>
+#include <semaphore.h>
 
 # define MAP_LEN 8
 # define MAP_SIZE sizeof (t_cell) * (MAP_LEN * MAP_LEN)
