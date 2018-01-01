@@ -1,26 +1,4 @@
 #include "lemipc.h"
-		
-int		map_init(void **map_mem)
-{
-	int		fd;
-	size_t	len;
-
-	if ((fd = shm_open("/shm-lemipc_map", O_RDWR | O_CREAT | O_EXCL, 0666))
-			!= -1)
-	{
-		len = MAP_SIZE;
-		if (ftruncate(fd, len) == -1)
-			perr_exit("map_get ftruncate");
-		if ((*map_mem = mmap(NULL, next_powerchr(len, getpagesize()), PROT_READ
-				| PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED)
-			perr_exit("map_get mmap");
-		if (sem_open("/sem-lemipc_map", O_CREAT, 0666, 1) == SEM_FAILED)
-			perr_exit("map_init sem_open");
-		close(fd);
-		return (1);
-	}
-	return (0);
-}
 
 void	map_get(void **map_mem)
 {
@@ -92,33 +70,7 @@ void	map_addplayer(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
         perr_exit("map_addplayer sem_post");
 }
 
-void	map_print(t_cell cells[MAP_LEN][MAP_LEN])
-{
-	t_inc			inc;
-
-	ft_memset(&inc, 0, sizeof inc);
-	ft_putstr("--------------------------------\n");
-	while (inc.i < MAP_LEN)
-	{
-		inc.j = 0;
-		while (inc.j < MAP_LEN)
-		{
-			if (cells[inc.i][inc.j].team_id == 0)
-				ft_putchar('o');
-			else
-				printf("%zu", cells[inc.i][inc.j].team_id);
-			fflush(stdout);
-			ft_putstr("   ");
-			inc.j++;
-		}
-		ft_putstr("\n\n");
-		inc.i++;
-	}
-	ft_putstr("--------------------------------\n"
-			"Press enter to launch the game\n");
-}
-
-void	map_read(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
+void	map_fill(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 {
 	t_inc			inc;
 
