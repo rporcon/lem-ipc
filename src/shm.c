@@ -1,5 +1,23 @@
 #include "lemipc.h"
 
+void	map_init()
+{
+	int		fd;
+
+	if ((fd = shm_open("/shm-lemipc_map", O_RDWR | O_CREAT | O_EXCL, 0666))
+			!= -1) {
+		printf("map init\n");
+		if (ftruncate(fd, MAP_SIZE) == -1)
+			perr_exit("map_init ftruncate");
+		if (mmap(NULL, next_powerchr(MAP_SIZE, getpagesize()),
+				PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0) == MAP_FAILED)
+			perr_exit("map_init mmap");
+		if (sem_open("/sem-lemipc_map", O_CREAT, 0666, 1) == SEM_FAILED)
+			perr_exit("map_init sem_open");
+		close(fd);
+	}
+}
+
 void	map_get(void **map_mem)
 {
 	int		fd;

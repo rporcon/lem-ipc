@@ -6,6 +6,8 @@ int		main(int ac, char **av)
 	void	*map_mem;
 	t_cell	cells[MAP_LEN][MAP_LEN];
 
+	/* map_erase(); exit(0); */
+	map_init();
 	map_mem = NULL;
 	ft_memset(cells, 0, MAP_SIZE);
 	get_args(ac, av);

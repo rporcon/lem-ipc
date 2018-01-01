@@ -1,20 +1,38 @@
 #include "print_map.h"
 
-void	map_init(void **map_mem)
-{
-	int		fd;
+/* void	map_init(void **map_mem) */
+/* { */
+/* 	int		fd; */
 
-	shm_unlink("/shm-lemipc_map");
-	if ((fd = shm_open("/shm-lemipc_map", O_RDWR | O_CREAT, 0666)) == -1)
-		perr_exit("map_init shm_open");
-	if (ftruncate(fd, MAP_SIZE) == -1)
-		perr_exit("map_init ftruncate");
-	if ((*map_mem = mmap(NULL, next_powerchr(MAP_SIZE, getpagesize()),
-			PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED)
-		perr_exit("map_init mmap");
-	if (sem_open("/sem-lemipc_map", O_CREAT, 0666, 1) == SEM_FAILED)
-		perr_exit("map_init sem_open");
-	close(fd);
+/* 	shm_unlink("/shm-lemipc_map"); */
+/* 	if ((fd = shm_open("/shm-lemipc_map", O_RDWR | O_CREAT, 0666)) == -1) */
+/* 		perr_exit("map_init shm_open"); */
+/* 	if (ftruncate(fd, MAP_SIZE) == -1) */
+/* 		perr_exit("map_init ftruncate"); */
+/* 	if ((*map_mem = mmap(NULL, next_powerchr(MAP_SIZE, getpagesize()), */
+/* 			PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED) */
+/* 		perr_exit("map_init mmap"); */
+/* 	if (sem_open("/sem-lemipc_map", O_CREAT, 0666, 1) == SEM_FAILED) */
+/* 		perr_exit("map_init sem_open"); */
+/* 	close(fd); */
+/* } */
+
+void    map_get(void **map_mem)
+{
+    int     fd;
+    size_t  len;
+
+	while (1)
+	{
+		if ((fd = shm_open("/shm-lemipc_map", O_RDONLY, 0666)) != -1)
+			break ;
+		sleep (1);
+	}
+    len = MAP_SIZE;
+    if ((*map_mem = mmap(NULL, next_powerchr(len, getpagesize()), PROT_READ
+                , MAP_SHARED, fd, 0)) == MAP_FAILED)
+    	perr_exit("map_get mmap");
+    close(fd);
 }
 
 void	map_fill(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
@@ -87,7 +105,8 @@ int     main()
 
 	map_mem = NULL;
 	ft_memset(cells, 0, MAP_SIZE);
-	map_init(&map_mem);
+	/* map_init(&map_mem); */
+	map_get(&map_mem);
 	map_fill(map_mem, cells);
 	map_print(cells);
 	fcntl(0, F_SETFL, fcntl(0, F_GETFL) | O_NONBLOCK);
