@@ -110,7 +110,7 @@ void	map_print(t_cell cells[MAP_LEN][MAP_LEN])
 			fflush(stdout);
 			ft_putstr("   ");
 			inc.j++;
-	}
+		}
 		ft_putstr("\n\n");
 		inc.i++;
 	}
