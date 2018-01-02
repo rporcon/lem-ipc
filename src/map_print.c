@@ -60,19 +60,23 @@ void	map_print(t_cell cells[MAP_LEN][MAP_LEN])
 			"Press enter to launch the game\n");
 }
 
-void    game_init()
+void    player_move()
 {
 	char            enter[8];
 
 	read(0, enter, sizeof enter);
-	if (enter[0] == '\n') {
+	if (enter[0] == '\n')
+	{
 		printf("Press enter to play one turn\n");
 		while (1)
 		{
 			ft_memset(enter, 0, sizeof enter);
 			fgets(enter, sizeof enter, stdin);
 			if (enter[0] == '\n')
+			{
 				printf("one move");
+				break ;
+			}
 			// one turn or one move each enter ??
 		}
 	}
@@ -96,7 +100,7 @@ int     main()
 		map_fill(map_mem, cells);
 		if (ft_memcmp(cells_tmp, cells, MAP_SIZE) != 0)
 			map_print(cells);
-		game_init();
+		player_move();
 		sleep(1);
 	}
 	return (0);
