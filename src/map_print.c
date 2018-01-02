@@ -73,7 +73,7 @@ void    game_init()
 			fgets(enter, sizeof enter, stdin);
 			if (enter[0] == '\n')
 				printf("one move");
-			// one move each enter ??
+			// one turn or one move each enter ??
 		}
 	}
 }

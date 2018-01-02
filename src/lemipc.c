@@ -15,9 +15,11 @@ void	communicate()
 			perr_exit("communicate msgrcv");
 		printf("message received on queue");
 		// supposition
-		// create another shared memory segment for data
-		// ! players has to played depending to their arrival in game and keep
-		// that order
+		// create another shared memory segment for map_print (or use same /shm-lemipc_map)
+		// 		to know when all players or each player (depending of map_print enter effect)
+		// 		have played
+		// 		or received a msg when finished
+		// ! players has to played depending to their arrival in game and keep that order
 		// send msg to each same team id (they have to focus same ennemy)
 		// when msg receive -> tick player status to "has played"
 		// ??? if not good player receive msg -> resend  ??? 

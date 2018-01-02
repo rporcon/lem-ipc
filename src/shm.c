@@ -116,6 +116,8 @@ void	ressources_erase()
 	int				fd;
 	void			*mem;
 	struct stat		st;
+	int				msgq_id;
+	key_t			key;
 
 	if ((fd = shm_open("/shm-lemipc_map", O_RDONLY, 0644)) == -1)
 		perr_exit("read shm_open");
@@ -127,5 +129,8 @@ void	ressources_erase()
 	munmap(mem, st.st_size);
 	shm_unlink("/shm-lemipc_map");
     sem_unlink("/sem-lemipc_map");
+	key = ftok("msg.c", '*');
+	msgq_id = msgget(key, 0644 | IPC_CREAT);
+	msgctl(msgq_id, IPC_RMID, NULL);
 	exit(0);
 }
