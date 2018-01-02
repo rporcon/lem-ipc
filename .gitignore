@@ -2,6 +2,8 @@ a.out
 test.c
 lemipc
 map
+read
+send
 .DS_Store
 .*.swp
 .*.swo

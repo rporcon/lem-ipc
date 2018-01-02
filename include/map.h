@@ -11,8 +11,10 @@
 # define MAP_SIZE sizeof (t_cell) * (MAP_LEN * MAP_LEN)
 
 typedef struct	s_cell {
-	size_t		team_id;
+	uint32_t	team_id;
 	uint32_t	pid;
+	/* uint8_t		played; */
+	/* uint8_t		ennemy; // pid */
 }				t_cell;
 
 typedef struct	s_inc {

@@ -1,7 +1,3 @@
-/*
-** kirk.c -- writes to a message queue
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -33,7 +29,7 @@ int main(void)
 
 	printf("Enter lines of text, ^D to quit:\n");
 
-	buf.mtype = 1; /* we don't really care in this case */
+	buf.mtype = 42; /* we don't really care in this case */
 
 	while(fgets(buf.mtext, sizeof buf.mtext, stdin) != NULL) {
 		int len = strlen(buf.mtext);
@@ -50,7 +46,6 @@ int main(void)
 		perror("msgctl");
 		exit(1);
 	}
-
 	return 0;
 }
 

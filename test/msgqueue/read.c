@@ -1,7 +1,3 @@
-/*
-** spock.c -- reads from a message queue
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -20,7 +16,7 @@ int main(void)
 	int msqid;
 	key_t key;
 
-	if ((key = ftok("read.c", 'B')) == -1) {  /* same key as kirk.c */
+	if ((key = ftok("read.c", 'B')) == -1) {  /* same key as send.c */
 		perror("ftok");
 		exit(1);
 	}
@@ -32,12 +28,12 @@ int main(void)
 	
 	printf("ready to receive messages\n");
 
-	for(;;) { /* Spock never quits! */
-		if (msgrcv(msqid, &buf, sizeof buf.mtext, 0, 0) == -1) {
+	for(;;) {
+		if (msgrcv(msqid, &buf, sizeof buf.mtext, 42, 0) == -1) {
 			perror("msgrcv");
 			exit(1);
 		}
-		printf("spock: \"%s\"\n", buf.mtext);
+		printf("received: \"%s\"\n", buf.mtext);
 	}
 
 	return 0;

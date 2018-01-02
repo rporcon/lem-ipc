@@ -3,18 +3,23 @@
 void	map_init()
 {
 	int		fd;
+	key_t	key;
 
-	if ((fd = shm_open("/shm-lemipc_map", O_RDWR | O_CREAT | O_EXCL, 0666))
-			!= -1) {
-		printf("map init\n");
+	if ((fd = shm_open("/shm-lemipc_map", O_RDWR | O_CREAT | O_EXCL, 0644))
+			!= -1)
+	{
 		if (ftruncate(fd, MAP_SIZE) == -1)
 			perr_exit("map_init ftruncate");
 		if (mmap(NULL, next_powerchr(MAP_SIZE, getpagesize()),
 				PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0) == MAP_FAILED)
 			perr_exit("map_init mmap");
-		if (sem_open("/sem-lemipc_map", O_CREAT, 0666, 1) == SEM_FAILED)
-			perr_exit("map_init sem_open");
 		close(fd);
+		if (sem_open("/sem-lemipc_map", O_CREAT, 0644, 1) == SEM_FAILED)
+			perr_exit("map_init sem_open");
+		if ((key = ftok("msg.c", '*')) == -1)
+			perr_exit("map_init ftok");
+		if (msgget(key, 0644 | IPC_CREAT) == -1)
+			perr_exit("map_init msgget");
 	}
 }
 
@@ -23,7 +28,7 @@ void	map_get(void **map_mem)
 	int		fd;
 	size_t	len;
 
-	if ((fd = shm_open("/shm-lemipc_map", O_RDWR, 0666)) == -1)
+	if ((fd = shm_open("/shm-lemipc_map", O_RDWR, 0644)) == -1)
 		perr_exit("map_get shm_open");
 	len = MAP_SIZE;
 	if ((*map_mem = mmap(NULL, next_powerchr(len, getpagesize()), PROT_READ
@@ -106,13 +111,13 @@ void	map_fill(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 	}
 }
 
-void	map_erase()
+void	ressources_erase()
 {
 	int				fd;
 	void			*mem;
 	struct stat		st;
 
-	if ((fd = shm_open("/shm-lemipc_map", O_RDONLY, 0666)) == -1)
+	if ((fd = shm_open("/shm-lemipc_map", O_RDONLY, 0644)) == -1)
 		perr_exit("read shm_open");
 	fstat(fd, &st);
 	if ((mem = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0)

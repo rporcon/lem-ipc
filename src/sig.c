@@ -2,9 +2,8 @@
 
 void	sighandler(int sig)
 {
-	if (sig == SIGINT)
-	{
-		map_erase();
+	if (sig == SIGINT) {
+		ressources_erase();
 	}
 }
 
