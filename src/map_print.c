@@ -60,7 +60,6 @@ void	map_print(t_cell cells[MAP_LEN][MAP_LEN])
 			"Press enter to launch the game\n");
 }
 
-
 void	players_get(t_players *players, t_cell cells[MAP_LEN][MAP_LEN])
 {
 	t_inc			inc;
@@ -130,9 +129,9 @@ void    game_init(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 			perr_exit("game_init ftok");
 		if ((gdata.msgq_id = msgget(gdata.key, 0644)) == -1)
 			perr_exit("game_init msgget");
-		printf("Press enter to play one turn\n");
 		while (1)
 		{
+			printf("Press enter to play one turn\n");
 			ft_memset(enter, 0, sizeof enter);
 			fgets(enter, sizeof enter, stdin);
 			if (enter[0] == '\n')
