@@ -26,13 +26,11 @@ void	map_init()
 void	map_get(void **map_mem)
 {
 	int		fd;
-	size_t	len;
 
 	if ((fd = shm_open("/shm-lemipc_map", O_RDWR, 0644)) == -1)
 		perr_exit("map_get shm_open");
-	len = MAP_SIZE;
-	if ((*map_mem = mmap(NULL, next_powerchr(len, getpagesize()), PROT_READ
-				| PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED)
+	if ((*map_mem = mmap(NULL, next_powerchr(MAP_SIZE, getpagesize()),
+			PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED)
 		perr_exit("map_get mmap");
 	close(fd);
 }

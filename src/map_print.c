@@ -102,13 +102,20 @@ uint32_t	players_getnb(t_cell cells[MAP_LEN][MAP_LEN])
 void    player_move(t_gamedata *gdata)
 {
 	int		i;
+	long	player_mtype;
 
 	i = 0;
 	printf("player move\n");
 	while (gdata->players[i].pid != 0 && gdata->players[i].played == 1)
 		i++;
-	gdata->msgbuf.mtype = INT_MAX + gdata->players[i].pid;
-	msgsnd(gdata->msgq_id, &gdata->msgbuf, 1, 0); // verif
+	player_mtype = INT_MAX + gdata->players[i].pid;
+	gdata->msgbuf.mtype = player_mtype;
+	if (msgsnd(gdata->msgq_id, &gdata->msgbuf, 0, 0) == -1)
+		perr_exit("player_move msgsnd"); // verif
+	ft_memset(&gdata->msgbuf, 0, sizeof gdata->msgbuf);
+	if (msgrcv(gdata->msgq_id, &gdata->msgbuf, 0, player_mtype, 0) == -1)
+		perr_exit("player_move msgrcv");
+	gdata->players[i].played = 1;
 }
 
 void    game_init(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
