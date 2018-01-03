@@ -1,4 +1,4 @@
-#include "print_map.h"
+#include "map_print.h"
 
 void    map_get(void **map_mem)
 {
@@ -60,20 +60,86 @@ void	map_print(t_cell cells[MAP_LEN][MAP_LEN])
 			"Press enter to launch the game\n");
 }
 
-void    game_init()
+
+void	players_get(t_players *players, t_cell cells[MAP_LEN][MAP_LEN])
+{
+	t_inc			inc;
+
+	ft_memset(&inc, 0, sizeof inc);
+	while (inc.i < MAP_LEN)
+	{
+		inc.j = 0;
+		while (inc.j < MAP_LEN)
+		{
+			if (cells[inc.i][inc.j].team_id > 0)
+				players->pid = cells[inc.i][inc.j].pid;
+			inc.j++;
+		}
+		inc.i++;
+	}
+}
+
+uint32_t	players_getnb(t_cell cells[MAP_LEN][MAP_LEN])
+{
+	t_inc			inc;
+	uint32_t		players_nb;
+
+	ft_memset(&inc, 0, sizeof inc);
+	players_nb = 0;
+	while (inc.i < MAP_LEN)
+	{
+		inc.j = 0;
+		while (inc.j < MAP_LEN)
+		{
+			if (cells[inc.i][inc.j].team_id > 0)
+				players_nb++;
+			inc.j++;
+		}
+		inc.i++;
+	}
+	return (players_nb);
+}
+
+void    player_move(t_gamedata *gdata)
+{
+	int		i;
+
+	i = 0;
+	printf("player move\n");
+	while (gdata->players[i].pid != 0 && gdata->players[i].played == 1)
+		i++;
+	gdata->msgbuf.mtype = INT_MAX + gdata->players[i].pid;
+	msgsnd(gdata->msgq_id, &gdata->msgbuf, 1, 0); // verif
+}
+
+void    game_init(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 {
 	char            enter[8];
+	t_gamedata		gdata;
 
+	(void)map_mem;
+	// list of all players to know which player to play
 	read(0, enter, sizeof enter);
 	if (enter[0] == '\n') {
+		gdata.players_nb = players_getnb(cells);
+		if ((gdata.players = calloc(gdata.players_nb + 1, sizeof(t_players)))
+				== NULL)
+			perr_exit("game_init calloc");
+		players_get(gdata.players, cells);
+		if ((gdata.key = ftok("./src/msg.c", '*')) == -1)
+			perr_exit("game_init ftok");
+		if ((gdata.msgq_id = msgget(gdata.key, 0644)) == -1)
+			perr_exit("game_init msgget");
 		printf("Press enter to play one turn\n");
 		while (1)
 		{
 			ft_memset(enter, 0, sizeof enter);
 			fgets(enter, sizeof enter, stdin);
 			if (enter[0] == '\n')
-				printf("one move");
-			// one turn or one move each enter ??
+				player_move(&gdata);
+			// send msg on pid that need to be played (msg_id = MAX_INT + pid())
+			// then tick player has been played
+			// receive msg on same pid, it mean process has played (reprint map)
 		}
 	}
 }
@@ -96,7 +162,7 @@ int     main()
 		map_fill(map_mem, cells);
 		if (ft_memcmp(cells_tmp, cells, MAP_SIZE) != 0)
 			map_print(cells);
-		game_init();
+		game_init(map_mem, cells);
 		sleep(1);
 	}
 	return (0);

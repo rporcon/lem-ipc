@@ -16,7 +16,7 @@ void	map_init()
 		close(fd);
 		if (sem_open("/sem-lemipc_map", O_CREAT, 0644, 1) == SEM_FAILED)
 			perr_exit("map_init sem_open");
-		if ((key = ftok("msg.c", '*')) == -1)
+		if ((key = ftok("./src/msg.c", '*')) == -1)
 			perr_exit("map_init ftok");
 		if (msgget(key, 0644 | IPC_CREAT) == -1)
 			perr_exit("map_init msgget");
@@ -76,6 +76,27 @@ void	get_coords(t_coord *coords)
 	sstrfree(coords_str);
 }
 
+int		already_teamleader(t_cell cells[MAP_LEN][MAP_LEN])
+{
+	t_inc			inc;
+
+	ft_memset(&inc, 0, sizeof inc);
+	while (inc.i < MAP_LEN)
+	{
+		inc.j = 0;
+		while (inc.j < MAP_LEN)
+		{
+			if (cells[inc.i][inc.j].team_id == g_data.team_id
+					&& cells[inc.i][inc.j].team_leader == 1)
+				return (1);
+			inc.j++;
+			inc.k++;
+		}
+		inc.i++;
+	}
+	return (0);
+}
+
 void	map_addplayer(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 {
 	t_coord		coords;
@@ -84,8 +105,10 @@ void	map_addplayer(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
     if ((sem = sem_open("/sem-lemipc_map", 0)) == SEM_FAILED)
         perr_exit("map_addplayer sem_open");
     if (sem_wait(sem) == -1)
-        perr_exit("map_addplayer  sem_wait");
+        perr_exit("map_addplayer sem_wait");
 	get_coords(&coords);
+	if (already_teamleader(cells) == 0)
+		cells[coords.x][coords.y].team_leader = 1;
 	cells[coords.x][coords.y].team_id = g_data.team_id;
 	cells[coords.x][coords.y].pid = getpid();
 	ft_memcpy(map_mem, cells, MAP_SIZE);
@@ -129,7 +152,7 @@ void	ressources_erase()
 	munmap(mem, st.st_size);
 	shm_unlink("/shm-lemipc_map");
     sem_unlink("/sem-lemipc_map");
-	key = ftok("msg.c", '*');
+	key = ftok("./src/msg.c", '*');
 	msgq_id = msgget(key, 0644 | IPC_CREAT);
 	msgctl(msgq_id, IPC_RMID, NULL);
 	exit(0);

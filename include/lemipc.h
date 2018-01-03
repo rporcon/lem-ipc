@@ -2,19 +2,14 @@
 # define LEMIPC_H
 
 #include "map.h"
-#include <sys/ipc.h>
-#include <sys/msg.h>
 
 typedef struct	s_data {
-	size_t		team_id;
+	uint32_t	team_id;
 }				t_data;
 
-typedef struct	s_msgbuf {
-	long		mtype;
-	char		mtext[255];
-}				t_msgbuf;
-
 extern t_data	g_data;
+
+// use globals for sem, shm (to open only once / avoid pass through every func)
 
 void	get_args(int ac, char **av);
 void	sighandle();
