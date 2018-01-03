@@ -99,7 +99,8 @@ uint32_t	players_getnb(t_cell cells[MAP_LEN][MAP_LEN])
 	return (players_nb);
 }
 
-void    player_move(t_gamedata *gdata)
+void    player_move(t_gamedata *gdata, void *map_mem,
+			t_cell cells[MAP_LEN][MAP_LEN])
 {
 	int		i;
 	long	player_mtype;
@@ -111,11 +112,12 @@ void    player_move(t_gamedata *gdata)
 	player_mtype = INT_MAX + gdata->players[i].pid;
 	gdata->msgbuf.mtype = player_mtype;
 	if (msgsnd(gdata->msgq_id, &gdata->msgbuf, 0, 0) == -1)
-		perr_exit("player_move msgsnd"); // verif
-	ft_memset(&gdata->msgbuf, 0, sizeof gdata->msgbuf);
+		perr_exit("player_move msgsnd");
 	if (msgrcv(gdata->msgq_id, &gdata->msgbuf, 0, player_mtype, 0) == -1)
 		perr_exit("player_move msgrcv");
 	gdata->players[i].played = 1;
+	map_fill(map_mem, cells);
+	map_print(cells);
 }
 
 void    game_init(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
@@ -142,7 +144,7 @@ void    game_init(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 			ft_memset(enter, 0, sizeof enter);
 			fgets(enter, sizeof enter, stdin);
 			if (enter[0] == '\n')
-				player_move(&gdata);
+				player_move(&gdata, map_mem, cells);
 			// send msg on pid that need to be played (msg_id = MAX_INT + pid())
 			// then tick player has been played
 			// receive msg on same pid, it mean process has played (reprint map)

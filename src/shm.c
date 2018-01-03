@@ -23,13 +23,13 @@ void	map_init()
 	}
 }
 
-void	map_get(void **map_mem)
+void	map_get()
 {
 	int		fd;
 
 	if ((fd = shm_open("/shm-lemipc_map", O_RDWR, 0644)) == -1)
 		perr_exit("map_get shm_open");
-	if ((*map_mem = mmap(NULL, next_powerchr(MAP_SIZE, getpagesize()),
+	if ((g_data.map_mem = mmap(NULL, next_powerchr(MAP_SIZE, getpagesize()),
 			PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0)) == MAP_FAILED)
 		perr_exit("map_get mmap");
 	close(fd);
@@ -74,7 +74,7 @@ void	get_coords(t_coord *coords)
 	sstrfree(coords_str);
 }
 
-int		already_teamleader(t_cell cells[MAP_LEN][MAP_LEN])
+int		teamleader_exist()
 {
 	t_inc			inc;
 
@@ -84,8 +84,8 @@ int		already_teamleader(t_cell cells[MAP_LEN][MAP_LEN])
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
-			if (cells[inc.i][inc.j].team_id == g_data.team_id
-					&& cells[inc.i][inc.j].team_leader == 1)
+			if (g_data.cells[inc.i][inc.j].team_id == g_data.team_id
+					&& g_data.cells[inc.i][inc.j].team_leader == 1)
 				return (1);
 			inc.j++;
 			inc.k++;
@@ -95,26 +95,49 @@ int		already_teamleader(t_cell cells[MAP_LEN][MAP_LEN])
 	return (0);
 }
 
-void	map_addplayer(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
+void	map_addplayer()
 {
 	t_coord		coords;
-    sem_t		*sem;
 
-    if ((sem = sem_open("/sem-lemipc_map", 0)) == SEM_FAILED)
+    if ((g_data.sem = sem_open("/sem-lemipc_map", 0)) == SEM_FAILED)
         perr_exit("map_addplayer sem_open");
-    if (sem_wait(sem) == -1)
+    if (sem_wait(g_data.sem) == -1)
         perr_exit("map_addplayer sem_wait");
 	get_coords(&coords);
-	if (already_teamleader(cells) == 0)
-		cells[coords.x][coords.y].team_leader = 1;
-	cells[coords.x][coords.y].team_id = g_data.team_id;
-	cells[coords.x][coords.y].pid = getpid();
-	ft_memcpy(map_mem, cells, MAP_SIZE);
-    if (sem_post(sem) == -1)
+	/* if (teamleader_exist() == 0) */
+	/* 	g_data.cells[coords.x][coords.y].team_leader = 1; */
+	// determine team_leader before launching game
+	g_data.cells[coords.x][coords.y].team_id = g_data.team_id;
+	g_data.cells[coords.x][coords.y].pid = getpid();
+	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
+    if (sem_post(g_data.sem) == -1)
         perr_exit("map_addplayer sem_post");
 }
 
-void	map_fill(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
+void	map_currentcell(pid_t pid, t_cell **current_cell)
+{
+	t_inc		inc;
+
+	ft_memset(&inc, 0, sizeof inc);
+	while (inc.i < MAP_LEN)
+	{
+		inc.j = 0;
+		while (inc.j < MAP_LEN)
+		{
+			if (pid == g_data.cells[inc.i][inc.j].pid)
+			{
+				*current_cell = &g_data.cells[inc.i][inc.j];
+				return ;
+			}
+			inc.j++;
+			inc.k++;
+		}
+		inc.i++;
+	}
+}
+
+
+void	map_fill()
 {
 	t_inc			inc;
 
@@ -124,7 +147,7 @@ void	map_fill(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
-			cells[inc.i][inc.j] = ((t_cell *)map_mem)[inc.k];
+			g_data.cells[inc.i][inc.j] = ((t_cell *)g_data.map_mem)[inc.k];
 			inc.j++;
 			inc.k++;
 		}
@@ -135,23 +158,15 @@ void	map_fill(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 void	ressources_erase()
 {
 	int				fd;
-	void			*mem;
 	struct stat		st;
-	int				msgq_id;
-	key_t			key;
 
 	if ((fd = shm_open("/shm-lemipc_map", O_RDONLY, 0644)) == -1)
 		perr_exit("read shm_open");
 	fstat(fd, &st);
-	if ((mem = mmap(NULL, st.st_size, PROT_READ, MAP_SHARED, fd, 0)
-			) == MAP_FAILED)
-		perr_exit("read mmap");
 	close(fd);
-	munmap(mem, st.st_size);
+	munmap(g_data.map_mem, st.st_size);
 	shm_unlink("/shm-lemipc_map");
     sem_unlink("/sem-lemipc_map");
-	key = ftok("./src/msg.c", '*');
-	msgq_id = msgget(key, 0644 | IPC_CREAT);
-	msgctl(msgq_id, IPC_RMID, NULL);
+	msgctl(g_data.msgq_id, IPC_RMID, NULL);
 	exit(0);
 }

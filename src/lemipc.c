@@ -1,60 +1,71 @@
 #include "lemipc.h"
-t_data	g_data = {0};
+t_data	g_data;
 
-void	move_player(void *map_mem)
+void	move_player(pid_t pid)
 {
-	/* t_cell	cells[MAP_LEN][MAP_LEN]; */
-	// map_mem as global
-	// fill cell
-	(void)map_mem;
+	t_msgbuf	msgbuf;
+	pid_t		ennemy_pid;
+	t_cell		*current_cell;
+
+	map_currentcell(pid, &current_cell);
+	if (teamleader_exist() == 0)
+	 	(*current_cell).team_leader = 1;
+	if ((*current_cell).team_leader == 1)
+	{
+		/* func to determine ennemy_pid */
+		// set ennemy_pid once at beggining and when target change
+		/* (*current_cell).ennemy_pid = ennemy_pid; */
+		// send ennemy target to same team player
+		send_target();
+	}
+	else {
+		// need to receive once at beggining and when target change
+		// (or it will block)
+		if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
+				g_data.team_id, 0) == -1)
+			perr_exit("communicate msgrcv");
+		ennemy_pid = ft_atoi(msgbuf.mtext);
+	}
+	// func to move player depending to ennemy_pid
+	// fill cells
+	// update shmem
 }
 
-void	communicate(void *map_mem)
+void	communicate()
 {
-	int			msgq_id;
 	t_msgbuf	msgbuf;
 	pid_t		pid;
 
 	ft_memset(&msgbuf, 0, sizeof msgbuf);
-	msgq_getid(&msgq_id);
+	msgq_getid();
 	pid = getpid();
 	// msgtype = team id to send msg
 	while (1)
 	{
-		if (msgrcv(msgq_id, &msgbuf, 0, pid, 0) == -1)
+		if (msgrcv(g_data.msgq_id, &msgbuf, 0, pid, 0) == -1)
 			perr_exit("communicate msgrcv");
 
-		move_player(map_mem);
-		// move player pos
-		// send ennemy pos to other team members
+		move_player(pid);
 		msgbuf.mtype = pid;
-		if (msgsnd(msgq_id, &msgbuf, 0, 0) == -1) // end of move
+		if (msgsnd(g_data.msgq_id, &msgbuf, 0, 0) == -1) // end of move (send to map_print bin)
 			perr_exit("communicate msgsnd");
-		/* printf("message received on queue"); */
-		// supposition
-		// receive msg on process pid
-		// send msg on same pid when played
 		// ! players has to played depending to their arrival in game and keep that order
 	}
 }
 
 int		main(int ac, char **av)
 {
-	void	*map_mem;
-	t_cell	cells[MAP_LEN][MAP_LEN];
-
 	// add an erase arg to call ressources_erase
 	/* ressources_erase(); exit(0); */
+	ft_memset(&g_data, 0, sizeof g_data);
 	map_init();
-	map_mem = NULL;
-	ft_memset(cells, 0, MAP_SIZE);
 	get_args(ac, av);
 	sighandle(); // clear only if last process quit
 				 // handle too much processus error case
-	map_get(&map_mem);
-	map_fill(map_mem, cells);
-	map_addplayer(map_mem, cells);
+	map_get();
+	map_fill();
+	map_addplayer();
 
-	communicate(map_mem);
+	communicate();
 	return (0);
 }
