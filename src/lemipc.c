@@ -4,31 +4,36 @@ t_data	g_data;
 void	move_player(pid_t pid)
 {
 	t_msgbuf	msgbuf;
-	pid_t		ennemy_pid;
 	t_cell		*current_cell;
 
 	map_currentcell(pid, &current_cell);
 	if (teamleader_exist() == 0)
 	 	(*current_cell).team_leader = 1;
-	if ((*current_cell).team_leader == 1)
+	if ((*current_cell).ennemy_set == 0 && (*current_cell).team_leader == 1)
 	{
 		/* func to determine ennemy_pid */
 		// set ennemy_pid once at beggining and when target change
 		/* (*current_cell).ennemy_pid = ennemy_pid; */
+		(*current_cell).ennemy_set = 1;
+		printf("team leader\n");
 		// send ennemy target to same team player
 		send_target();
 	}
-	else {
-		// need to receive once at beggining and when target change
-		// (or it will block)
+	else if ((*current_cell).ennemy_set == 0)
+	{
+		printf("non team leader\n");
 		if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
 				g_data.team_id, 0) == -1)
 			perr_exit("communicate msgrcv");
-		ennemy_pid = ft_atoi(msgbuf.mtext);
+		(*current_cell).ennemy = ft_atoi(msgbuf.mtext);
+		printf("received ennemy: %d\n", (*current_cell).ennemy);
+		(*current_cell).ennemy_set = 1;
 	}
 	// func to move player depending to ennemy_pid
-	// fill cells
-	// update shmem
+	// test
+	g_data.cells[2][2].team_id = 42;
+	//
+	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 }
 
 void	communicate()
@@ -39,16 +44,18 @@ void	communicate()
 	ft_memset(&msgbuf, 0, sizeof msgbuf);
 	msgq_getid();
 	pid = getpid();
-	// msgtype = team id to send msg
 	while (1)
 	{
-		if (msgrcv(g_data.msgq_id, &msgbuf, 0, pid, 0) == -1)
+		printf("communicate waiting msg [%lu]\n", (long)INT_MAX + pid);
+		if (msgrcv(g_data.msgq_id, &msgbuf, 0, (long)INT_MAX + pid, 0) == -1)
 			perr_exit("communicate msgrcv");
-
+		printf("communicate begin\n");
+		map_fill();
 		move_player(pid);
-		msgbuf.mtype = pid;
+		msgbuf.mtype = INT_MAX + pid;
 		if (msgsnd(g_data.msgq_id, &msgbuf, 0, 0) == -1) // end of move (send to map_print bin)
 			perr_exit("communicate msgsnd");
+		printf("communicate end\n");
 		// ! players has to played depending to their arrival in game and keep that order
 	}
 }

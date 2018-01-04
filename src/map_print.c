@@ -34,7 +34,7 @@ void	map_fill(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 	}
 }
 
-void	map_print(t_cell cells[MAP_LEN][MAP_LEN])
+void	map_print(t_cell cells[MAP_LEN][MAP_LEN], int type)
 {
 	t_inc			inc;
 
@@ -56,8 +56,9 @@ void	map_print(t_cell cells[MAP_LEN][MAP_LEN])
 		ft_putstr("\n\n");
 		inc.i++;
 	}
-	ft_putstr("--------------------------------\n"
-			"Press enter to launch the game\n");
+	ft_putstr("--------------------------------\n");
+	if (type == 1)
+			ft_putstr("Press enter to launch the game\n");
 }
 
 void	players_get(t_players *players, t_cell cells[MAP_LEN][MAP_LEN])
@@ -106,18 +107,18 @@ void    player_move(t_gamedata *gdata, void *map_mem,
 	long	player_mtype;
 
 	i = 0;
-	printf("player move\n");
 	while (gdata->players[i].pid != 0 && gdata->players[i].played == 1)
 		i++;
-	player_mtype = INT_MAX + gdata->players[i].pid;
+	player_mtype = (long)INT_MAX + gdata->players[i].pid;
 	gdata->msgbuf.mtype = player_mtype;
 	if (msgsnd(gdata->msgq_id, &gdata->msgbuf, 0, 0) == -1)
 		perr_exit("player_move msgsnd");
+	printf("sendmsg to [%lu]\n", gdata->msgbuf.mtype);
 	if (msgrcv(gdata->msgq_id, &gdata->msgbuf, 0, player_mtype, 0) == -1)
 		perr_exit("player_move msgrcv");
 	gdata->players[i].played = 1;
 	map_fill(map_mem, cells);
-	map_print(cells);
+	map_print(cells, 0);
 }
 
 void    game_init(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
@@ -138,6 +139,7 @@ void    game_init(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 			perr_exit("game_init ftok");
 		if ((gdata.msgq_id = msgget(gdata.key, 0644)) == -1)
 			perr_exit("game_init msgget");
+		fcntl(0, F_SETFL, fcntl(0, F_GETFL) & ~(O_NONBLOCK));
 		while (1)
 		{
 			printf("Press enter to play one turn\n");
@@ -162,14 +164,14 @@ int     main()
 	ft_memset(cells, 0, MAP_SIZE);
 	map_get(&map_mem);
 	map_fill(map_mem, cells);
-	map_print(cells);
+	map_print(cells, 1);
 	fcntl(0, F_SETFL, fcntl(0, F_GETFL) | O_NONBLOCK);
 	while (1)
 	{
 		ft_memcpy(cells_tmp, cells, MAP_SIZE);
 		map_fill(map_mem, cells);
 		if (ft_memcmp(cells_tmp, cells, MAP_SIZE) != 0)
-			map_print(cells);
+			map_print(cells, 1);
 		game_init(map_mem, cells);
 		sleep(1);
 	}

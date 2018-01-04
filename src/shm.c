@@ -136,7 +136,6 @@ void	map_currentcell(pid_t pid, t_cell **current_cell)
 	}
 }
 
-
 void	map_fill()
 {
 	t_inc			inc;

@@ -28,7 +28,7 @@ void	send_target()
 				msgbuf.mtype = g_data.team_id;
 				ft_strcpy(msgbuf.mtext, "442"); // normally ennemy_pid
 				if (msgsnd(g_data.msgq_id, &msgbuf, 0, 0) == -1)
-					    perr_exit("send_target msgsnd");
+					perr_exit("send_target msgsnd");
 			}
 			inc.j++;
 			inc.k++;
