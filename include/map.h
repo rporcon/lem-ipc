@@ -23,7 +23,7 @@ typedef struct	s_cell {
 
 typedef struct	s_msgbuf {
 	long		mtype;
-	char		mtext[255];
+	char		mtext[16];
 }				t_msgbuf;
 
 typedef struct	s_inc {

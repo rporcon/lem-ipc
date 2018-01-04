@@ -114,10 +114,10 @@ void    player_move(t_gamedata *gdata, void *map_mem,
 		i++;
 	player_mtype = (long)INT_MAX + gdata->players[i].pid;
 	gdata->msgbuf.mtype = player_mtype;
-	if (msgsnd(gdata->msgq_id, &gdata->msgbuf, 0, 0) == -1)
+	if (msgsnd(gdata->msgq_id, &gdata->msgbuf, sizeof gdata->msgbuf.mtext, 0) == -1)
 		perr_exit("player_move msgsnd");
 	printf("sendmsg to [%lu] {%u}\n", gdata->msgbuf.mtype, gdata->players[i].pid);
-	if (msgrcv(gdata->msgq_id, &gdata->msgbuf, 0, player_mtype, 0) == -1)
+	if (msgrcv(gdata->msgq_id, &gdata->msgbuf, sizeof gdata->msgbuf.mtext, player_mtype, 0) == -1)
 		perr_exit("player_move msgrcv");
 	gdata->players[i].played = 1;
 	map_fill(map_mem, cells);
@@ -130,6 +130,7 @@ void    game_init(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 	t_gamedata		gdata;
 
 	// list of all players to know which player to play
+	ft_memset(&gdata.msgbuf, 0, sizeof gdata.msgbuf);
 	read(0, enter, sizeof enter);
 	if (enter[0] == '\n') {
 		gdata.players_nb = players_getnb(cells);
@@ -162,6 +163,9 @@ int     main()
 	t_cell  cells[MAP_LEN][MAP_LEN];
 	t_cell  cells_tmp[MAP_LEN][MAP_LEN];
 
+	// step by step mode / no step by step mode
+	// (pass throug player played msgq (INT_MAX + PID) smth
+	// 		to indicate to not waiting on step by step msgq
 	map_mem = NULL;
 	ft_memset(cells, 0, MAP_SIZE);
 	map_get(&map_mem);

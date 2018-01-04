@@ -47,16 +47,18 @@ void	communicate()
 	while (1)
 	{
 		printf("communicate waiting msg [%lu] {%u}\n", (long)INT_MAX + pid, pid);
-		if (msgrcv(g_data.msgq_id, &msgbuf, 0, (long)INT_MAX + pid, 0) == -1)
+		sleep(1);
+		if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
+				(long)INT_MAX + pid, 0) == -1)
 			perr_exit("communicate msgrcv");
 		printf("communicate begin\n");
 		map_fill();
 		move_player(pid);
 		msgbuf.mtype = (long)INT_MAX + pid;
-		if (msgsnd(g_data.msgq_id, &msgbuf, 0, 0) == -1) // end of move (send to map_print bin)
+		if (msgsnd(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext, 0) == -1) // end of move (send to map_print bin)
 			perr_exit("communicate msgsnd");
 		printf("communicate end\n");
-		// ! players has to played depending to their arrival in game and keep that order
+		// ! players has to played depending to their arrival in game
 	}
 }
 
