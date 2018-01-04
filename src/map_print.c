@@ -72,7 +72,10 @@ void	players_get(t_players *players, t_cell cells[MAP_LEN][MAP_LEN])
 		while (inc.j < MAP_LEN)
 		{
 			if (cells[inc.i][inc.j].team_id > 0)
-				players->pid = cells[inc.i][inc.j].pid;
+			{
+				players[inc.k].pid = cells[inc.i][inc.j].pid;
+				inc.k++;
+			}
 			inc.j++;
 		}
 		inc.i++;
@@ -113,7 +116,7 @@ void    player_move(t_gamedata *gdata, void *map_mem,
 	gdata->msgbuf.mtype = player_mtype;
 	if (msgsnd(gdata->msgq_id, &gdata->msgbuf, 0, 0) == -1)
 		perr_exit("player_move msgsnd");
-	printf("sendmsg to [%lu]\n", gdata->msgbuf.mtype);
+	printf("sendmsg to [%lu] {%u}\n", gdata->msgbuf.mtype, gdata->players[i].pid);
 	if (msgrcv(gdata->msgq_id, &gdata->msgbuf, 0, player_mtype, 0) == -1)
 		perr_exit("player_move msgrcv");
 	gdata->players[i].played = 1;
@@ -126,7 +129,6 @@ void    game_init(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 	char            enter[8];
 	t_gamedata		gdata;
 
-	(void)map_mem;
 	// list of all players to know which player to play
 	read(0, enter, sizeof enter);
 	if (enter[0] == '\n') {

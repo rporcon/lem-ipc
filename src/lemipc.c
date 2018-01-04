@@ -46,13 +46,13 @@ void	communicate()
 	pid = getpid();
 	while (1)
 	{
-		printf("communicate waiting msg [%lu]\n", (long)INT_MAX + pid);
+		printf("communicate waiting msg [%lu] {%u}\n", (long)INT_MAX + pid, pid);
 		if (msgrcv(g_data.msgq_id, &msgbuf, 0, (long)INT_MAX + pid, 0) == -1)
 			perr_exit("communicate msgrcv");
 		printf("communicate begin\n");
 		map_fill();
 		move_player(pid);
-		msgbuf.mtype = INT_MAX + pid;
+		msgbuf.mtype = (long)INT_MAX + pid;
 		if (msgsnd(g_data.msgq_id, &msgbuf, 0, 0) == -1) // end of move (send to map_print bin)
 			perr_exit("communicate msgsnd");
 		printf("communicate end\n");
