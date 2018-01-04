@@ -163,6 +163,8 @@ int     main()
 	t_cell  cells[MAP_LEN][MAP_LEN];
 	t_cell  cells_tmp[MAP_LEN][MAP_LEN];
 
+	// remove struct players and add played in t_cells in shm instead
+	// must be able to close and reopen graphic client and see the same map
 	// step by step mode / no step by step mode
 	// (pass throug player played msgq (INT_MAX + PID) smth
 	// 		to indicate to not waiting on step by step msgq
