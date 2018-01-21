@@ -114,9 +114,11 @@ void    player_move(t_gamedata *gdata, void *map_mem,
 		i++;
 	player_mtype = (long)INT_MAX + gdata->players[i].pid;
 	gdata->msgbuf.mtype = player_mtype;
+	// send msg when every players have played
 	if (msgsnd(gdata->msgq_id, &gdata->msgbuf, sizeof gdata->msgbuf.mtext, 0) == -1)
 		perr_exit("player_move msgsnd");
 	printf("sendmsg to [%lu] {%u}\n", gdata->msgbuf.mtype, gdata->players[i].pid);
+	// waiting every players to have played
 	if (msgrcv(gdata->msgq_id, &gdata->msgbuf, sizeof gdata->msgbuf.mtext, player_mtype, 0) == -1)
 		perr_exit("player_move msgrcv");
 	/* gdata->players[i].played = 1; set played lemipc side map must be independant */

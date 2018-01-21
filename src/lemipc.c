@@ -55,6 +55,7 @@ void	communicate()
 		map_fill();
 		move_player(pid);
 		msgbuf.mtype = (long)INT_MAX + pid;
+		// send when every players has played
 		if (msgsnd(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext, 0) == -1) // end of move (send to map_print bin)
 			perr_exit("communicate msgsnd");
 		printf("communicate end\n");

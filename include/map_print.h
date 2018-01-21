@@ -4,7 +4,7 @@
 #include "map.h"
 
 typedef struct	s_players {
-	uint8_t		played;
+	/* uint8_t		played; */
 	uint32_t	pid;
 }				t_players;
 
