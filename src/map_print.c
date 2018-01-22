@@ -103,25 +103,20 @@ uint32_t	players_getnb(t_cell cells[MAP_LEN][MAP_LEN])
 	return (players_nb);
 }
 
-void    player_move(t_gamedata *gdata, void *map_mem,
+void    players_move(t_gamedata *gdata, void *map_mem,
 			t_cell cells[MAP_LEN][MAP_LEN])
 {
-	int		i;
 	long	player_mtype;
 
-	i = 0;
-	while (gdata->players[i].pid != 0 && gdata->players[i].played == 1)
-		i++;
-	player_mtype = (long)INT_MAX + gdata->players[i].pid;
+	player_mtype = (long)INT_MAX + gdata->players[0].pid;
 	gdata->msgbuf.mtype = player_mtype;
 	// send msg when every players have played
 	if (msgsnd(gdata->msgq_id, &gdata->msgbuf, sizeof gdata->msgbuf.mtext, 0) == -1)
-		perr_exit("player_move msgsnd");
-	printf("sendmsg to [%lu] {%u}\n", gdata->msgbuf.mtype, gdata->players[i].pid);
+		perr_exit("players_move msgsnd");
+	printf("sendmsg to [%lu] {%u}\n", gdata->msgbuf.mtype, gdata->players[0].pid);
 	// waiting every players to have played
 	if (msgrcv(gdata->msgq_id, &gdata->msgbuf, sizeof gdata->msgbuf.mtext, player_mtype, 0) == -1)
-		perr_exit("player_move msgrcv");
-	/* gdata->players[i].played = 1; set played lemipc side map must be independant */
+		perr_exit("players_move msgrcv");
 	map_fill(map_mem, cells);
 	map_print(cells, 0);
 }
@@ -151,7 +146,9 @@ void    game_init(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 			ft_memset(enter, 0, sizeof enter);
 			fgets(enter, sizeof enter, stdin);
 			if (enter[0] == '\n')
-				player_move(&gdata, map_mem, cells);
+				players_move(&gdata, map_mem, cells);
+			gdata.players_nb = players_getnb(cells);
+			players_get(gdata.players, cells);
 			// send msg on pid that need to be played (msg_id = MAX_INT + pid())
 			// then tick player has been played
 			// receive msg on same pid, it mean process has played (reprint map)

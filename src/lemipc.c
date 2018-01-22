@@ -7,10 +7,16 @@ void	move_player(pid_t pid)
 	t_cell		*current_cell;
 
 	map_currentcell(pid, &current_cell);
-	if (teamleader_exist() == 0)
+	if (teamleader_exist() == 0) {
+		printf("pid: %d is team leader\n", (*current_cell).pid);
 	 	(*current_cell).team_leader = 1;
+	}
 	if ((*current_cell).ennemy_set == 0 && (*current_cell).team_leader == 1)
 	{
+		printf("communicate begin\n");
+		if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
+				(long)INT_MAX + pid, 0) == -1)
+			perr_exit("communicate msgrcv");
 		/* func to determine ennemy_pid */
 		// set ennemy_pid once at beggining and when target change
 		/* (*current_cell).ennemy_pid = ennemy_pid; */
@@ -46,12 +52,8 @@ void	communicate()
 	pid = getpid();
 	while (1)
 	{
-		printf("communicate waiting msg [%lu] {%u}\n", (long)INT_MAX + pid, pid);
+		printf("communicate waiting msg [%lu], pid: {%u}\n", (long)INT_MAX + pid, pid);
 		sleep(1);
-		if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
-				(long)INT_MAX + pid, 0) == -1)
-			perr_exit("communicate msgrcv");
-		printf("communicate begin\n");
 		map_fill();
 		move_player(pid);
 		msgbuf.mtype = (long)INT_MAX + pid;
