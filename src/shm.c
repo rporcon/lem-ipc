@@ -124,12 +124,9 @@ void	map_currentcell(pid_t pid, t_cell **current_cell)
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
-			printf("pid: %d, tl: %d\n", g_data.cells[inc.i][inc.j].pid,
-					g_data.cells[inc.i][inc.j].team_leader);
 			if (pid == g_data.cells[inc.i][inc.j].pid)
 			{
 				*current_cell = &g_data.cells[inc.i][inc.j];
-				g_data.cells[inc.i][inc.j].team_leader = 1;
 				return ;
 			}
 			inc.j++;

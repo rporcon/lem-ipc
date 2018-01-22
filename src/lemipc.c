@@ -10,6 +10,7 @@ void	move_player(pid_t pid)
 	if (teamleader_exist() == 0) {
 		printf("pid: %d is team leader\n", (*current_cell).pid);
 	 	(*current_cell).team_leader = 1;
+		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 	}
 	if ((*current_cell).ennemy_set == 0 && (*current_cell).team_leader == 1)
 	{
