@@ -2,7 +2,7 @@
 
 void    map_get(void **map_mem)
 {
-    int     fd;
+	int     fd;
 
 	while (1)
 	{
@@ -109,6 +109,7 @@ void    players_move(t_gamedata *gdata, void *map_mem,
 	long	player_mtype;
 
 	player_mtype = (long)INT_MAX + gdata->players[0].pid;
+	printf("Sending message to team leader %d\n", gdata->players[0].pid);
 	gdata->msgbuf.mtype = player_mtype;
 	// send msg when every players have played
 	if (msgsnd(gdata->msgq_id, &gdata->msgbuf, sizeof gdata->msgbuf.mtext, 0) == -1)
