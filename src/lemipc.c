@@ -13,15 +13,11 @@ void	move_player(pid_t pid)
 	}
 	if ((*current_cell).ennemy_set == 0 && (*current_cell).team_leader == 1)
 	{
-		printf("[team leader], rcv on: [%lu], pid: {%u}\n", (long)INT_MAX + pid, pid);
-		if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
-				(long)INT_MAX + pid, 0) == -1)
-			perr_exit("communicate msgrcv");
-		printf("team leader received msg\n");
 		/* func to determine ennemy_pid */
 		// set ennemy_pid once at beggining and when target change
 		/* (*current_cell).ennemy_pid = ennemy_pid; */
 		(*current_cell).ennemy_set = 1;
+		printf("[team leader]  pid: {%d} send ennemy\n", pid);
 		// send ennemy target to same team player
 		send_target();
 	}
@@ -30,7 +26,7 @@ void	move_player(pid_t pid)
 		printf("[non team leader], rcv on: [%lu], pid: {%u}\n", (long)INT_MAX + pid, pid);
 		if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
 				g_data.team_id, 0) == -1)
-			perr_exit("communicate msgrcv");
+			perr_exit("move_player msgrcv");
 		(*current_cell).ennemy = ft_atoi(msgbuf.mtext);
 		printf("received ennemy: %d\n", (*current_cell).ennemy);
 		(*current_cell).ennemy_set = 1;
@@ -55,13 +51,16 @@ void	communicate()
 	{
 		sleep(1);
 		map_fill();
+		// if every player has played (played arg in g_ struc) or first turn
+		//
+		if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
+				INT_MAX, 0) == -1)
+			perr_exit("communicate msgrcv");
 		move_player(pid);
-		msgbuf.mtype = (long)INT_MAX + pid;
+		/* msgbuf.mtype = (long)INT_MAX + pid; */
 		// send when every players has played
-		if (msgsnd(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext, 0) == -1) // end of move (send to map_print bin)
-			perr_exit("communicate msgsnd");
-		printf("communicate end\n");
-		// ! players has to played depending to their arrival in game
+		/* if (msgsnd(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext, 0) == -1) // end of move (send to map_print bin) */
+		/* 	perr_exit("communicate msgsnd"); */
 	}
 }
 

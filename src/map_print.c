@@ -106,17 +106,16 @@ uint32_t	players_getnb(t_cell cells[MAP_LEN][MAP_LEN])
 void    players_move(t_gamedata *gdata, void *map_mem,
 			t_cell cells[MAP_LEN][MAP_LEN])
 {
-	long	player_mtype;
-
-	player_mtype = (long)INT_MAX + gdata->players[0].pid;
 	printf("Sending message to team leader %d\n", gdata->players[0].pid);
-	gdata->msgbuf.mtype = player_mtype;
+	gdata->msgbuf.mtype = (long)INT_MAX;
 	// send msg when every players have played
+	// forget sending message to team leader
 	if (msgsnd(gdata->msgq_id, &gdata->msgbuf, sizeof gdata->msgbuf.mtext, 0) == -1)
 		perr_exit("players_move msgsnd");
-	printf("sendmsg to [%lu] {%u}\n", gdata->msgbuf.mtype, gdata->players[0].pid);
+	printf("sendmsg to first player to played\n");
 	// waiting every players to have played
-	if (msgrcv(gdata->msgq_id, &gdata->msgbuf, sizeof gdata->msgbuf.mtext, player_mtype, 0) == -1)
+	if (msgrcv(gdata->msgq_id, &gdata->msgbuf, sizeof gdata->msgbuf.mtext,
+				gdata->msgbuf.mtype, 0) == -1)
 		perr_exit("players_move msgrcv");
 	map_fill(map_mem, cells);
 	map_print(cells, 0);
