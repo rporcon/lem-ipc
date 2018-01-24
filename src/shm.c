@@ -84,9 +84,6 @@ int		teamleader_exist()
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
-			printf("team_leader: %d, pid: %u\n",
-				g_data.cells[inc.i][inc.j].team_leader,
-				g_data.cells[inc.i][inc.j].pid);
 			if (g_data.cells[inc.i][inc.j].team_id == g_data.team_id
 					&& g_data.cells[inc.i][inc.j].team_leader == 1)
 				return (1);

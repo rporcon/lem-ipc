@@ -1,6 +1,28 @@
 #include "lemipc.h"
 t_data	g_data;
 
+int		print_cells()
+{
+	t_inc			inc;
+
+	ft_memset(&inc, 0, sizeof inc);
+	while (inc.i < MAP_LEN)
+	{
+		inc.j = 0;
+		while (inc.j < MAP_LEN)
+		{
+			printf("[%zu][%zu] pid: %u, team_leader: %d\n",
+				inc.i, inc.j,
+				g_data.cells[inc.i][inc.j].team_leader,
+				g_data.cells[inc.i][inc.j].pid);
+			inc.j++;
+			inc.k++;
+		}
+		inc.i++;
+	}
+	return (0);
+}
+
 void	move_player(pid_t pid)
 {
 	t_msgbuf	msgbuf;
@@ -11,17 +33,26 @@ void	move_player(pid_t pid)
 	if (teamleader_exist() == 0) {
 	 	(*current_cell).team_leader = 1;
 		printf("team leader\n");
+		/* ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE); */
+		//
+		map_fill();
+		print_cells();
+		printf("print_cells\n");
+		g_data.cells[0][0].played = 1;
+		g_data.cells[0][0].pid = 4242;
 		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
+		//
 	}
 	if ((*current_cell).ennemy_set == 0 && (*current_cell).team_leader == 1)
 	{
 		/* func to determine ennemy_pid */
 		// set ennemy_pid once at beggining and when target change
 		/* (*current_cell).ennemy_pid = ennemy_pid; */
-		while (playersPlayedNb() == 0) {
-			ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
+		/* while (playersPlayedNb() == 0) { */
+		/* 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE); */
 			sleep(1);
-		}
+		/* } */
+		sleep(1);
 		(*current_cell).ennemy_set = 1;
 		printf("[team leader]  pid: {%d} send ennemy\n", pid);
 		// send ennemy target to same team player
@@ -38,7 +69,6 @@ void	move_player(pid_t pid)
 		(*current_cell).ennemy_set = 1;
 	}
 	// test
-	assert(teamleader_exist() == 1);
 	printf("set player\n");
 	// clear old pos
 	/* ft_memset(current_cell, 0, sizeof *current_cell); */
@@ -75,7 +105,7 @@ void	communicate()
 			printf("msgsnd end of turn");
 			playersResetPlayed();
 		}
-		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
+		/* ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE); */
 	}
 }
 
