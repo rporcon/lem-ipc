@@ -19,6 +19,7 @@ typedef struct	s_cell {
 	uint32_t	ennemy; // pid
 	uint8_t		team_leader; // process that will sent target to other
 	uint8_t		ennemy_set;
+	/* uint8_t		first; */
 	uint8_t		played;	
 }				t_cell;
 

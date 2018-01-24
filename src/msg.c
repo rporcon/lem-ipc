@@ -27,7 +27,7 @@ void	send_target()
 			{
 				msgbuf.mtype = g_data.team_id;
 				ft_strcpy(msgbuf.mtext, "442"); // normally ennemy_pid
-				printf("Send ennemy to: %d\n", g_data.team_id);
+				printf("Send ennemy to: %d team players\n", g_data.team_id);
 				if (msgsnd(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext, 0) == -1)
 					perr_exit("send_target msgsnd");
 			}

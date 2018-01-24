@@ -84,6 +84,9 @@ int		teamleader_exist()
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
+			printf("team_leader: %d, pid: %u\n",
+				g_data.cells[inc.i][inc.j].team_leader,
+				g_data.cells[inc.i][inc.j].pid);
 			if (g_data.cells[inc.i][inc.j].team_id == g_data.team_id
 					&& g_data.cells[inc.i][inc.j].team_leader == 1)
 				return (1);
@@ -93,6 +96,73 @@ int		teamleader_exist()
 		inc.i++;
 	}
 	return (0);
+}
+
+int 	playersPlayed()
+{
+	t_inc	inc;
+
+	ft_memset(&inc, 0, sizeof inc);
+	while (inc.i < MAP_LEN)
+	{
+		inc.j = 0;
+		while (inc.j < MAP_LEN)
+		{
+			if (g_data.cells[inc.i][inc.j].team_id > 0 &&
+					g_data.cells[inc.i][inc.j].played == 1)
+				return (0);
+			inc.j++;
+			inc.k++;
+		}
+		inc.i++;
+	}
+	printf("Played !\n");
+	return (1);
+}
+
+void 	playersResetPlayed()
+{
+	t_inc	inc;
+	size_t 	nb;
+
+	ft_memset(&inc, 0, sizeof inc);
+	nb = 0;
+	while (inc.i < MAP_LEN)
+	{
+		inc.j = 0;
+		while (inc.j < MAP_LEN)
+		{
+			if (g_data.cells[inc.i][inc.j].team_id > 0 &&
+					g_data.cells[inc.i][inc.j].played == 1)
+				g_data.cells[inc.i][inc.j].played = 0;
+			inc.j++;
+			inc.k++;
+		}
+		inc.i++;
+	}
+}
+
+size_t	playersPlayedNb()
+{
+	t_inc	inc;
+	size_t 	nb;
+
+	ft_memset(&inc, 0, sizeof inc);
+	nb = 0;
+	while (inc.i < MAP_LEN)
+	{
+		inc.j = 0;
+		while (inc.j < MAP_LEN)
+		{
+			if (g_data.cells[inc.i][inc.j].team_id > 0 &&
+					g_data.cells[inc.i][inc.j].played == 1)
+				nb++;
+			inc.j++;
+			inc.k++;
+		}
+		inc.i++;
+	}
+	return (nb);
 }
 
 void	map_addplayer()
@@ -109,6 +179,7 @@ void	map_addplayer()
 	// determine team_leader before launching game
 	g_data.cells[coords.x][coords.y].team_id = g_data.team_id;
 	g_data.cells[coords.x][coords.y].pid = getpid();
+	g_data.cells[coords.x][coords.y].played = 1;
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
     if (sem_post(g_data.sem) == -1)
         perr_exit("map_addplayer sem_post");

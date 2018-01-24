@@ -2,6 +2,7 @@
 # define LEMIPC_H
 
 #include "map.h"
+#include <assert.h>
 
 typedef struct	s_data {
 	uint32_t	team_id;
@@ -19,9 +20,12 @@ void	map_init();
 void	map_fill();
 void	map_addplayer();
 void	map_get();
+int 	playersPlayed();
+size_t	playersPlayedNb();
 void	msgq_getid();
 int		teamleader_exist();
 void	ressources_erase();
+void 	playersResetPlayed();
 void	map_currentcell(pid_t pid, t_cell **current_cell);
 void	send_target();
 
