@@ -4,22 +4,33 @@ t_data	g_data;
 uint32_t	enemy_chr(t_cell current_cell)
 {
 	t_inc			inc;
+	uint32_t 		enemy_pid;
 
+	/* inc.i = current_cell.x; */
+	/* inc.j = current_cell.y; */
+	enemy_pid = 0;
 	ft_memset(&inc, 0, sizeof inc);
 	while (inc.i < MAP_LEN)
 	{
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
-			if (cells[inc.i][inc.j].team_id > 0)
+			if (g_data.cells[inc.i][inc.j].team_id != current_cell.team_id
+					&& g_data.cells[inc.i][inc.j].val == 0)
 			{
-				players[inc.k].pid = cells[inc.i][inc.j].pid;
-				inc.k++;
+				// end condition (return coord of enemy)
+				// or make a func to return coord of pid
+				if (g_data.cells[inc.i][inc.j].team_id > 0)
+					return (g_data.cells[inc.i][inc.j].pid);
+				g_data.cells[inc.i][inc.j].val = abs((int)(current_cell.x -
+					g_data.cells[inc.i][inc.j].x)) + abs((int)(current_cell.y -
+					g_data.cells[inc.i][inc.j].y));
 			}
 			inc.j++;
 		}
 		inc.i++;
 	}
+	return (enemy_pid);
 }
 
 void	move_player(pid_t pid)
@@ -32,6 +43,11 @@ void	move_player(pid_t pid)
 	if (teamleader_exist() == 0) {
 	 	(*current_cell).team_leader = 1;
 		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
+		//
+		enemy_chr(*current_cell);
+		print_cells();
+		raise(SIGINT);
+		//
 	}
 	if ((*current_cell).ennemy_set == 0 && (*current_cell).team_leader == 1)
 	{
@@ -54,8 +70,8 @@ void	move_player(pid_t pid)
 		if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
 				g_data.team_id, 0) == -1)
 			perr_exit("move_player msgrcv");
-		(*current_cell).ennemy = ft_atoi(msgbuf.mtext);
-		printf("received ennemy: %d\n", (*current_cell).ennemy);
+		(*current_cell).enemy_pid = ft_atoi(msgbuf.mtext);
+		printf("received ennemy: %d\n", (*current_cell).enemy_pid);
 		(*current_cell).ennemy_set = 1;
 	}
 	// test

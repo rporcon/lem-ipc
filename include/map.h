@@ -18,11 +18,11 @@ typedef struct	s_cell {
 	pid_t		pid;
 	size_t		x;
 	size_t		y;
-	uint32_t	ennemy; // pid
-	uint8_t		team_leader; // process that will sent target to other
-	uint8_t		ennemy_set;
-	/* uint8_t		first; */
-	uint8_t		played;	
+	uint32_t	enemy_pid;
+	uint64_t	val;
+	uint8_t		team_leader:1; // process that will sent target to other
+	uint8_t		ennemy_set:1;
+	uint8_t		played:1;	
 }				t_cell;
 
 typedef struct	s_msgbuf {

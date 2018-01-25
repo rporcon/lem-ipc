@@ -33,10 +33,10 @@ int		print_cells()
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
-			printf("[%zu][%zu] pid: %u, team_leader: %d\n",
-				inc.i, inc.j,
-				g_data.cells[inc.i][inc.j].team_leader,
-				g_data.cells[inc.i][inc.j].pid);
+			printf("[%zu][%zu] pid: %u, team_leader: %d, value: %llu\n",
+				inc.i, inc.j, g_data.cells[inc.i][inc.j].team_leader,
+				g_data.cells[inc.i][inc.j].pid,
+				g_data.cells[inc.i][inc.j].val);
 			inc.j++;
 			inc.k++;
 		}
