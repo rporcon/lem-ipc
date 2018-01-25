@@ -1,7 +1,7 @@
 #include "lemipc.h"
 t_data	g_data;
 
-int		print_cells()
+uint32_t	enemy_chr(t_cell current_cell)
 {
 	t_inc			inc;
 
@@ -11,16 +11,15 @@ int		print_cells()
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
-			printf("[%zu][%zu] pid: %u, team_leader: %d\n",
-				inc.i, inc.j,
-				g_data.cells[inc.i][inc.j].team_leader,
-				g_data.cells[inc.i][inc.j].pid);
+			if (cells[inc.i][inc.j].team_id > 0)
+			{
+				players[inc.k].pid = cells[inc.i][inc.j].pid;
+				inc.k++;
+			}
 			inc.j++;
-			inc.k++;
 		}
 		inc.i++;
 	}
-	return (0);
 }
 
 void	move_player(pid_t pid)
@@ -32,29 +31,20 @@ void	move_player(pid_t pid)
 	map_currentcell(pid, &current_cell);
 	if (teamleader_exist() == 0) {
 	 	(*current_cell).team_leader = 1;
-		printf("team leader\n");
-		/* ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE); */
-		//
-		map_fill();
-		print_cells();
-		printf("print_cells\n");
-		g_data.cells[0][0].played = 1;
-		g_data.cells[0][0].pid = 4242;
 		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
-		//
 	}
 	if ((*current_cell).ennemy_set == 0 && (*current_cell).team_leader == 1)
 	{
 		/* func to determine ennemy_pid */
 		// set ennemy_pid once at beggining and when target change
 		/* (*current_cell).ennemy_pid = ennemy_pid; */
-		/* while (playersPlayedNb() == 0) { */
-		/* 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE); */
+		while (playersPlayedNb() == 0) {
+			ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 			sleep(1);
-		/* } */
-		sleep(1);
+		}
 		(*current_cell).ennemy_set = 1;
-		printf("[team leader]  pid: {%d} send ennemy\n", pid);
+		printf("[team leader %d]  pid: {%d} send ennemy\n",
+			g_data.team_id, pid);
 		// send ennemy target to same team player
 		send_target();
 	}
@@ -75,6 +65,7 @@ void	move_player(pid_t pid)
 	// func to move player depending to ennemy_pid instead of below
 	g_data.cells[4][5].team_id = 42;
 	g_data.cells[4][5].played = 1;
+	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 	//
 }
 
@@ -89,11 +80,10 @@ void	communicate()
 	while (1)
 	{
 		sleep(1);
-		map_fill();
 		if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
 				(long)INT_MAX + pid, 0) == -1)
 			perr_exit("communicate msgrcv");
-		printf("my turn\n");
+		map_fill();
 		move_player(pid);
 		// if first player has played
 		// send when every players has played
@@ -105,7 +95,6 @@ void	communicate()
 			printf("msgsnd end of turn");
 			playersResetPlayed();
 		}
-		/* ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE); */
 	}
 }
 

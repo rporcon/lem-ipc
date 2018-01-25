@@ -23,6 +23,28 @@ void	map_init()
 	}
 }
 
+int		print_cells()
+{
+	t_inc			inc;
+
+	ft_memset(&inc, 0, sizeof inc);
+	while (inc.i < MAP_LEN)
+	{
+		inc.j = 0;
+		while (inc.j < MAP_LEN)
+		{
+			printf("[%zu][%zu] pid: %u, team_leader: %d\n",
+				inc.i, inc.j,
+				g_data.cells[inc.i][inc.j].team_leader,
+				g_data.cells[inc.i][inc.j].pid);
+			inc.j++;
+			inc.k++;
+		}
+		inc.i++;
+	}
+	return (0);
+}
+
 void	map_get()
 {
 	int		fd;
@@ -177,6 +199,9 @@ void	map_addplayer()
 	g_data.cells[coords.x][coords.y].team_id = g_data.team_id;
 	g_data.cells[coords.x][coords.y].pid = getpid();
 	g_data.cells[coords.x][coords.y].played = 1;
+	g_data.cells[coords.x][coords.y].x = coords.x;
+	g_data.cells[coords.x][coords.y].y = coords.y;
+	
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
     if (sem_post(g_data.sem) == -1)
         perr_exit("map_addplayer sem_post");
@@ -215,6 +240,8 @@ void	map_fill()
 		while (inc.j < MAP_LEN)
 		{
 			g_data.cells[inc.i][inc.j] = ((t_cell *)g_data.map_mem)[inc.k];
+			g_data.cells[inc.i][inc.j].x = inc.i;
+			g_data.cells[inc.i][inc.j].y = inc.j;
 			inc.j++;
 			inc.k++;
 		}

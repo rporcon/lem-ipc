@@ -16,6 +16,8 @@
 typedef struct	s_cell {
 	uint32_t	team_id;
 	pid_t		pid;
+	size_t		x;
+	size_t		y;
 	uint32_t	ennemy; // pid
 	uint8_t		team_leader; // process that will sent target to other
 	uint8_t		ennemy_set;

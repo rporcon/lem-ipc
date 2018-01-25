@@ -12,6 +12,12 @@ typedef struct	s_data {
 	int			msgq_id;
 }				t_data;
 
+typedef struct	s_enemy {
+	uint32_t	x;
+	uint32_t	y;
+	uint32_t	pid;
+}				t_enemy;
+
 extern t_data	g_data;
 
 void	get_args(int ac, char **av);
@@ -20,6 +26,7 @@ void	map_init();
 void	map_fill();
 void	map_addplayer();
 void	map_get();
+int		print_cells();
 int 	playersPlayed();
 size_t	playersPlayedNb();
 void	msgq_getid();
