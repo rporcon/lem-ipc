@@ -1,13 +1,9 @@
 #include "lemipc.h"
 t_data	g_data;
 
-t_cell	enemy_chr(t_cell current_cell)
+void 	fill_enemies(t_cell enemies[ENEMY_SIZE], t_cell current_cell,
+			uint64_t *enemy_nb, t_inc inc)
 {
-	t_inc			inc;
-	t_cell			enemies[MAP_SIZE / 2];
-
-	ft_memset(&inc, 0, sizeof inc);
-	ft_memset(&enemies, 0, sizeof enemies);
 	while (inc.i < MAP_LEN)
 	{
 		inc.j = 0;
@@ -16,7 +12,8 @@ t_cell	enemy_chr(t_cell current_cell)
 			if (g_data.cells[inc.i][inc.j].team_id != current_cell.team_id
 					&& g_data.cells[inc.i][inc.j].val == 0)
 			{
-				if (g_data.cells[inc.i][inc.j].team_id > 0) {
+				if (g_data.cells[inc.i][inc.j].team_id > 0)
+				{
 					enemies[inc.k] = g_data.cells[inc.i][inc.j];
 					inc.k++;
 				}
@@ -28,10 +25,27 @@ t_cell	enemy_chr(t_cell current_cell)
 		}
 		inc.i++;
 	}
-	for (unsigned long i = 0; enemies[i].pid != 0; i++) {
-		printf("enemy, pid: %d\n", enemies[i].pid);
+	*enemy_nb = inc.k;
+}
+
+t_cell	enemy_chr(t_cell current_cell)
+{
+	t_cell			enemies[ENEMY_SIZE];
+	t_cell			enemy;
+	uint64_t		enemy_nb;
+	t_inc 			inc;
+
+	ft_memset(&enemies, 0, sizeof enemies);
+	ft_memset(&inc, 0, sizeof inc);
+	fill_enemies(enemies, current_cell, &enemy_nb, inc);
+	assert(enemy_nb > 0);
+	enemy = enemies[0];
+	for (inc.k = 1; inc.k < enemy_nb; inc.k++) {
+		if (enemies[inc.k].val > enemy.val)
+			enemy = enemies[inc.k];
 	}
-	return (enemies[inc.k]);
+	printf("common enemy is: %d\n", enemy.pid);
+	return (enemy);
 }
 
 void	move_player(pid_t pid)
@@ -47,7 +61,7 @@ void	move_player(pid_t pid)
 		//
 		enemy_chr(*current_cell);
 		/* print_cells(); */
-		raise(SIGINT);
+		/* raise(SIGINT); */
 		//
 	}
 	if ((*current_cell).ennemy_set == 0 && (*current_cell).team_leader == 1)

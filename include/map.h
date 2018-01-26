@@ -12,6 +12,7 @@
 
 # define MAP_LEN 8
 # define MAP_SIZE sizeof (t_cell) * (MAP_LEN * MAP_LEN)
+# define ENEMY_SIZE MAP_SIZE / 2
 
 typedef struct	s_cell {
 	uint32_t	team_id;
