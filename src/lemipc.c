@@ -2,7 +2,7 @@
 t_data	g_data;
 
 void 	fill_enemies(t_cell enemies[ENEMY_SIZE], t_cell current_cell,
-			uint64_t *enemy_nb, t_inc inc)
+			uint32_t *enemy_nb, t_inc inc)
 {
 	while (inc.i < MAP_LEN)
 	{
@@ -28,11 +28,11 @@ void 	fill_enemies(t_cell enemies[ENEMY_SIZE], t_cell current_cell,
 	*enemy_nb = inc.k;
 }
 
-t_cell	enemy_chr(t_cell current_cell)
+t_cell	*enemy_chr(t_cell current_cell)
 {
 	t_cell			enemies[ENEMY_SIZE];
 	t_cell			enemy;
-	uint64_t		enemy_nb;
+	uint32_t		enemy_nb;
 	t_inc 			inc;
 
 	ft_memset(&enemies, 0, sizeof enemies);
@@ -58,21 +58,15 @@ void	move_player(pid_t pid)
 	if (teamleader_exist() == 0) {
 	 	(*current_cell).team_leader = 1;
 		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
-		//
-		enemy_chr(*current_cell);
-		/* print_cells(); */
-		/* raise(SIGINT); */
-		//
 	}
 	if ((*current_cell).ennemy_set == 0 && (*current_cell).team_leader == 1)
 	{
-		/* func to determine ennemy_pid */
 		// set ennemy_pid once at beggining and when target change
-		/* (*current_cell).ennemy_pid = ennemy_pid; */
 		while (playersPlayedNb() == 0) {
 			ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 			sleep(1);
 		}
+		(*current_cell).enemy = enemy_chr(*current_cell);
 		(*current_cell).ennemy_set = 1;
 		printf("[team leader %d]  pid: {%d} send ennemy\n",
 			g_data.team_id, pid);
