@@ -1,15 +1,13 @@
 #include "lemipc.h"
 t_data	g_data;
 
-uint32_t	enemy_chr(t_cell current_cell)
+t_cell	enemy_chr(t_cell current_cell)
 {
 	t_inc			inc;
-	uint32_t 		enemy_pid;
+	t_cell			enemies[MAP_SIZE / 2];
 
-	/* inc.i = current_cell.x; */
-	/* inc.j = current_cell.y; */
-	enemy_pid = 0;
 	ft_memset(&inc, 0, sizeof inc);
+	ft_memset(&enemies, 0, sizeof enemies);
 	while (inc.i < MAP_LEN)
 	{
 		inc.j = 0;
@@ -18,10 +16,10 @@ uint32_t	enemy_chr(t_cell current_cell)
 			if (g_data.cells[inc.i][inc.j].team_id != current_cell.team_id
 					&& g_data.cells[inc.i][inc.j].val == 0)
 			{
-				// end condition (return coord of enemy)
-				// or make a func to return coord of pid
-				if (g_data.cells[inc.i][inc.j].team_id > 0)
-					return (g_data.cells[inc.i][inc.j].pid);
+				if (g_data.cells[inc.i][inc.j].team_id > 0) {
+					enemies[inc.k] = g_data.cells[inc.i][inc.j];
+					inc.k++;
+				}
 				g_data.cells[inc.i][inc.j].val = abs((int)(current_cell.x -
 					g_data.cells[inc.i][inc.j].x)) + abs((int)(current_cell.y -
 					g_data.cells[inc.i][inc.j].y));
@@ -30,7 +28,10 @@ uint32_t	enemy_chr(t_cell current_cell)
 		}
 		inc.i++;
 	}
-	return (enemy_pid);
+	for (unsigned long i = 0; enemies[i].pid != 0; i++) {
+		printf("enemy, pid: %d\n", enemies[i].pid);
+	}
+	return (enemies[inc.k]);
 }
 
 void	move_player(pid_t pid)
@@ -45,7 +46,7 @@ void	move_player(pid_t pid)
 		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 		//
 		enemy_chr(*current_cell);
-		print_cells();
+		/* print_cells(); */
 		raise(SIGINT);
 		//
 	}
@@ -93,6 +94,7 @@ void	communicate()
 	ft_memset(&msgbuf, 0, sizeof msgbuf);
 	msgq_getid();
 	pid = getpid();
+	printf("pid: %u\n", pid);
 	while (1)
 	{
 		sleep(1);
