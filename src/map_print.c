@@ -106,7 +106,9 @@ uint32_t	players_getnb(t_cell cells[MAP_LEN][MAP_LEN])
 void    players_move(t_gamedata *gdata, void *map_mem,
 			t_cell cells[MAP_LEN][MAP_LEN])
 {
-	size_t 	i = 0;
+	size_t 	i;
+	
+	i = 0;
 	while (i < players_getnb(cells)) {
 		gdata->msgbuf.mtype = (long)INT_MAX + gdata->players[i].pid;
 		if (msgsnd(gdata->msgq_id, &gdata->msgbuf, sizeof gdata->msgbuf.mtext, 0) == -1)
@@ -120,6 +122,7 @@ void    players_move(t_gamedata *gdata, void *map_mem,
 	if (msgrcv(gdata->msgq_id, &gdata->msgbuf, sizeof gdata->msgbuf.mtext,
 				gdata->msgbuf.mtype, 0) == -1)
 		perr_exit("players_move msgrcv");
+	printf("turn finished\n");
 	map_fill(map_mem, cells);
 	map_print(cells, 0);
 }
@@ -152,9 +155,6 @@ void    game_init(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 				players_move(&gdata, map_mem, cells);
 			gdata.players_nb = players_getnb(cells);
 			players_get(gdata.players, cells);
-			// send msg on pid that need to be played (msg_id = MAX_INT + pid())
-			// then tick player has been played
-			// receive msg on same pid, it mean process has played (reprint map)
 		}
 	}
 }
@@ -165,11 +165,7 @@ int     main()
 	t_cell  cells[MAP_LEN][MAP_LEN];
 	t_cell  cells_tmp[MAP_LEN][MAP_LEN];
 
-	// remove struct players and add played in t_cells in shm instead
 	// must be able to close and reopen graphic client and see the same map
-	// step by step mode / no step by step mode
-	// (pass throug player played msgq (INT_MAX + PID) smth
-	// 		to indicate to not waiting on step by step msgq
 	map_mem = NULL;
 	ft_memset(cells, 0, MAP_SIZE);
 	map_get(&map_mem);

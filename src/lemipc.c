@@ -75,21 +75,35 @@ t_cell 	nearestPosToEnemy(t_cell current)
 	t_cell 		newPos;
 	t_cell 		tmp;
 
-	ft_memset(&newPos, 0, sizeof newPos);
+	ft_memcpy(&newPos, &g_data.cells[current.x][current.y], sizeof newPos);
 	newPos.val = UINT64_MAX;
-
 	tmp = g_data.cells[current.x + 1][current.y];
-	if (current.x + 1 < MAP_LEN && tmp.team_id == 0 && newPos.val > tmp.val)
-		newPos = g_data.cells[current.x + 1][current.y];
+	// made a func set newPos / val
+	if (current.x + 1 < MAP_LEN && tmp.val != 0 && newPos.val > tmp.val)
+	{
+		newPos.val = tmp.val;
+		newPos.x = current.x + 1;
+	}
 	tmp = g_data.cells[current.x - 1][current.y];
-	if (current.x - 1 >= 0 && tmp.team_id == 0 && newPos.val > tmp.val)
-		newPos = tmp;
+	if (current.x - 1 >= 0 && tmp.val != 0 && newPos.val > tmp.val)
+	{
+		newPos.val = tmp.val;
+		newPos.x = current.x - 1;
+	}
 	tmp = g_data.cells[current.x][current.y + 1];
-	if (current.y + 1 < MAP_LEN && tmp.team_id == 0 && newPos.val > tmp.val)
-		newPos = tmp;
+	if (current.y + 1 < MAP_LEN && tmp.val != 0 && newPos.val > tmp.val)
+	{
+		newPos.val = tmp.val;
+		newPos.x = current.x;
+		newPos.y = current.y + 1;
+	}
 	tmp = g_data.cells[current.x][current.y - 1];
-	if (current.y - 1 >= 0 && tmp.team_id == 0 && newPos.val > tmp.val)
-		newPos = tmp;
+	if (current.y - 1 >= 0 && tmp.val != 0 && newPos.val > tmp.val)
+	{
+		newPos.val = tmp.val;
+		newPos.x = current.x;
+		newPos.y = current.y - 1;
+	}
 	return (newPos);
 }
 
@@ -107,6 +121,7 @@ t_cell 	moveToEnemy(t_cell current)
 			if (g_data.cells[inc.i][inc.j].team_id == 0
 					&& g_data.cells[inc.i][inc.j].val == 0)
 			{
+				/* printf("[%lld]\n", current.enemy->x); */
 				g_data.cells[inc.i][inc.j].val = abs((int)(current.enemy->x -
 					g_data.cells[inc.i][inc.j].x)) + abs((int)(
 					current.enemy->y - g_data.cells[inc.i][inc.j].y));
@@ -115,6 +130,7 @@ t_cell 	moveToEnemy(t_cell current)
 		}
 		inc.i++;
 	}
+	print_cells();
 	return (nearestPosToEnemy(current));
 }
 
@@ -124,7 +140,6 @@ void	move_player(pid_t pid)
 	t_cell		*current;
 	t_cell 		newPos;
 
-	// semaphore
 	map_currentcell(pid, &current);
 	if (teamleader_exist() == 0) {
 	 	(*current).team_leader = 1;
@@ -132,15 +147,14 @@ void	move_player(pid_t pid)
 	}
 	if ((*current).ennemy_set == 0 && (*current).team_leader == 1)
 	{
-		// set ennemy_pid once at beggining and when target change
 		while (playersPlayedNb() == 0) {
 			ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 			sleep(1);
 		}
 		(*current).enemy = enemy_chr(*current);
 		(*current).ennemy_set = 1;
-		printf("[team leader %d]  pid: {%d} send ennemy\n",
-			g_data.team_id, pid);
+		printf("[team leader] send ennemy[%lld][%lld]\n",
+			(*current).enemy->x, (*current).enemy->y);
 		// send ennemy target to same team player
 		send_target((*current).enemy);
 	}
@@ -150,16 +164,18 @@ void	move_player(pid_t pid)
 		if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
 				g_data.team_id, 0) == -1)
 			perr_exit("move_player msgrcv");
-		(*current).enemy = (t_cell *)msgbuf.mtext;
+		(*current).enemy = malloc(sizeof (t_cell));
+		ft_memcpy((*current).enemy, (void *)msgbuf.mtext, sizeof (t_cell));
 		printf("received ennemy: %d\n", (*current).enemy->pid);
 		(*current).ennemy_set = 1;
 	}
-	printf("set player\n");
-	ft_memset(current, 0, sizeof *current); // clear old pos
-	// func to move player depending to ennemy
-	newPos = moveToEnemy(*current);
-	g_data.cells[newPos.x][newPos.y] = newPos;
 	// if newPos.val == 1 current is next to enemy
+	// when enemy is cleared -> enemy_set = 0
+	newPos = moveToEnemy(*current);
+	printf("newPos: [%lld][%lld]\n", newPos.x, newPos.y);
+	g_data.cells[newPos.x][newPos.y] = newPos;
+	ft_memset(current, 0, sizeof *current); // clear old pos
+	g_data.cells[newPos.x][newPos.y].played = 1;
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 }
 
@@ -179,7 +195,12 @@ void	communicate()
 				(long)INT_MAX + pid, 0) == -1)
 			perr_exit("communicate msgrcv");
 		map_fill();
+		if (sem_wait(g_data.sem) == -1)
+			perr_exit("communicate sem_wait");
 		move_player(pid);
+		if (sem_post(g_data.sem) == -1)
+			perr_exit("communicate sem_post");
+
 		// if first player has played
 		// send when every players has played
 		if (playersPlayed() == 1) {
@@ -204,6 +225,7 @@ int		main(int ac, char **av)
 				 // handle too much processus error case
 	map_get();
 	map_fill();
+	// error if player on case already exist
 	map_addplayer();
 
 	communicate();
