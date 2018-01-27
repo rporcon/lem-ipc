@@ -70,24 +70,26 @@ t_cell	*enemy_chr(t_cell current)
 	return (enemy);
 }
 
-t_cell 	nearestPosToEnemy(t_cell current, t_inc inc)
+t_cell 	nearestPosToEnemy(t_cell current)
 {
 	t_cell 		newPos;
+	t_cell 		tmp;
 
 	ft_memset(&newPos, 0, sizeof newPos);
 	newPos.val = UINT64_MAX;
-	if (inc.i + 1 < MAP_LEN && newPos.val
-			> g_data.cells[current.x + 1][current.y].val)
+
+	tmp = g_data.cells[current.x + 1][current.y];
+	if (current.x + 1 < MAP_LEN && tmp.team_id == 0 && newPos.val > tmp.val)
 		newPos = g_data.cells[current.x + 1][current.y];
-	if (current.x - 1 >= 0 && newPos.val
-			> g_data.cells[current.x - 1][current.y].val)
-		newPos = g_data.cells[current.x - 1][current.y];
-	if (current.y + 1 < MAP_LEN && newPos.val
-			> g_data.cells[current.x][current.y + 1].val)
-		newPos = g_data.cells[current.x][current.y + 1];
-	if (current.y - 1 >= 0 && newPos.val
-			> g_data.cells[current.x][current.y - 1].val)
-		newPos = g_data.cells[current.x][current.y - 1];
+	tmp = g_data.cells[current.x - 1][current.y];
+	if (current.x - 1 >= 0 && tmp.team_id == 0 && newPos.val > tmp.val)
+		newPos = tmp;
+	tmp = g_data.cells[current.x][current.y + 1];
+	if (current.y + 1 < MAP_LEN && tmp.team_id == 0 && newPos.val > tmp.val)
+		newPos = tmp;
+	tmp = g_data.cells[current.x][current.y - 1];
+	if (current.y - 1 >= 0 && tmp.team_id == 0 && newPos.val > tmp.val)
+		newPos = tmp;
 	return (newPos);
 }
 
@@ -102,7 +104,7 @@ t_cell 	moveToEnemy(t_cell current)
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
-			if (g_data.cells[inc.i][inc.j].team_id != current.enemy->team_id
+			if (g_data.cells[inc.i][inc.j].team_id == 0
 					&& g_data.cells[inc.i][inc.j].val == 0)
 			{
 				g_data.cells[inc.i][inc.j].val = abs((int)(current.enemy->x -
@@ -113,7 +115,7 @@ t_cell 	moveToEnemy(t_cell current)
 		}
 		inc.i++;
 	}
-	return (nearestPosToEnemy(current, inc));
+	return (nearestPosToEnemy(current));
 }
 
 void	move_player(pid_t pid)

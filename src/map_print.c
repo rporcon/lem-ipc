@@ -107,8 +107,6 @@ void    players_move(t_gamedata *gdata, void *map_mem,
 			t_cell cells[MAP_LEN][MAP_LEN])
 {
 	size_t 	i = 0;
-	// send msg when every players have played
-	// forget sending message to team leader
 	while (i < players_getnb(cells)) {
 		gdata->msgbuf.mtype = (long)INT_MAX + gdata->players[i].pid;
 		if (msgsnd(gdata->msgq_id, &gdata->msgbuf, sizeof gdata->msgbuf.mtext, 0) == -1)
@@ -118,6 +116,7 @@ void    players_move(t_gamedata *gdata, void *map_mem,
 	}
 	printf("sendmsg to %d players\n", players_getnb(cells));
 	// waiting every players to have played
+	gdata->msgbuf.mtype = INT_MAX;
 	if (msgrcv(gdata->msgq_id, &gdata->msgbuf, sizeof gdata->msgbuf.mtext,
 				gdata->msgbuf.mtype, 0) == -1)
 		perr_exit("players_move msgrcv");
