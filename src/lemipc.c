@@ -70,54 +70,24 @@ t_cell	*enemy_chr(t_cell current)
 	return (enemy);
 }
 
-t_cell 	enemyToCurrentCellBackward(t_cell current, t_cell *newPos,
-			t_inc inc)
-{
-	inc.i = current.enemy->x;
-	inc.j = current.enemy->y;
-	while (inc.i >= 0)
-	{
-		while (inc.j >= 0)
-		{
-			if (g_data.cells[inc.i][inc.j].val == 1) // not 1 but nearest pos
-			{
-				*newPos = g_data.cells[inc.i][inc.j];
-				goto end;
-			}
-			inc.j--;
-		}
-		inc.j = MAP_LEN - 1;
-		inc.i--;
-	}
-	assert((*newPos).val == 1); //
-	end:
-	return (*newPos);
-}
-
-t_cell 	enemyToCurrentCell(t_cell current, t_inc inc)
+t_cell 	nearestPosToEnemy(t_cell current, t_inc inc)
 {
 	t_cell 		newPos;
 
 	ft_memset(&newPos, 0, sizeof newPos);
-	inc.i = current.enemy->x;
-	inc.j = current.enemy->y;
-	while (inc.i < MAP_LEN)
-	{
-		inc.j = 0;
-		while (inc.j < MAP_LEN)
-		{
-			if (g_data.cells[inc.i][inc.j].val == 1) // not 1 but nearest pos
-			{
-				newPos = g_data.cells[inc.i][inc.j];
-				inc.i = MAP_LEN;
-				break ;
-			}
-			inc.j++;
-		}
-		inc.i++;
-	}
-	if (newPos.val != 1)
-		newPos = enemyToCurrentCellBackward(current, &newPos, inc);
+	newPos.val = UINT64_MAX;
+	if (inc.i + 1 < MAP_LEN && newPos.val
+			> g_data.cells[current.x + 1][current.y].val)
+		newPos = g_data.cells[current.x + 1][current.y];
+	if (current.x - 1 >= 0 && newPos.val
+			> g_data.cells[current.x - 1][current.y].val)
+		newPos = g_data.cells[current.x - 1][current.y];
+	if (current.y + 1 < MAP_LEN && newPos.val
+			> g_data.cells[current.x][current.y + 1].val)
+		newPos = g_data.cells[current.x][current.y + 1];
+	if (current.y - 1 >= 0 && newPos.val
+			> g_data.cells[current.x][current.y - 1].val)
+		newPos = g_data.cells[current.x][current.y - 1];
 	return (newPos);
 }
 
@@ -132,18 +102,18 @@ t_cell 	moveToEnemy(t_cell current)
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
-			if (g_data.cells[inc.i][inc.j].team_id != current.team_id
+			if (g_data.cells[inc.i][inc.j].team_id != current.enemy->team_id
 					&& g_data.cells[inc.i][inc.j].val == 0)
 			{
-				g_data.cells[inc.i][inc.j].val = abs((int)(current.x -
-					g_data.cells[inc.i][inc.j].x)) + abs((int)(current.y -
-					g_data.cells[inc.i][inc.j].y));
+				g_data.cells[inc.i][inc.j].val = abs((int)(current.enemy->x -
+					g_data.cells[inc.i][inc.j].x)) + abs((int)(
+					current.enemy->y - g_data.cells[inc.i][inc.j].y));
 			}
 			inc.j++;
 		}
 		inc.i++;
 	}
-	return (enemyToCurrentCell(current, inc));
+	return (nearestPosToEnemy(current, inc));
 }
 
 void	move_player(pid_t pid)
@@ -187,6 +157,7 @@ void	move_player(pid_t pid)
 	// func to move player depending to ennemy
 	newPos = moveToEnemy(*current);
 	g_data.cells[newPos.x][newPos.y] = newPos;
+	// if newPos.val == 1 current is next to enemy
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 }
 
