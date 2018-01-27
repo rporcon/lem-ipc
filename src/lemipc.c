@@ -1,15 +1,33 @@
 #include "lemipc.h"
 t_data	g_data;
 
-void 	fill_enemies(t_cell enemies[ENEMY_SIZE], t_cell current_cell,
-			uint32_t *enemy_nb, t_inc inc)
+void 	resetCellsVal()
 {
+	t_inc 			inc;
+
+	ft_memset(&inc, 0, sizeof inc);
 	while (inc.i < MAP_LEN)
 	{
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
-			if (g_data.cells[inc.i][inc.j].team_id != current_cell.team_id
+			g_data.cells[inc.i][inc.j].val = 0;
+			inc.j++;
+		}
+		inc.i++;
+	}
+}
+
+void 	fill_enemies(t_cell enemies[ENEMY_SIZE], t_cell current,
+			uint32_t *enemy_nb, t_inc inc)
+{
+	resetCellsVal();
+	while (inc.i < MAP_LEN)
+	{
+		inc.j = 0;
+		while (inc.j < MAP_LEN)
+		{
+			if (g_data.cells[inc.i][inc.j].team_id != current.team_id
 					&& g_data.cells[inc.i][inc.j].val == 0)
 			{
 				if (g_data.cells[inc.i][inc.j].team_id > 0)
@@ -17,8 +35,8 @@ void 	fill_enemies(t_cell enemies[ENEMY_SIZE], t_cell current_cell,
 					enemies[inc.k] = g_data.cells[inc.i][inc.j];
 					inc.k++;
 				}
-				g_data.cells[inc.i][inc.j].val = abs((int)(current_cell.x -
-					g_data.cells[inc.i][inc.j].x)) + abs((int)(current_cell.y -
+				g_data.cells[inc.i][inc.j].val = abs((int)(current.x -
+					g_data.cells[inc.i][inc.j].x)) + abs((int)(current.y -
 					g_data.cells[inc.i][inc.j].y));
 			}
 			inc.j++;
@@ -28,70 +46,148 @@ void 	fill_enemies(t_cell enemies[ENEMY_SIZE], t_cell current_cell,
 	*enemy_nb = inc.k;
 }
 
-t_cell	*enemy_chr(t_cell current_cell)
+t_cell	*enemy_chr(t_cell current)
 {
 	t_cell			enemies[ENEMY_SIZE];
-	t_cell			enemy;
+	t_cell			*enemy;
 	uint32_t		enemy_nb;
 	t_inc 			inc;
 
 	ft_memset(&enemies, 0, sizeof enemies);
 	ft_memset(&inc, 0, sizeof inc);
-	fill_enemies(enemies, current_cell, &enemy_nb, inc);
-	assert(enemy_nb > 0);
-	enemy = enemies[0];
-	for (inc.k = 1; inc.k < enemy_nb; inc.k++) {
-		if (enemies[inc.k].val > enemy.val)
-			enemy = enemies[inc.k];
+	enemy = malloc(sizeof *enemy);
+	fill_enemies(enemies, current, &enemy_nb, inc);
+	assert(enemy_nb > 0); //
+	ft_memcpy(enemy, &enemies[0], sizeof *enemy);;
+	inc.i = 1;
+	while (inc.i < enemy_nb)
+	{
+		if (enemies[inc.i].val > enemy->val)
+			ft_memcpy(enemy, &enemies[inc.i], sizeof *enemy);
+		inc.i++;
 	}
-	printf("common enemy is: %d\n", enemy.pid);
+	printf("common enemy is: %d\n", enemy->pid);
 	return (enemy);
+}
+
+t_cell 	enemyToCurrentCellBackward(t_cell current, t_cell *newPos,
+			t_inc inc)
+{
+	inc.i = current.enemy->x;
+	inc.j = current.enemy->y;
+	while (inc.i >= 0)
+	{
+		while (inc.j >= 0)
+		{
+			if (g_data.cells[inc.i][inc.j].val == 1) // not 1 but nearest pos
+			{
+				*newPos = g_data.cells[inc.i][inc.j];
+				goto end;
+			}
+			inc.j--;
+		}
+		inc.j = MAP_LEN - 1;
+		inc.i--;
+	}
+	assert((*newPos).val == 1); //
+	end:
+	return (*newPos);
+}
+
+t_cell 	enemyToCurrentCell(t_cell current, t_inc inc)
+{
+	t_cell 		newPos;
+
+	ft_memset(&newPos, 0, sizeof newPos);
+	inc.i = current.enemy->x;
+	inc.j = current.enemy->y;
+	while (inc.i < MAP_LEN)
+	{
+		inc.j = 0;
+		while (inc.j < MAP_LEN)
+		{
+			if (g_data.cells[inc.i][inc.j].val == 1) // not 1 but nearest pos
+			{
+				newPos = g_data.cells[inc.i][inc.j];
+				inc.i = MAP_LEN;
+				break ;
+			}
+			inc.j++;
+		}
+		inc.i++;
+	}
+	if (newPos.val != 1)
+		newPos = enemyToCurrentCellBackward(current, &newPos, inc);
+	return (newPos);
+}
+
+t_cell 	moveToEnemy(t_cell current)
+{
+	t_inc 			inc;
+
+	ft_memset(&inc, 0, sizeof inc);
+	resetCellsVal();
+	while (inc.i < MAP_LEN)
+	{
+		inc.j = 0;
+		while (inc.j < MAP_LEN)
+		{
+			if (g_data.cells[inc.i][inc.j].team_id != current.team_id
+					&& g_data.cells[inc.i][inc.j].val == 0)
+			{
+				g_data.cells[inc.i][inc.j].val = abs((int)(current.x -
+					g_data.cells[inc.i][inc.j].x)) + abs((int)(current.y -
+					g_data.cells[inc.i][inc.j].y));
+			}
+			inc.j++;
+		}
+		inc.i++;
+	}
+	return (enemyToCurrentCell(current, inc));
 }
 
 void	move_player(pid_t pid)
 {
 	t_msgbuf	msgbuf;
-	t_cell		*current_cell;
+	t_cell		*current;
+	t_cell 		newPos;
 
 	// semaphore
-	map_currentcell(pid, &current_cell);
+	map_currentcell(pid, &current);
 	if (teamleader_exist() == 0) {
-	 	(*current_cell).team_leader = 1;
+	 	(*current).team_leader = 1;
 		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 	}
-	if ((*current_cell).ennemy_set == 0 && (*current_cell).team_leader == 1)
+	if ((*current).ennemy_set == 0 && (*current).team_leader == 1)
 	{
 		// set ennemy_pid once at beggining and when target change
 		while (playersPlayedNb() == 0) {
 			ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 			sleep(1);
 		}
-		(*current_cell).enemy = enemy_chr(*current_cell);
-		(*current_cell).ennemy_set = 1;
+		(*current).enemy = enemy_chr(*current);
+		(*current).ennemy_set = 1;
 		printf("[team leader %d]  pid: {%d} send ennemy\n",
 			g_data.team_id, pid);
 		// send ennemy target to same team player
-		send_target();
+		send_target((*current).enemy);
 	}
-	else if ((*current_cell).ennemy_set == 0)
+	else if ((*current).ennemy_set == 0)
 	{
 		printf("[non team leader], rcv on: [%lu], pid: {%u}\n", (long)INT_MAX + pid, pid);
 		if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
 				g_data.team_id, 0) == -1)
 			perr_exit("move_player msgrcv");
-		(*current_cell).enemy_pid = ft_atoi(msgbuf.mtext);
-		printf("received ennemy: %d\n", (*current_cell).enemy_pid);
-		(*current_cell).ennemy_set = 1;
+		(*current).enemy = (t_cell *)msgbuf.mtext;
+		printf("received ennemy: %d\n", (*current).enemy->pid);
+		(*current).ennemy_set = 1;
 	}
-	// test
 	printf("set player\n");
-	// clear old pos
-	/* ft_memset(current_cell, 0, sizeof *current_cell); */
-	// func to move player depending to ennemy_pid instead of below
-	g_data.cells[4][5].team_id = 42;
-	g_data.cells[4][5].played = 1;
+	ft_memset(current, 0, sizeof *current); // clear old pos
+	// func to move player depending to ennemy
+	newPos = moveToEnemy(*current);
+	g_data.cells[newPos.x][newPos.y] = newPos;
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
-	//
 }
 
 void	communicate()

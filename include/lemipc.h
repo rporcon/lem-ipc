@@ -34,6 +34,6 @@ int		teamleader_exist();
 void	ressources_erase();
 void 	playersResetPlayed();
 void	map_currentcell(pid_t pid, t_cell **current_cell);
-void	send_target();
+void	send_target(t_cell *enemy);
 
 #endif

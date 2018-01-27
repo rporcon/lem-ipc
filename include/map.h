@@ -32,9 +32,9 @@ typedef struct	s_msgbuf {
 }				t_msgbuf;
 
 typedef struct	s_inc {
-	size_t		i;
-	size_t		j;
-	size_t		k;
+	int64_t		i;
+	int64_t		j;
+	int64_t		k;
 }				t_inc;
 
 typedef struct	s_coord {
