@@ -135,7 +135,7 @@ int 	playersPlayed()
 		}
 		inc.i++;
 	}
-	printf("Played !\n");
+	printf("all players have played\n");
 	return (1);
 }
 
