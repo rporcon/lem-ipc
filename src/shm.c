@@ -105,14 +105,13 @@ void	map_addplayer()
     if (sem_wait(g_data.sem) == -1)
         perr_exit("map_addplayer sem_wait");
 	get_coords(&coords);
-	/* if (teamleader_exist() == 0) */
-	/* 	g_data.cells[coords.x][coords.y].team_leader = 1; */
-	// determine team_leader before launching game
 	g_data.cells[coords.y][coords.x].team_id = g_data.team_id;
 	g_data.cells[coords.y][coords.x].pid = getpid();
 	g_data.cells[coords.y][coords.x].played = 1;
 	g_data.cells[coords.y][coords.x].x = coords.x;
 	g_data.cells[coords.y][coords.x].y = coords.y;
+	printf("--- %lld %lld [[%lld---\n", coords.y, coords.x,
+			g_data.cells[2][3].x);
 	
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
     if (sem_post(g_data.sem) == -1)
@@ -132,6 +131,8 @@ void	map_currentcell(pid_t pid, t_cell **current_cell)
 			if (pid == g_data.cells[inc.i][inc.j].pid)
 			{
 				*current_cell = &g_data.cells[inc.i][inc.j];
+				printf("%lld, i: %lld, %lld, j: %lld\n", g_data.cells[inc.i][inc.j].y, inc.i,
+						g_data.cells[inc.i][inc.j].x, inc.j); raise(SIGINT);
 				return ;
 			}
 			inc.j++;

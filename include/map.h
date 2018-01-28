@@ -38,8 +38,8 @@ typedef struct	s_inc {
 }				t_inc;
 
 typedef struct	s_coord {
-	size_t		x;
-	size_t		y;
+	int64_t		x;
+	int64_t 	y;
 }				t_coord;
 
 #endif

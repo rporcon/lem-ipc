@@ -174,17 +174,19 @@ void	move_player(pid_t pid)
 	t_cell 		newPos;
 
 	map_currentcell(pid, &current);
-	printf("current cell: [%lld][%lld]", current->x, current->y);
+	printf("current cell: [%lld][%lld]\n", current->y, current->x);
+	raise(SIGINT);
 	if (teamleader_exist() == 0) {
 	 	(*current).team_leader = 1;
 		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 	}
 	if ((*current).enemy_set == 0 && (*current).team_leader == 1)
 	{
-		while (playersPlayedNb() == 0) { // enemiesNb() == 0
-			ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
-			/* sleep(1); */
-		}
+		// has team leader to wait other allies to send target ?
+		/* while (playersPlayedNb() == 0) { */
+		/* 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE); */
+		/* 	/1* sleep(1); *1/ */
+		/* } */
 		(*current).enemy = enemy_chr(*current);
 		(*current).enemy_set = 1;
 		printf("[team leader] pid: {%u} send ennemy[%lld][%lld]", pid, (*current).enemy->x, (*current).enemy->y);
@@ -207,6 +209,7 @@ void	move_player(pid_t pid)
 	printf("newPos: [%lld][%lld]\n", newPos.y, newPos.x);
 	if (newPos.val == 1 && allyNearEnemy(pid) == 1)
 	{
+		printf("clear enemy: [%lld][%lld]\n", current->enemy->y, current->enemy->x);
 		ft_memset(&g_data.cells[current->enemy->y][current->enemy->x],
 			0, sizeof *current->enemy); // sigterm process
 		allyClearEnemySet(*current->enemy);
@@ -215,10 +218,14 @@ void	move_player(pid_t pid)
 		printf("End of game\n");
 		exit(1);
 	}
+	print_cells();
+	printf("newPos: %lld %lld, current: %lld, %lld\n",
+			newPos.y, newPos.y, (*current).y, (*current).x);
 	g_data.cells[newPos.y][newPos.x] = newPos;
 	ft_memset(current, 0, sizeof *current); // clear old pos
 	g_data.cells[newPos.y][newPos.x].played = 1;
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
+	print_cells();
 }
 
 void	communicate()
@@ -236,15 +243,15 @@ void	communicate()
 		if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
 				(long)INT_MAX + pid, 0) == -1)
 			perr_exit("communicate msgrcv");
-		map_fill();
+		printf("[[[--- %lld---]]]\n", g_data.cells[2][3].y);
+		map_fill(); // map_fill change x y order
 		if (sem_wait(g_data.sem) == -1)
 			perr_exit("communicate sem_wait");
+		printf("[[[--- %lld---]]]\n", g_data.cells[2][3].y);
 		move_player(pid);
 		if (sem_post(g_data.sem) == -1)
 			perr_exit("communicate sem_post");
 
-		// if first player has played
-		// send when every players has played
 		if (playersPlayed() == 1) {
 			msgbuf.mtype = INT_MAX;
 			if (msgsnd(g_data.msgq_id, &msgbuf,
@@ -269,6 +276,7 @@ int		main(int ac, char **av)
 	map_fill();
 	// error if player on case already exist
 	map_addplayer();
+	printf("--- %lld---\n", g_data.cells[2][3].y);
 
 	communicate();
 	return (0);

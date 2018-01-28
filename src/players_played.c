@@ -14,7 +14,6 @@ int 	playersPlayed()
 					g_data.cells[inc.i][inc.j].played == 0)
 				return (0);
 			inc.j++;
-			inc.k++;
 		}
 		inc.i++;
 	}
@@ -38,7 +37,6 @@ void 	playersResetPlayed()
 					g_data.cells[inc.i][inc.j].played == 1)
 				g_data.cells[inc.i][inc.j].played = 0;
 			inc.j++;
-			inc.k++;
 		}
 		inc.i++;
 	}
@@ -60,7 +58,6 @@ size_t	playersPlayedNb()
 					g_data.cells[inc.i][inc.j].played == 1)
 				nb++;
 			inc.j++;
-			inc.k++;
 		}
 		inc.i++;
 	}
