@@ -60,7 +60,7 @@ void	map_get()
 void	get_coords_err(int errtype, char usercoord[8], size_t usercoord_len)
 {
 	if (errtype == 1) {
-		fprintf(stderr, "invalid coord (must be x, y)\n");
+		fprintf(stderr, "invalid coord (must be y, x)\n");
 	}
 	else if (errtype == 2) {
 		fprintf(stderr, "invalid coord (must be within 0 - %u"
@@ -75,7 +75,7 @@ void	get_coords(t_coord *coords)
 	char		**coords_str;
 
 	ft_memset(usercoord, 0, sizeof usercoord);
-	printf("Enter your coords (must be x, y) :\n");
+	printf("Enter your coords (must be y, x) :\n");
 	while (1)
 	{
 		fgets(usercoord, sizeof usercoord, stdin);
@@ -84,8 +84,8 @@ void	get_coords(t_coord *coords)
 			get_coords_err(1, usercoord, sizeof usercoord);
 			continue;
 		}
-		coords->x = atoi_max(coords_str[0]);
-		coords->y = atoi_max(coords_str[1]);
+		coords->y = atoi_max(coords_str[0]);
+		coords->x = atoi_max(coords_str[1]);
 		if (coords->x > (MAP_LEN - 1) || coords->y > (MAP_LEN - 1)) {
 			get_coords_err(2, usercoord, sizeof usercoord);
 			continue;
@@ -108,11 +108,11 @@ void	map_addplayer()
 	/* if (teamleader_exist() == 0) */
 	/* 	g_data.cells[coords.x][coords.y].team_leader = 1; */
 	// determine team_leader before launching game
-	g_data.cells[coords.x][coords.y].team_id = g_data.team_id;
-	g_data.cells[coords.x][coords.y].pid = getpid();
-	g_data.cells[coords.x][coords.y].played = 1;
-	g_data.cells[coords.x][coords.y].x = coords.x;
-	g_data.cells[coords.x][coords.y].y = coords.y;
+	g_data.cells[coords.y][coords.x].team_id = g_data.team_id;
+	g_data.cells[coords.y][coords.x].pid = getpid();
+	g_data.cells[coords.y][coords.x].played = 1;
+	g_data.cells[coords.y][coords.x].x = coords.x;
+	g_data.cells[coords.y][coords.x].y = coords.y;
 	
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
     if (sem_post(g_data.sem) == -1)
