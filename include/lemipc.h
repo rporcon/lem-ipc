@@ -33,7 +33,9 @@ void	msgq_getid();
 int		teamleader_exist();
 void	ressources_erase();
 void 	playersResetPlayed();
+int 	enemiesAlive();
 void	map_currentcell(pid_t pid, t_cell **current_cell);
+void 	allyClearEnemySet(t_cell enemy);
 void	send_target(t_cell *enemy);
 
 #endif

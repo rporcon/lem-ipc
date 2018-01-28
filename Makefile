@@ -10,7 +10,8 @@ LFT_NAME = libft.a
 
 LFT_DIR = ./libft
 
-LEMIPC_SRC_FILE = args.c sig.c shm.c msg.c lemipc.c
+LEMIPC_SRC_FILE = args.c sig.c shm.c msg.c players_played.c players_team.c \
+				  enemy.c lemipc.c
 
 LEMIPC_SRC = $(addprefix $(SRCS_DIR), $(LEMIPC_SRC_FILE))
 

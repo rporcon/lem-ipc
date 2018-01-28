@@ -22,7 +22,7 @@ typedef struct		s_cell {
 	struct s_cell 	*enemy;
 	uint64_t		val;
 	uint8_t			team_leader:1; // process that will sent target to other
-	uint8_t			ennemy_set:1;
+	uint8_t			enemy_set:1;
 	uint8_t			played:1;	
 }					t_cell;
 
