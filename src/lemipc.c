@@ -203,7 +203,6 @@ void	move_player(pid_t pid)
 		printf("received ennemy: %d\n", (*current).enemy->pid);
 		(*current).enemy_set = 1;
 	}
-	// when enemy is cleared -> enemy_set = 0
 	newPos = moveToEnemy(*current);
 	printf("newPos: [%lld][%lld]\n", newPos.y, newPos.x);
 	if (newPos.val == 1 && allyNearEnemy(pid) == 1)
