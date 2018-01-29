@@ -160,6 +160,7 @@ void 	allyClearEnemySet(t_cell enemy)
 					&& enemy.pid == g_data.cells[inc.i][inc.j].enemy->pid)
 			{
 				g_data.cells[inc.i][inc.j].enemy_set = 0;
+				free(g_data.cells[inc.i][inc.j].enemy);
 			}
 			inc.j++;
 		}
@@ -187,8 +188,12 @@ void	move_player(pid_t pid)
 			sleep(1);
 		}
 		(*current).enemy = enemy_chr(*current);
+		//
+		ft_memset(&newPos, 0, sizeof newPos);
+		setNewEnemyPos(pid, newPos);
+		//
 		(*current).enemy_set = 1;
-		printf("[team leader] pid: {%u} send ennemy[%lld][%lld](%u)\n", pid,
+		printf("[team leader] pid: {%u} send ennemy[%lld][%lld](%u) ", pid,
 				(*current).enemy->y, (*current).enemy->x, (*current).enemy->pid);
 		// send ennemy target to same team player
 		send_target((*current).enemy);
@@ -205,7 +210,9 @@ void	move_player(pid_t pid)
 		(*current).enemy_set = 1;
 	}
 	newPos = moveToEnemy(*current);
-	printf("newPos: [%lld][%lld]\n", newPos.y, newPos.x);
+	printf("{pid: %u} currentPos: [%lld][%lld], newPos: [%lld][%lld], val: %llu\n",
+			pid, (*current).y, (*current).x, newPos.y, newPos.x, newPos.val);
+	printf("enemy: [%lld][%lld] (pid: %u) \n", current->enemy->y, current->enemy->x, current->enemy->pid);
 	if (newPos.val == 1 && allyNearEnemy(pid) == 1)
 	{
 		printf("clear enemy: [%lld][%lld]\n", current->enemy->y, current->enemy->x);
@@ -217,9 +224,9 @@ void	move_player(pid_t pid)
 		printf("End of game\n");
 		exit(1);
 	}
-	printf("newPos: %lld %lld, current: %lld, %lld\n",
-			newPos.y, newPos.y, (*current).y, (*current).x);
+	/* setNewEnemyPos(pid, newPos); */
 	g_data.cells[newPos.y][newPos.x] = newPos;
+	// reset enemy pos (verify if enemy pos has changed)
 	ft_memset(current, 0, sizeof *current); // clear old pos
 	g_data.cells[newPos.y][newPos.x].played = 1;
 	printf("played ~!\n");
@@ -235,14 +242,13 @@ void	communicate()
 	msgq_getid();
 	pid = getpid();
 	printf("pid: %u\n", pid);
-	printf("playersPlayedNb: %zu\n", playersPlayedNb());
 	while (1)
 	{
-		sleep(1);
+		/* sleep(1); */
 		if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
 				(long)INT_MAX + pid, 0) == -1)
 			perr_exit("communicate msgrcv");
-		map_fill(); // map_fill change x y order
+		map_fill();
 		if (sem_wait(g_data.sem) == -1)
 			perr_exit("communicate sem_wait");
 		move_player(pid);

@@ -12,12 +12,6 @@ typedef struct	s_data {
 	int			msgq_id;
 }				t_data;
 
-typedef struct	s_enemy {
-	uint32_t	x;
-	uint32_t	y;
-	uint32_t	pid;
-}				t_enemy;
-
 extern t_data	g_data;
 
 void		get_args(int ac, char **av);
@@ -35,6 +29,7 @@ void		ressources_erase();
 void		playersResetPlayed();
 int			enemiesAlive();
 uint32_t	playersNb(t_cell cells[MAP_LEN][MAP_LEN]);
+void		setNewEnemyPos(pid_t pid, t_cell newPos);
 void		map_currentcell(pid_t pid, t_cell **current_cell);
 void		allyClearEnemySet(t_cell enemy);
 void		send_target(t_cell *enemy);
