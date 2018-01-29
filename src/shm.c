@@ -107,7 +107,6 @@ void	map_addplayer()
 	get_coords(&coords);
 	g_data.cells[coords.y][coords.x].team_id = g_data.team_id;
 	g_data.cells[coords.y][coords.x].pid = getpid();
-	g_data.cells[coords.y][coords.x].played = 1;
 	g_data.cells[coords.y][coords.x].x = coords.x;
 	g_data.cells[coords.y][coords.x].y = coords.y;
 	

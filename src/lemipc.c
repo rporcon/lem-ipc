@@ -182,13 +182,14 @@ void	move_player(pid_t pid)
 	if ((*current).enemy_set == 0 && (*current).team_leader == 1)
 	{
 		// has team leader to wait other allies to send target ?
-		/* while (playersPlayedNb() == 0) { */
-		/* 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE); */
-		/* 	/1* sleep(1); *1/ */
-		/* } */
+		while (enemiesAlive() == 0) {
+			ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
+			sleep(1);
+		}
 		(*current).enemy = enemy_chr(*current);
 		(*current).enemy_set = 1;
-		printf("[team leader] pid: {%u} send ennemy[%lld][%lld]", pid, (*current).enemy->x, (*current).enemy->y);
+		printf("[team leader] pid: {%u} send ennemy[%lld][%lld](%u)\n", pid,
+				(*current).enemy->y, (*current).enemy->x, (*current).enemy->pid);
 		// send ennemy target to same team player
 		send_target((*current).enemy);
 	}
@@ -221,6 +222,7 @@ void	move_player(pid_t pid)
 	g_data.cells[newPos.y][newPos.x] = newPos;
 	ft_memset(current, 0, sizeof *current); // clear old pos
 	g_data.cells[newPos.y][newPos.x].played = 1;
+	printf("played ~!\n");
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 }
 
@@ -233,6 +235,7 @@ void	communicate()
 	msgq_getid();
 	pid = getpid();
 	printf("pid: %u\n", pid);
+	printf("playersPlayedNb: %zu\n", playersPlayedNb());
 	while (1)
 	{
 		sleep(1);
@@ -253,6 +256,7 @@ void	communicate()
 				perr_exit("communicate msgsnd");
 			printf("msgsnd end of turn\n");
 			playersResetPlayed();
+			ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE); // semaphore ?
 		}
 	}
 }
