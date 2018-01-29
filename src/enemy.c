@@ -43,7 +43,6 @@ void	setNewEnemyPos(pid_t pid, t_cell newPos)
 				g_data.cells[inc.i][inc.j].enemy->y = newPos.y;
 			}
 			inc.j++;
-			inc.k++;
 		}
 		inc.i++;
 	}

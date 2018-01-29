@@ -14,12 +14,18 @@
 # define MAP_SIZE sizeof (t_cell) * (MAP_LEN * MAP_LEN)
 # define ENEMY_SIZE MAP_SIZE / 2
 
+typedef struct	s_enemy {
+	int64_t		x;
+	int64_t		y;
+	pid_t		pid;
+}				t_enemy;
+
 typedef struct		s_cell {
 	uint32_t		team_id;
 	pid_t			pid;
 	int64_t			x;
 	int64_t			y;
-	struct s_cell 	*enemy;
+	t_enemy			enemy;
 	uint64_t		val;
 	uint8_t			team_leader:1; // process that will sent target to other
 	uint8_t			enemy_set:1;
