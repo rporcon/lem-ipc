@@ -109,7 +109,6 @@ void	map_addplayer()
 	g_data.cells[coords.y][coords.x].pid = getpid();
 	g_data.cells[coords.y][coords.x].x = coords.x;
 	g_data.cells[coords.y][coords.x].y = coords.y;
-	
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
     if (sem_post(g_data.sem) == -1)
         perr_exit("map_addplayer sem_post");

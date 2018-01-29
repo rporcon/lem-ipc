@@ -38,7 +38,6 @@ void	setNewEnemyPos(pid_t pid, t_cell newPos)
 					&& g_data.cells[inc.i][inc.j].enemy != NULL
 					&& g_data.cells[inc.i][inc.j].enemy->pid == pid)
 			{
-				break ;
 				fprintf(stderr, "setting new enemy");
 				g_data.cells[inc.i][inc.j].enemy->x = newPos.x;
 				g_data.cells[inc.i][inc.j].enemy->y = newPos.y;

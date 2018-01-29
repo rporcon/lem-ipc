@@ -168,6 +168,26 @@ void 	allyClearEnemySet(t_cell enemy)
 	}
 }
 
+
+void	testt(pid_t pid)
+{
+	t_inc			inc;
+
+	ft_memset(&inc, 0, sizeof inc);
+	while (inc.i < MAP_LEN)
+	{
+		inc.j = 0;
+		while (inc.j < MAP_LEN)
+		{
+			if (g_data.cells[inc.i][inc.j].enemy != NULL) {
+				fprintf(stderr, "pid: %d has enemy: %u\n", pid, g_data.cells[inc.i][inc.j].enemy->pid);
+			}
+			inc.j++;
+		}
+		inc.i++;
+	}
+}
+
 void	move_player(pid_t pid)
 {
 	t_msgbuf	msgbuf;
@@ -188,12 +208,9 @@ void	move_player(pid_t pid)
 			sleep(1);
 		}
 		(*current).enemy = enemy_chr(*current);
-		//
-		ft_memset(&newPos, 0, sizeof newPos);
-		setNewEnemyPos(pid, newPos);
-		//
+		testt(pid); /////////////////
 		(*current).enemy_set = 1;
-		printf("[team leader] pid: {%u} send ennemy[%lld][%lld](%u) ", pid,
+		printf("[team leader] pid: {%u} send ennemy[%lld][%lld](%u)", pid,
 				(*current).enemy->y, (*current).enemy->x, (*current).enemy->pid);
 		// send ennemy target to same team player
 		send_target((*current).enemy);
@@ -224,7 +241,7 @@ void	move_player(pid_t pid)
 		printf("End of game\n");
 		exit(1);
 	}
-	/* setNewEnemyPos(pid, newPos); */
+	setNewEnemyPos(pid, newPos);
 	g_data.cells[newPos.y][newPos.x] = newPos;
 	// reset enemy pos (verify if enemy pos has changed)
 	ft_memset(current, 0, sizeof *current); // clear old pos
