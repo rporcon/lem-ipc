@@ -10,7 +10,7 @@ void	msgq_getid()
 		perr_exit("msg_getid msgget");
 }
 
-void	send_target(t_cell *enemy)
+void	send_target(t_enemy enemy)
 {
 	t_inc		inc;
 	t_msgbuf	msgbuf;
@@ -26,7 +26,7 @@ void	send_target(t_cell *enemy)
 					&& g_data.cells[inc.i][inc.j].team_leader == 0)
 			{
 				msgbuf.mtype = g_data.team_id;
-				ft_memcpy(msgbuf.mtext, enemy, sizeof *enemy);
+				ft_memcpy(msgbuf.mtext, &enemy, sizeof enemy);
 				printf(" to: %d team players\n", g_data.team_id);
 				if (msgsnd(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext, 0) == -1)
 					perr_exit("send_target msgsnd");
