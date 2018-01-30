@@ -3,7 +3,6 @@
 
 #include "map.h"
 #include <assert.h>
-#include <time.h>
 
 typedef struct	s_data {
 	uint32_t	team_id;
@@ -12,13 +11,6 @@ typedef struct	s_data {
 	sem_t		*sem;
 	int			msgq_id;
 }				t_data;
-
-typedef struct	s_possiblePos {
-	uint64_t 	val;
-	int64_t		x;
-	int64_t		y;
-
-}				t_possiblePos;
 
 extern t_data	g_data;
 

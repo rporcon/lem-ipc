@@ -76,7 +76,7 @@ void 	setNewPosToEnemy(t_cell *newPos, int y, int x)
 	t_cell 		newCell;
 
 	newCell = g_data.cells[y][x];
-	if (newCell.val != 0 && newPos->val > newCell.val)
+	if (newCell.val != 0 && (*newPos).val > newCell.val)
 	{
 		newPos->val = newCell.val;
 		newPos->y = y;
@@ -84,67 +84,44 @@ void 	setNewPosToEnemy(t_cell *newPos, int y, int x)
 	}
 }
 
-int compare(const struct s_possiblePos *a, const struct s_possiblePos *b)
-{
-	return (a->val - b->val);
-}
-
 t_cell 	nearestPosToEnemy(t_cell current)
 {
-	t_cell 			newPos;
-	t_possiblePos	possiblePos[4];
-	int				possiblePosNb;
-	int				samePosNb;
-	int				i;
+	t_cell 		newPos;
 
-	ft_memcpy(&newPos, &g_data.cells[current.y][current.x], sizeof newPos);ft_memset(possiblePos, 0, sizeof possiblePos);
-	possiblePosNb = 0;
-	samePosNb = 0;
-	i = 0;
+	ft_memcpy(&newPos, &g_data.cells[current.y][current.x], sizeof newPos);
+	newPos.val = UINT64_MAX;
 	if (current.x + 1 < MAP_LEN)
-	{
-		/* setNewPosToEnemy(&newPos, current.y, nt.x + 1); */
-		possiblePos[i].val = g_data.cells[current.y][current.x + 1].val;
-		possiblePos[i].y = current.y;
-		possiblePos[i].x = current.x + 1;
-		i++;
-	}
+		setNewPosToEnemy(&newPos, current.y, current.x + 1);
 	if (current.x - 1 >= 0)
-	{
-		/* setNewPosToEnemy(&newPos, current.y, current.x - 1); */
-		possiblePos[i].val = g_data.cells[current.y][current.x - 1].val;
-		possiblePos[i].y = current.y;
-		possiblePos[i].x = current.x - 1;
-		i++;
-	}
+		setNewPosToEnemy(&newPos, current.y, current.x - 1);
 	if (current.y + 1 < MAP_LEN)
-	{
-		/* setNewPosToEnemy(&newPos, current.y + 1, current.x); */
-		possiblePos[i].val = g_data.cells[current.y + 1][current.x].val;
-		possiblePos[i].y = current.y + 1;
-		possiblePos[i].x = current.x;
-		i++;
-	}
+		setNewPosToEnemy(&newPos, current.y + 1, current.x);
 	if (current.y - 1 >= 0)
-	{
-		/* setNewPosToEnemy(&newPos, current.y - 1, current.x); */
-		possiblePos[i].val = g_data.cells[current.y - 1][current.x].val;
-		possiblePos[i].y = current.y - 1;
-		possiblePos[i].x = current.x;
-		i++;
-	}mergesort(possiblePos, i, sizeof(t_possiblePos),
-		(int (*)(const void*, const void*)) compare);
-	while (samePosNb != i && possiblePos[i].val == possiblePos[i + 1].val)
-	{
-		samePosNb++;
-		i++;
-	}
-	printf("samePosNb: %d\n", samePosNb);
-	possiblePosNb = samePosNb == 0 ? 0 : rand() % (samePosNb + 1);
-	setNewPosToEnemy(&newPos, possiblePos[possiblePosNb].y,
-		possiblePos[possiblePosNb].x);
+		setNewPosToEnemy(&newPos, current.y - 1, current.x);
 	return (newPos);
 }
+
+/* void	testt(pid_t pid) */
+/* { */
+/* 	t_inc			inc; */
+
+/* 	ft_memset(&inc, 0, sizeof inc); */
+/* 	while (inc.i < MAP_LEN) */
+/* 	{ */
+/* 		inc.j = 0; */
+/* 		while (inc.j < MAP_LEN) */
+/* 		{ */
+/* 			fprintf(stderr, "[%lld][%lld]", inc.i, inc.j); */
+/* 			if (g_data.cells[inc.i][inc.j].enemy != NULL) { */
+/* 				fprintf(stderr, "pid: %d has enemy: %u\n", 	pid, */
+/* 					g_data.cells[inc.i][inc.j].enemy->pid); */
+/* 			} */
+/* 			inc.j++; */
+/* 		} */
+/* 		inc.i++; */
+/* 	} */
+/* } */
+
 
 t_cell 	moveToEnemy(t_cell current)
 {
@@ -311,7 +288,6 @@ int		main(int ac, char **av)
 	// add an erase arg to call ressources_erase
 	/* ressources_erase(); exit(0); */
 	ft_memset(&g_data, 0, sizeof g_data);
-	srand(time(NULL));
 	map_init();
 	get_args(ac, av);
 	sighandle(); // clear only if last process quit
