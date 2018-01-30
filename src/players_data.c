@@ -42,7 +42,7 @@ void 	playersResetPlayed()
 	}
 }
 
-size_t	playersPlayedNb()
+uint32_t	playersPlayedNb()
 {
 	t_inc	inc;
 	size_t 	nb;

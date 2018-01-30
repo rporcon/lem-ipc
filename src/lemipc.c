@@ -76,7 +76,7 @@ void 	setNewPosToEnemy(t_cell *newPos, int y, int x)
 	t_cell 		newCell;
 
 	newCell = g_data.cells[y][x];
-	if (newCell.val != 0 && (*newPos).val > newCell.val)
+	if (newCell.team_id == 0 && (*newPos).val > newCell.val)
 	{
 		newPos->val = newCell.val;
 		newPos->y = y;
@@ -101,29 +101,7 @@ t_cell 	nearestPosToEnemy(t_cell current)
 	return (newPos);
 }
 
-/* void	testt(pid_t pid) */
-/* { */
-/* 	t_inc			inc; */
-
-/* 	ft_memset(&inc, 0, sizeof inc); */
-/* 	while (inc.i < MAP_LEN) */
-/* 	{ */
-/* 		inc.j = 0; */
-/* 		while (inc.j < MAP_LEN) */
-/* 		{ */
-/* 			fprintf(stderr, "[%lld][%lld]", inc.i, inc.j); */
-/* 			if (g_data.cells[inc.i][inc.j].enemy != NULL) { */
-/* 				fprintf(stderr, "pid: %d has enemy: %u\n", 	pid, */
-/* 					g_data.cells[inc.i][inc.j].enemy->pid); */
-/* 			} */
-/* 			inc.j++; */
-/* 		} */
-/* 		inc.i++; */
-/* 	} */
-/* } */
-
-
-t_cell 	moveToEnemy(t_cell current)
+void 	setVal(t_cell current)
 {
 	t_inc 			inc;
 
@@ -134,8 +112,7 @@ t_cell 	moveToEnemy(t_cell current)
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
-			if (g_data.cells[inc.i][inc.j].team_id == 0
-					&& g_data.cells[inc.i][inc.j].val == 0)
+			if (g_data.cells[inc.i][inc.j].val == 0)
 			{
 				g_data.cells[inc.i][inc.j].val = abs((int)(current.enemy.x -
 					g_data.cells[inc.i][inc.j].x)) + abs((int)(
@@ -145,8 +122,17 @@ t_cell 	moveToEnemy(t_cell current)
 		}
 		inc.i++;
 	}
-	return (nearestPosToEnemy(current));
 }
+
+/* t_cell 	moveToEnemy(t_cell current) */
+/* { */
+/* 	print_cells(); */
+/* 	printf("current val: %lld\n", g_data.cells[current.y][current.x].val); */
+/* 	if (g_data.cells[current.y][current.x].val == 1) */
+/* 		return (g_data.cells[current.y][current.x]); */
+/* 	else */
+/* 		return (nearestPosToEnemy(current)); */
+/* } */
 
 int 	allyNearEnemy(pid_t pid)
 {
@@ -225,11 +211,11 @@ void	move_player(pid_t pid)
 		printf("received ennemy: %d\n", current->enemy.pid);
 		current->enemy_set = 1;
 	}
-	newPos = moveToEnemy(*current);
 	printf("{pid: %u} currentPos: [%lld][%lld], newPos: [%lld][%lld], val: %llu\n",
 			pid, current->y, current->x, newPos.y, newPos.x, newPos.val);
 	printf("enemy: [%lld][%lld] (pid: %u) \n", current->enemy.y, current->enemy.x, current->enemy.pid);
-	if (newPos.val == 1 && allyNearEnemy(pid) == 1)
+	setVal(*current);
+	if (current->val == 1 && allyNearEnemy(pid) == 1)
 	{
 		printf("clear enemy: [%lld][%lld]\n", current->enemy.y, current->enemy.x);
 		ft_memset(&g_data.cells[current->enemy.y][current->enemy.x],
@@ -240,11 +226,16 @@ void	move_player(pid_t pid)
 		printf("End of game\n");
 		exit(1);
 	}
-	setNewEnemyPos(pid, newPos);
-	g_data.cells[newPos.y][newPos.x] = newPos;
-	// reset enemy pos (verify if enemy pos has changed)
-	ft_memset(current, 0, sizeof *current); // clear old pos
-	g_data.cells[newPos.y][newPos.x].played = 1;
+	if (current->val != 1)
+	{
+		newPos = nearestPosToEnemy(*current);
+		setNewEnemyPos(pid, newPos);
+		g_data.cells[newPos.y][newPos.x] = newPos;
+		ft_memset(current, 0, sizeof *current); // clear old pos
+		g_data.cells[newPos.y][newPos.x].played = 1;
+	}
+	else
+		current->played = 1;
 	printf("played ~!\n");
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 }
@@ -271,6 +262,7 @@ void	communicate()
 		if (sem_post(g_data.sem) == -1)
 			perr_exit("communicate sem_post");
 
+		printf("playersPlayedNb: %d, playersNb: %d\n", playersPlayedNb(), playersNb());
 		if (playersPlayed() == 1) {
 			msgbuf.mtype = INT_MAX;
 			if (msgsnd(g_data.msgq_id, &msgbuf,
