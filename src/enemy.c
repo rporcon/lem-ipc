@@ -21,6 +21,46 @@ int 	enemiesAlive()
 	return (0);
 }
 
+int 	allyNearEnemy(pid_t pid)
+{
+	t_inc 			inc;
+
+	ft_memset(&inc, 0, sizeof inc);
+	while (inc.i < MAP_LEN)
+	{
+		inc.j = 0;
+		while (inc.j < MAP_LEN)
+		{
+			if (g_data.cells[inc.i][inc.j].team_id == g_data.team_id
+					&& g_data.cells[inc.i][inc.j].pid != pid
+					&& g_data.cells[inc.i][inc.j].val == 1)
+				return (1);
+			inc.j++;
+		}
+		inc.i++;
+	}
+	return (0);
+}
+
+void 	allyClearEnemySet(t_enemy enemy)
+{
+	t_inc 			inc;
+
+	ft_memset(&inc, 0, sizeof inc);
+	while (inc.i < MAP_LEN)
+	{
+		inc.j = 0;
+		while (inc.j < MAP_LEN)
+		{
+			if (g_data.cells[inc.i][inc.j].team_id == g_data.team_id
+					&& enemy.pid == g_data.cells[inc.i][inc.j].enemy.pid)
+				g_data.cells[inc.i][inc.j].enemy_set = 0;
+			inc.j++;
+		}
+		inc.i++;
+	}
+}
+
 void	setNewEnemyPos(pid_t pid, t_cell newPos)
 {
 	t_inc			inc;
@@ -31,9 +71,6 @@ void	setNewEnemyPos(pid_t pid, t_cell newPos)
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
-			/* if (g_data.cells[inc.i][inc.j].enemy != NULL) { */
-			/* 	fprintf(stderr, "pid: %d has enemy: %u\n", pid, g_data.cells[inc.i][inc.j].enemy->pid); */
-			/* } */
 			if (g_data.cells[inc.i][inc.j].team_id > 0
 					&& g_data.cells[inc.i][inc.j].enemy.pid == pid)
 			{
@@ -45,14 +82,4 @@ void	setNewEnemyPos(pid_t pid, t_cell newPos)
 		}
 		inc.i++;
 	}
-}
-
-t_enemy 	cellToEnemy(t_cell c)
-{
-	t_enemy enemy;
-
-	enemy.x = c.x;
-	enemy.y = c.y;
-	enemy.pid = c.pid;
-	return (enemy);
 }
