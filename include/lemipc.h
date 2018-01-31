@@ -11,6 +11,7 @@ typedef struct	s_data {
 	t_cell		cells[MAP_LEN][MAP_LEN];
 	sem_t		*sem;
 	int			msgq_id;
+	t_msgbuf	msgbuf;
 	uint8_t		gameLaunched:1;
 }				t_data;
 

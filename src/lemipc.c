@@ -4,14 +4,11 @@ t_data	g_data;
 
 void	communicate()
 {
-	t_msgbuf	msgbuf;
-
-	ft_memset(&msgbuf, 0, sizeof msgbuf);
 	msgq_getid();
 	printf("pid: %u\n", g_data.pid);
 	while (1)
 	{
-		if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
+		if (msgrcv(g_data.msgq_id, &g_data.msgbuf, sizeof g_data.msgbuf.mtext,
 				(long)INT_MAX + g_data.pid, 0) == -1)
 			perr_exit("communicate msgrcv");
 		if (g_data.gameLaunched == 0)
@@ -23,20 +20,11 @@ void	communicate()
 		if (sem_post(g_data.sem) == -1)
 			perr_exit("communicate sem_post");
 		if (playersPlayed() == 1) {
-			msgbuf.mtype = INT_MAX;
-			if (enemiesAlive() == 0) {
-				ft_strcpy(msgbuf.mtext, "EndOfGame");
-				if (msgsnd(g_data.msgq_id, &msgbuf,
-						sizeof msgbuf.mtext, 0) == -1)
-				printf("End of game\n");
-				ressources_erase();
-			}
-			else {
-				if (msgsnd(g_data.msgq_id, &msgbuf,
-						sizeof msgbuf.mtext, 0) == -1)
-					perr_exit("communicate msgsnd");
-				printf("msgsnd end of turn\n");
-			}
+			g_data.msgbuf.mtype = INT_MAX;
+			if (msgsnd(g_data.msgq_id, &g_data.msgbuf,
+					sizeof g_data.msgbuf.mtext, 0) == -1)
+				perr_exit("communicate msgsnd");
+			printf("msgsnd end of turn\n");
 			playersResetPlayed();
 			ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE); // semaphore ?
 		}

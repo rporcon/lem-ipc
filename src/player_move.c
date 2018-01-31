@@ -15,12 +15,10 @@ void	init_teamleader(t_cell *current)
 
 void 	init_enemy(t_cell *current)
 {
-	t_msgbuf	msgbuf;
-
-	if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
+	if (msgrcv(g_data.msgq_id, &g_data.msgbuf, sizeof g_data.msgbuf.mtext,
 			g_data.team_id, 0) == -1)
 		perr_exit("move_player msgrcv");
-	current->enemy = *((t_enemy *)msgbuf.mtext);
+	current->enemy = *((t_enemy *)g_data.msgbuf.mtext);
 	printf("[non TL], pid: {%u} received ennemy: %d\n", g_data.pid, current->enemy.pid);
 	current->enemy_set = 1;
 }
@@ -51,18 +49,23 @@ void	move_player()
 		init_teamleader(current);
 	else if (current->enemy_set == 0)
 		init_enemy(current);
-	/* if (current->val == 1 && allyNearEnemy() == 1) // check if two team enemy at one */
 	setCurrentVal(*current);
 	if (twoEnemiesNear(*current) == 1)
 	{
-		/* printf("clear enemy: [%lld][%lld]\n", current->enemy.y, current->enemy.x); */
 		printf("clear current: [%lld][%lld]\n", current->y, current->x);
-		/* ft_memset(&g_data.cells[current->enemy.y][current->enemy.x], */
-		/* 	0, sizeof current->enemy); // sigterm process */
 		ft_memset(current, 0, sizeof *current);
 		allyClearEnemySet();
 		if (oneTeamAlive() == 1) {
+			printf("!!!!\n");
+			g_data.msgbuf.mtype = INT_MAX;
+			ft_memset(g_data.msgbuf.mtext, 0, sizeof g_data.msgbuf.mtext);
+			ft_strcpy(g_data.msgbuf.mtext, "EndOfGame");
+			if (msgsnd(g_data.msgq_id, &g_data.msgbuf,
+					sizeof g_data.msgbuf.mtext, 0) == -1)
+				perr_exit("[msgsnd] endOfGame");
 			printf("End of game\n");
+			sleep(1);
+			ressources_erase();
 		}
 		exit(0);
 	}
