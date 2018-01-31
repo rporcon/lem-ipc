@@ -114,7 +114,7 @@ void	map_addplayer()
         perr_exit("map_addplayer sem_post");
 }
 
-void	map_currentcell(pid_t pid, t_cell **current_cell)
+void	map_currentcell(t_cell **current_cell)
 {
 	t_inc		inc;
 
@@ -124,7 +124,7 @@ void	map_currentcell(pid_t pid, t_cell **current_cell)
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
-			if (pid == g_data.cells[inc.i][inc.j].pid)
+			if (g_data.pid == g_data.cells[inc.i][inc.j].pid)
 			{
 				*current_cell = &g_data.cells[inc.i][inc.j];
 				/* printf("%lld, i: %lld, %lld, j: %lld\n", g_data.cells[inc.i][inc.j].y, inc.i, */

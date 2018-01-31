@@ -5,21 +5,19 @@ t_data	g_data;
 void	communicate()
 {
 	t_msgbuf	msgbuf;
-	pid_t		pid;
 
 	ft_memset(&msgbuf, 0, sizeof msgbuf);
 	msgq_getid();
-	pid = getpid();
-	printf("pid: %u\n", pid);
+	printf("pid: %u\n", g_data.pid);
 	while (1)
 	{
 		if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
-				(long)INT_MAX + pid, 0) == -1)
+				(long)INT_MAX + g_data.pid, 0) == -1)
 			perr_exit("communicate msgrcv");
 		map_fill();
 		if (sem_wait(g_data.sem) == -1)
 			perr_exit("communicate sem_wait");
-		move_player(pid);
+		move_player();
 		if (sem_post(g_data.sem) == -1)
 			perr_exit("communicate sem_post");
 		if (playersPlayed() == 1) {
@@ -38,6 +36,7 @@ int		main(int ac, char **av)
 	// add an erase arg to call ressources_erase
 	/* ressources_erase(); exit(0); */
 	ft_memset(&g_data, 0, sizeof g_data);
+	g_data.pid = getpid();
 	map_init();
 	get_args(ac, av);
 	sighandle(); // clear only if last process quit

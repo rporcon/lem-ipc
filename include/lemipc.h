@@ -6,6 +6,7 @@
 
 typedef struct	s_data {
 	uint32_t	team_id;
+	pid_t 		pid;
 	void		*map_mem;
 	t_cell		cells[MAP_LEN][MAP_LEN];
 	sem_t		*sem;
@@ -20,7 +21,7 @@ void		map_init();
 void		map_fill();
 void		map_addplayer();
 void		map_get();
-void		move_player(pid_t pid);
+void		move_player();
 int			print_cells();
 int			playersPlayed();
 uint32_t	playersPlayedNb();
@@ -34,9 +35,9 @@ void		setVal(t_cell current);
 void		resetCellsVal();
 int			enemiesAlive();
 uint32_t	playersNb();
-void		setNewEnemyPos(pid_t pid, t_cell newPos);
-void		map_currentcell(pid_t pid, t_cell **current_cell);
-int			allyNearEnemy(pid_t pid);
+void		setNewEnemyPos(t_cell newPos);
+void		map_currentcell(t_cell **current_cell);
+int			allyNearEnemy();
 void		allyClearEnemySet(t_enemy enemy);
 void		send_target(t_enemy enemy);
 

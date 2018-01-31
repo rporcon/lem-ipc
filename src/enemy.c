@@ -21,7 +21,7 @@ int 	enemiesAlive()
 	return (0);
 }
 
-int 	allyNearEnemy(pid_t pid)
+int 	allyNearEnemy()
 {
 	t_inc 			inc;
 
@@ -32,7 +32,7 @@ int 	allyNearEnemy(pid_t pid)
 		while (inc.j < MAP_LEN)
 		{
 			if (g_data.cells[inc.i][inc.j].team_id == g_data.team_id
-					&& g_data.cells[inc.i][inc.j].pid != pid
+					&& g_data.cells[inc.i][inc.j].pid != g_data.pid
 					&& g_data.cells[inc.i][inc.j].val == 1)
 				return (1);
 			inc.j++;
@@ -61,7 +61,7 @@ void 	allyClearEnemySet(t_enemy enemy)
 	}
 }
 
-void	setNewEnemyPos(pid_t pid, t_cell newPos)
+void	setNewEnemyPos(t_cell newPos)
 {
 	t_inc			inc;
 
@@ -72,7 +72,7 @@ void	setNewEnemyPos(pid_t pid, t_cell newPos)
 		while (inc.j < MAP_LEN)
 		{
 			if (g_data.cells[inc.i][inc.j].team_id > 0
-					&& g_data.cells[inc.i][inc.j].enemy.pid == pid)
+					&& g_data.cells[inc.i][inc.j].enemy.pid == g_data.pid)
 			{
 				fprintf(stderr, "setting new enemy pos\n");
 				g_data.cells[inc.i][inc.j].enemy.x = newPos.x;

@@ -1,39 +1,58 @@
 #include "lemipc.h"
 
-void	move_player(pid_t pid)
+void	init_teamleader(t_cell *current)
+{
+	while (enemiesAlive() == 0) {
+		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
+		sleep(1); // usleep 1/10 second
+	}
+	current->enemy = enemy_chr(*current);
+	current->enemy_set = 1;
+	printf("[TL] g_data.pid: {%u} send ennemy[%lld][%lld](%u)", g_data.pid,
+			current->enemy.y, current->enemy.x, current->enemy.pid);
+	send_target(current->enemy);
+}
+
+void 	init_enemy(t_cell *current)
 {
 	t_msgbuf	msgbuf;
-	t_cell		*current;
+
+	if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
+			g_data.team_id, 0) == -1)
+		perr_exit("move_player msgrcv");
+	current->enemy = *((t_enemy *)msgbuf.mtext);
+	printf("[non TL], pid: {%u} received ennemy: %d\n", g_data.pid, current->enemy.pid);
+	current->enemy_set = 1;
+}
+
+void	setNewCurrentPos(t_cell *current)
+{
 	t_cell 		newPos;
 
-	map_currentcell(pid, &current);
+	newPos = nearestPosToEnemy(*current);
+	printf("{pid: %u} newPos: [%lld][%lld], val: %llu\n", g_data.pid, newPos.y, newPos.x, newPos.val);
+	printf("enemy: [%lld][%lld] (pid: %u) \n", current->enemy.y, current->enemy.x, current->enemy.pid);
+	setNewEnemyPos(newPos);
+	g_data.cells[newPos.y][newPos.x] = newPos;
+	ft_memset(current, 0, sizeof *current); // clear old pos
+	g_data.cells[newPos.y][newPos.x].played = 1;
+}
+
+void	move_player()
+{
+	t_cell		*current;
+
+	map_currentcell(&current);
 	if (teamleader_exist() == 0) {
 	 	current->team_leader = 1;
 		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE); // with semaphore remove ?
 	}
 	if (current->enemy_set == 0 && current->team_leader == 1)
-	{
-		while (enemiesAlive() == 0) {
-			ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
-			sleep(1); // usleep 1/10 second
-		}
-		current->enemy = enemy_chr(*current);
-		current->enemy_set = 1;
-		printf("[TL] pid: {%u} send ennemy[%lld][%lld](%u)", pid,
-				current->enemy.y, current->enemy.x, current->enemy.pid);
-		send_target(current->enemy);
-	}
+		init_teamleader(current);
 	else if (current->enemy_set == 0)
-	{
-		if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
-				g_data.team_id, 0) == -1)
-			perr_exit("move_player msgrcv");
-		current->enemy = *((t_enemy *)msgbuf.mtext);
-		printf("[non TL], pid: {%u} received ennemy: %d\n", pid, current->enemy.pid);
-		current->enemy_set = 1;
-	}
+		init_enemy(current);
 	setVal(*current);
-	if (current->val == 1 && allyNearEnemy(pid) == 1)
+	if (current->val == 1 && allyNearEnemy() == 1)
 	{
 		printf("clear enemy: [%lld][%lld]\n", current->enemy.y, current->enemy.x);
 		ft_memset(&g_data.cells[current->enemy.y][current->enemy.x],
@@ -45,17 +64,9 @@ void	move_player(pid_t pid)
 		exit(1);
 	}
 	if (current->val != 1)
-	{
-		newPos = nearestPosToEnemy(*current);
-		printf("{pid: %u} newPos: [%lld][%lld], val: %llu\n", pid, newPos.y, newPos.x, newPos.val);
-		printf("enemy: [%lld][%lld] (pid: %u) \n", current->enemy.y, current->enemy.x, current->enemy.pid);
-		setNewEnemyPos(pid, newPos);
-		g_data.cells[newPos.y][newPos.x] = newPos;
-		ft_memset(current, 0, sizeof *current); // clear old pos
-		g_data.cells[newPos.y][newPos.x].played = 1;
-	}
+		setNewCurrentPos(current);
 	else {
-		printf("{pid: %u} currentPos: [%lld][%lld], val: %llu\n", pid, current->y, current->x, current->val);
+		printf("{pid: %u} currentPos: [%lld][%lld], val: %llu\n", g_data.pid, current->y, current->x, current->val);
 		current->played = 1;
 	}
 	printf("played ~!\n");
