@@ -21,20 +21,39 @@ int 	enemiesAlive()
 	return (0);
 }
 
-int 	allyNearEnemy()
+int		twoEnemiesNear()
 {
-	t_inc 			inc;
+	t_inc 		inc;
+	t_enemy 	enemy;
+	uint32_t	enemies_team[8];
+	int			i;
 
 	ft_memset(&inc, 0, sizeof inc);
+	ft_memset(&enemies_team, 0, sizeof enemies_team);
 	while (inc.i < MAP_LEN)
 	{
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
-			if (g_data.cells[inc.i][inc.j].team_id == g_data.team_id
-					&& g_data.cells[inc.i][inc.j].pid != g_data.pid
+			printf("[%lld][%lld] val: %llu\n", inc.i, inc.j,
+					g_data.cells[inc.i][inc.j].val);
+			enemy = g_data.cells[inc.i][inc.j].enemy;
+			if (enemy.pid == g_data.pid
 					&& g_data.cells[inc.i][inc.j].val == 1)
-				return (1);
+			{
+				i = 0;
+				printf("enemy[%lld][%lld] team_id: %u\n", enemy.y, enemy.x,
+						g_data.cells[enemy.y][enemy.x].team_id);
+				while (i < 8)
+				{
+					if (g_data.cells[enemy.y][enemy.x].team_id
+							== enemies_team[i])
+						return (1);
+					i++;
+				}
+				enemies_team[inc.k] = g_data.cells[enemy.y][enemy.x].team_id;
+				inc.k++;
+			}
 			inc.j++;
 		}
 		inc.i++;
@@ -42,7 +61,7 @@ int 	allyNearEnemy()
 	return (0);
 }
 
-void 	allyClearEnemySet(t_enemy enemy)
+void 	allyClearEnemySet()
 {
 	t_inc 			inc;
 
@@ -52,9 +71,10 @@ void 	allyClearEnemySet(t_enemy enemy)
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
-			if (g_data.cells[inc.i][inc.j].team_id == g_data.team_id
-					&& enemy.pid == g_data.cells[inc.i][inc.j].enemy.pid)
+			if (g_data.pid == g_data.cells[inc.i][inc.j].enemy.pid)
 				g_data.cells[inc.i][inc.j].enemy_set = 0;
+			/* if (g_data.cells[inc.i][inc.j].team_id == g_data.team_id */
+			/* 		&& enemy.pid == g_data.cells[inc.i][inc.j].enemy.pid) */
 			inc.j++;
 		}
 		inc.i++;

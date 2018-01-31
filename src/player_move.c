@@ -51,18 +51,22 @@ void	move_player()
 		init_teamleader(current);
 	else if (current->enemy_set == 0)
 		init_enemy(current);
-	setVal(*current);
-	if (current->val == 1 && allyNearEnemy() == 1)
+	/* if (current->val == 1 && allyNearEnemy() == 1) // check if two team enemy at one */
+	setCurrentVal(*current);
+	if (twoEnemiesNear(*current) == 1)
 	{
-		printf("clear enemy: [%lld][%lld]\n", current->enemy.y, current->enemy.x);
-		ft_memset(&g_data.cells[current->enemy.y][current->enemy.x],
-			0, sizeof current->enemy); // sigterm process
-		allyClearEnemySet(current->enemy);
+		/* printf("clear enemy: [%lld][%lld]\n", current->enemy.y, current->enemy.x); */
+		printf("clear current: [%lld][%lld]\n", current->y, current->x);
+		/* ft_memset(&g_data.cells[current->enemy.y][current->enemy.x], */
+		/* 	0, sizeof current->enemy); // sigterm process */
+		ft_memset(current, 0, sizeof *current);
+		allyClearEnemySet();
 		if (enemiesAlive() == 0) {
 			printf("End of game\n");
-			/* exit(1); */
 		}
+		exit(0);
 	}
+	setToEnemyVal(*current);
 	if (current->val != 1)
 		setNewCurrentPos(current);
 	else {

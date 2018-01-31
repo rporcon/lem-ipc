@@ -32,14 +32,16 @@ void		ressources_erase();
 void		playersResetPlayed();
 t_enemy		enemy_chr(t_cell current);
 t_cell 		nearestPosToEnemy(t_cell current);
-void		setVal(t_cell current);
+void		setCurrentVal(t_cell current);
+void		setToEnemyVal(t_cell current);
 void		resetCellsVal();
 int			enemiesAlive();
 uint32_t	playersNb();
 void		setNewEnemyPos(t_cell newPos);
 void		map_currentcell(t_cell **current_cell);
 int			allyNearEnemy();
-void		allyClearEnemySet(t_enemy enemy);
+void		allyClearEnemySet();
+int			twoEnemiesNear();
 void		send_target(t_enemy enemy);
 
 #endif
