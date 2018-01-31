@@ -58,10 +58,10 @@ void	move_player()
 		ft_memset(&g_data.cells[current->enemy.y][current->enemy.x],
 			0, sizeof current->enemy); // sigterm process
 		allyClearEnemySet(current->enemy);
-	}
-	if (enemiesAlive() == 0) {
-		printf("End of game\n");
-		exit(1);
+		if (enemiesAlive() == 0) {
+			printf("End of game\n");
+			/* exit(1); */
+		}
 	}
 	if (current->val != 1)
 		setNewCurrentPos(current);

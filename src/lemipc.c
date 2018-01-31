@@ -22,9 +22,19 @@ void	communicate()
 			perr_exit("communicate sem_post");
 		if (playersPlayed() == 1) {
 			msgbuf.mtype = INT_MAX;
-			if (msgsnd(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext, 0) == -1) // all players played
-				perr_exit("communicate msgsnd");
-			printf("msgsnd end of turn\n");
+			if (enemiesAlive() == 0) {
+				ft_strcpy(msgbuf.mtext, "EndOfGame");
+				if (msgsnd(g_data.msgq_id, &msgbuf,
+						sizeof msgbuf.mtext, 0) == -1)
+				printf("End of game\n");
+				ressources_erase();
+			}
+			else {
+				if (msgsnd(g_data.msgq_id, &msgbuf,
+						sizeof msgbuf.mtext, 0) == -1)
+					perr_exit("communicate msgsnd");
+				printf("msgsnd end of turn\n");
+			}
 			playersResetPlayed();
 			ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE); // semaphore ?
 		}

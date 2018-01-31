@@ -103,6 +103,31 @@ uint32_t	players_getnb(t_cell cells[MAP_LEN][MAP_LEN])
 	return (players_nb);
 }
 
+uint32_t 	lastTeamAliveName(t_cell cells[MAP_LEN][MAP_LEN])
+{
+	t_inc			inc;
+	uint32_t 		team_id;
+
+	ft_memset(&inc, 0, sizeof inc);
+	team_id = 0;
+	while (inc.i < MAP_LEN)
+	{
+		inc.j = 0;
+		while (inc.j < MAP_LEN)
+		{
+			if (cells[inc.i][inc.j].team_id > 0)
+			{
+				team_id = cells[inc.i][inc.j].team_id;
+				inc.i = MAP_LEN;
+				break ;
+			}
+			inc.j++;
+		}
+		inc.i++;
+	}
+	return (team_id);
+}
+
 void    players_move(t_gamedata *gdata, void *map_mem,
 			t_cell cells[MAP_LEN][MAP_LEN])
 {
@@ -111,7 +136,8 @@ void    players_move(t_gamedata *gdata, void *map_mem,
 	i = 0;
 	while (i < players_getnb(cells)) {
 		gdata->msgbuf.mtype = (long)INT_MAX + gdata->players[i].pid;
-		if (msgsnd(gdata->msgq_id, &gdata->msgbuf, sizeof gdata->msgbuf.mtext, 0) == -1)
+		if (msgsnd(gdata->msgq_id, &gdata->msgbuf,
+				sizeof gdata->msgbuf.mtext, 0) == -1)
 			perr_exit("players_move msgsnd");
 		sleep(1);
 		i++;
@@ -125,6 +151,11 @@ void    players_move(t_gamedata *gdata, void *map_mem,
 	printf("turn finished\n");
 	map_fill(map_mem, cells);
 	map_print(cells, 0);
+	if (ft_strcmp(gdata->msgbuf.mtext, "EndOfGame") == 0)
+	{
+		printf("[End of game]\nWinner is team %u\n", lastTeamAliveName(cells));
+		exit (0);
+	}
 }
 
 void    game_init(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])

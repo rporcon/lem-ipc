@@ -127,8 +127,6 @@ void	map_currentcell(t_cell **current_cell)
 			if (g_data.pid == g_data.cells[inc.i][inc.j].pid)
 			{
 				*current_cell = &g_data.cells[inc.i][inc.j];
-				/* printf("%lld, i: %lld, %lld, j: %lld\n", g_data.cells[inc.i][inc.j].y, inc.i, */
-				/* 		g_data.cells[inc.i][inc.j].x, inc.j); raise(SIGINT); */
 				return ;
 			}
 			inc.j++;
@@ -162,6 +160,9 @@ void	ressources_erase()
 {
 	int				fd;
 	struct stat		st;
+	sem_t			*sem;
+	int 			msgq_id;
+	key_t			key;
 
 	if ((fd = shm_open("/shm-lemipc_map", O_RDONLY, 0644)) == -1)
 		perr_exit("read shm_open");
@@ -169,7 +170,13 @@ void	ressources_erase()
 	close(fd);
 	munmap(g_data.map_mem, st.st_size);
 	shm_unlink("/shm-lemipc_map");
+    if ((sem = sem_open("/sem-lemipc_map", 0)) == SEM_FAILED)
+        perr_exit("map_addplayer sem_open");
     sem_unlink("/sem-lemipc_map");
+	if ((key = ftok("./src/msg.c", '*')) == -1)
+		perr_exit("msg_getid ftok");
+	if ((msgq_id = msgget(key, 0644 | IPC_CREAT)) == -1)
+		perr_exit("msg_getid msgget");
 	msgctl(g_data.msgq_id, IPC_RMID, NULL);
 	exit(0);
 }

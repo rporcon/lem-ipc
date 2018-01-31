@@ -2,8 +2,14 @@
 
 void	sighandler(int sig)
 {
+	t_cell	*current;
+
 	if (sig == SIGINT) {
-		ressources_erase();
+		map_currentcell(&current);
+		ft_memset(current, 0, sizeof *current);
+		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
+		if (enemiesAlive() == 0)
+			ressources_erase();
 	}
 }
 

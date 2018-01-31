@@ -2,7 +2,10 @@
 
 void		print_help()
 {
-	printf("Usage: ./lemipc [team id]\n");
+	printf("Usage: ./lemipc [team id] [options]\n"
+		"\t-h     print this help screen\n"
+		"\t-e     erase all ressources\n"
+	);
 	exit(0);
 }
 
@@ -30,11 +33,14 @@ void	get_args(int ac, char **av)
 {
 	char	c;
 
-	while ((c = getopt (ac, av, "6hrke:g")) != -1) {
+	while ((c = getopt(ac, av, "he")) != -1) {
 		switch (c)
 		{
 			case 'h':
 				print_help();
+				break ;
+			case 'e':
+				ressources_erase();
 				break ;
 			case '?':
 				if (ft_isprint (optopt))
