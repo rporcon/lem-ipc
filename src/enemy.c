@@ -21,6 +21,24 @@ int 	enemiesAlive()
 	return (0);
 }
 
+/* int		addSurroundedEnemy(t_enemy enemy, uint32_t enemies_team[8], */
+/* 			int64_t *k) */
+/* { */
+/* 	int		i; */
+
+/* 	i = 0; */
+/* 	while (i < 8) */
+/* 	{ */
+/* 		if (g_data.cells[enemy.y][enemy.x].team_id */
+/* 				== enemies_team[i]) */
+/* 			return (1); */
+/* 		i++; */
+/* 	} */
+/* 	enemies_team[*k] = g_data.cells[enemy.y][enemy.x].team_id; */
+/* 	(*k)++; */
+/* 	return (0); */
+/* } */
+
 int		twoEnemiesNear()
 {
 	t_inc 		inc;
