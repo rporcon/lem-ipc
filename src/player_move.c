@@ -61,7 +61,7 @@ void	move_player()
 		/* 	0, sizeof current->enemy); // sigterm process */
 		ft_memset(current, 0, sizeof *current);
 		allyClearEnemySet();
-		if (enemiesAlive() == 0) {
+		if (oneTeamAlive() == 1) {
 			printf("End of game\n");
 		}
 		exit(0);

@@ -53,15 +53,15 @@ int		twoEnemiesNear()
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
-			printf("[%lld][%lld] val: %llu\n", inc.i, inc.j,
-					g_data.cells[inc.i][inc.j].val);
+			/* printf("[%lld][%lld] val: %llu\n", inc.i, inc.j, */
+			/* 		g_data.cells[inc.i][inc.j].val); */
 			enemy = g_data.cells[inc.i][inc.j].enemy;
 			if (enemy.pid == g_data.pid
 					&& g_data.cells[inc.i][inc.j].val == 1)
 			{
 				i = 0;
-				printf("enemy[%lld][%lld] team_id: %u\n", enemy.y, enemy.x,
-						g_data.cells[enemy.y][enemy.x].team_id);
+				/* printf("enemy[%lld][%lld] team_id: %u\n", enemy.y, enemy.x, */
+				/* 		g_data.cells[enemy.y][enemy.x].team_id); */
 				while (i < 8)
 				{
 					if (g_data.cells[enemy.y][enemy.x].team_id

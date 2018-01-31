@@ -45,8 +45,7 @@ void	communicate()
 
 int		main(int ac, char **av)
 {
-	// add an erase arg to call ressources_erase
-	/* ressources_erase(); exit(0); */
+	// cannot chose 0 for name of team id
 	ft_memset(&g_data, 0, sizeof g_data);
 	g_data.pid = getpid();
 	map_init();

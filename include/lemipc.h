@@ -36,6 +36,7 @@ void		setCurrentVal(t_cell current);
 void		setToEnemyVal(t_cell current);
 void		resetCellsVal();
 int			enemiesAlive();
+int			oneTeamAlive();
 uint32_t	playersNb();
 void		setNewEnemyPos(t_cell newPos);
 void		map_currentcell(t_cell **current_cell);
