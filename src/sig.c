@@ -8,8 +8,12 @@ void	sighandler(int sig)
 		map_currentcell(&current);
 		ft_memset(current, 0, sizeof *current);
 		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
-		if (enemiesAlive() == 0)
+		if (enemiesAlive() == 0 && g_data.gameLaunched == 1)
+		{
+			fprintf(stderr, "ressources erase\n");
 			ressources_erase();
+		}
+		exit (0);
 	}
 }
 

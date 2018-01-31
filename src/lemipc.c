@@ -14,6 +14,8 @@ void	communicate()
 		if (msgrcv(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext,
 				(long)INT_MAX + g_data.pid, 0) == -1)
 			perr_exit("communicate msgrcv");
+		if (g_data.gameLaunched == 0)
+			g_data.gameLaunched = 1;
 		map_fill();
 		if (sem_wait(g_data.sem) == -1)
 			perr_exit("communicate sem_wait");
