@@ -114,9 +114,15 @@ void 	setVal(t_cell current)
 		{
 			if (g_data.cells[inc.i][inc.j].val == 0)
 			{
-				g_data.cells[inc.i][inc.j].val = abs((int)(current.enemy.x -
-					g_data.cells[inc.i][inc.j].x)) + abs((int)(
-					current.enemy.y - g_data.cells[inc.i][inc.j].y));
+				if (abs((int)(current.enemy.x - g_data.cells[inc.i][inc.j].x))
+						== 1 && abs((int)(current.enemy.y -
+						g_data.cells[inc.i][inc.j].y)) == 1)
+					g_data.cells[inc.i][inc.j].val = 1;
+				else {
+					g_data.cells[inc.i][inc.j].val = abs((int)(current.enemy.x -
+						g_data.cells[inc.i][inc.j].x)) + abs((int)(
+						current.enemy.y - g_data.cells[inc.i][inc.j].y));
+				}
 			}
 			inc.j++;
 		}
@@ -211,9 +217,6 @@ void	move_player(pid_t pid)
 		printf("received ennemy: %d\n", current->enemy.pid);
 		current->enemy_set = 1;
 	}
-	printf("{pid: %u} currentPos: [%lld][%lld], newPos: [%lld][%lld], val: %llu\n",
-			pid, current->y, current->x, newPos.y, newPos.x, newPos.val);
-	printf("enemy: [%lld][%lld] (pid: %u) \n", current->enemy.y, current->enemy.x, current->enemy.pid);
 	setVal(*current);
 	if (current->val == 1 && allyNearEnemy(pid) == 1)
 	{
@@ -229,13 +232,18 @@ void	move_player(pid_t pid)
 	if (current->val != 1)
 	{
 		newPos = nearestPosToEnemy(*current);
+		printf("{pid: %u} newPos: [%lld][%lld], val: %llu\n",
+				pid, newPos.y, newPos.x, newPos.val);
+		printf("enemy: [%lld][%lld] (pid: %u) \n", current->enemy.y, current->enemy.x, current->enemy.pid);
 		setNewEnemyPos(pid, newPos);
 		g_data.cells[newPos.y][newPos.x] = newPos;
 		ft_memset(current, 0, sizeof *current); // clear old pos
 		g_data.cells[newPos.y][newPos.x].played = 1;
 	}
-	else
+	else {
+		printf("{pid: %u} currentPos: [%lld][%lld], val: %llu\n", pid, current->y, current->x, current->val);
 		current->played = 1;
+	}
 	printf("played ~!\n");
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 }
