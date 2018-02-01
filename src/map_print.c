@@ -146,7 +146,7 @@ void    players_move(t_gamedata *gdata, void *map_mem,
 	// waiting every players to have played
 	gdata->msgbuf.mtype = INT_MAX;
 	if (msgrcv(gdata->msgq_id, &gdata->msgbuf, sizeof gdata->msgbuf.mtext,
-				gdata->msgbuf.mtype, 0) == -1)
+			gdata->msgbuf.mtype, 0) == -1)
 		perr_exit("players_move msgrcv");
 	printf("turn finished\n");
 	hexdump(&gdata->msgbuf.mtext, 16);

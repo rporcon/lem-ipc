@@ -27,6 +27,8 @@ void	req_args(int ac, char **av)
 	}
 	if (reqarg_nb != 1)
 		print_help();
+	if (g_data.team_id == 0 || g_data.team_id >= 100)
+		err_exit("Invalid team_id name (maybe too long)", 1);
 }
 
 void	get_args(int ac, char **av)
@@ -43,7 +45,7 @@ void	get_args(int ac, char **av)
 				ressources_erase();
 				break ;
 			case '?':
-				if (ft_isprint (optopt))
+				if (ft_isprint(optopt))
 					fprintf(stderr, "Unknown option '-%c'.\n", optopt);
 				else
 					fprintf(stderr, "Unknown option character '%c'.\n",
