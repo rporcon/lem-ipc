@@ -102,9 +102,11 @@ void	map_addplayer()
 
     if ((g_data.sem = sem_open("/sem-lemipc_map", 0)) == SEM_FAILED)
         perr_exit("map_addplayer sem_open");
+	get_coords(&coords);
+	if (g_data.cells[coords.y][coords.x].team_id > 0)
+		err_exit("player already exist on this coord", 1);
     if (sem_wait(g_data.sem) == -1)
         perr_exit("map_addplayer sem_wait");
-	get_coords(&coords);
 	g_data.cells[coords.y][coords.x].team_id = g_data.team_id;
 	g_data.cells[coords.y][coords.x].pid = getpid();
 	g_data.cells[coords.y][coords.x].x = coords.x;
@@ -165,18 +167,18 @@ void	ressources_erase()
 	key_t			key;
 
 	if ((fd = shm_open("/shm-lemipc_map", O_RDONLY, 0644)) == -1)
-		perr_exit("read shm_open");
+		perr_exit("ressources_erase shm_open");
 	fstat(fd, &st);
 	close(fd);
 	munmap(g_data.map_mem, st.st_size);
 	shm_unlink("/shm-lemipc_map");
     if ((sem = sem_open("/sem-lemipc_map", 0)) == SEM_FAILED)
-        perr_exit("map_addplayer sem_open");
+        perr_exit("ressources_erase sem_open");
     sem_unlink("/sem-lemipc_map");
 	if ((key = ftok("./src/msg.c", '*')) == -1)
-		perr_exit("msg_getid ftok");
+		perr_exit("ressources_erase ftok");
 	if ((msgq_id = msgget(key, 0644 | IPC_CREAT)) == -1)
-		perr_exit("msg_getid msgget");
+		perr_exit("ressources_erase msgget");
 	msgctl(g_data.msgq_id, IPC_RMID, NULL);
 	exit(0);
 }

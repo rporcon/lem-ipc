@@ -45,7 +45,7 @@ void	communicate(void)
 
 int		main(int ac, char **av)
 {
-	// clear map
+	// clear map not working
 	ft_memset(&g_data, 0, sizeof(g_data));
 	g_data.pid = getpid();
 	map_init();

@@ -3,6 +3,7 @@
 
 #include "map.h"
 #include <assert.h>
+#define __DEBUG 0
 
 typedef struct	s_data {
 	uint32_t	team_id;

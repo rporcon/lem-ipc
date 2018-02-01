@@ -39,6 +39,7 @@ void	map_print(t_cell cells[MAP_LEN][MAP_LEN], int type)
 	t_inc			inc;
 
 	ft_memset(&inc, 0, sizeof inc);
+	/* system("clear"); */
 	ft_putstr("--------------------------------\n");
 	while (inc.i < MAP_LEN)
 	{
@@ -197,7 +198,6 @@ int     main()
 	t_cell  cells[MAP_LEN][MAP_LEN];
 	t_cell  cells_tmp[MAP_LEN][MAP_LEN];
 
-	// must be able to close and reopen graphic client and see the same map
 	map_mem = NULL;
 	ft_memset(cells, 0, MAP_SIZE);
 	map_get(&map_mem);
