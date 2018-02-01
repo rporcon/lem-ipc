@@ -43,7 +43,7 @@ void	move_player()
 	map_currentcell(&current);
 	if (teamleader_exist() == 0) {
 	 	current->team_leader = 1;
-		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE); // with semaphore remove ?
+		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE); //sem
 	}
 	if (current->enemy_set == 0 && current->team_leader == 1)
 		init_teamleader(current);
@@ -58,14 +58,15 @@ void	move_player()
 		if (oneTeamAlive() == 1) {
 			printf("!!!!\n");
 			g_data.msgbuf.mtype = INT_MAX;
-			ft_memset(g_data.msgbuf.mtext, 0, sizeof g_data.msgbuf.mtext);
+			/* ft_memset(g_data.msgbuf.mtext, 0, sizeof g_data.msgbuf.mtext); */
 			ft_strcpy(g_data.msgbuf.mtext, "EndOfGame");
+			ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 			if (msgsnd(g_data.msgq_id, &g_data.msgbuf,
 					sizeof g_data.msgbuf.mtext, 0) == -1)
 				perr_exit("[msgsnd] endOfGame");
 			printf("End of game\n");
 			sleep(1);
-			ressources_erase();
+			/* ressources_erase(); */
 		}
 		exit(0);
 	}
@@ -77,5 +78,5 @@ void	move_player()
 		current->played = 1;
 	}
 	printf("played ~!\n");
-	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
+	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);//sem
 }

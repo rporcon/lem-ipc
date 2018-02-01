@@ -149,6 +149,7 @@ void    players_move(t_gamedata *gdata, void *map_mem,
 				gdata->msgbuf.mtype, 0) == -1)
 		perr_exit("players_move msgrcv");
 	printf("turn finished\n");
+	hexdump(&gdata->msgbuf.mtext, 16);
 	map_fill(map_mem, cells);
 	map_print(cells, 0);
 	if (ft_strcmp(gdata->msgbuf.mtext, "EndOfGame") == 0)
