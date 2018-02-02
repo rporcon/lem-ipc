@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 14:46:34 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/02 14:53:11 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/02 15:56:15 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,11 @@ void	clear_current(t_cell *current)
 		printf("clear current: [%lld][%lld]\n", current->y, current->x);
 	ft_memset(current, 0, sizeof(*current));
 	ally_clear_enemyset();
+	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 	if (oneteam_alive() == 1)
 	{
 		g_data.msgbuf.mtype = INT_MAX;
 		ft_strcpy(g_data.msgbuf.mtext, "EndOfGame");
-		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 		if (msgsnd(g_data.msgq_id, &g_data.msgbuf,
 				sizeof(g_data.msgbuf.mtext), 0) == -1)
 			perr_exit("[msgsnd] endOfGame");

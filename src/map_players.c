@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 15:10:41 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/02 15:16:22 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/02 17:03:48 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,30 +79,29 @@ uint32_t	lastteam_alive_name(t_cell cells[MAP_LEN][MAP_LEN])
 	return (team_id);
 }
 
-void		players_move(t_gamedata *gdata, void *map_mem,
-				t_cell cells[MAP_LEN][MAP_LEN])
+void		players_move(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 {
 	size_t	i;
 
 	i = 0;
 	while (i < players_getnb(cells))
 	{
-		gdata->msgbuf.mtype = (long)INT_MAX + gdata->players[i].pid;
-		if (msgsnd(gdata->msgq_id, &gdata->msgbuf,
-				sizeof(gdata->msgbuf.mtext), 0) == -1)
+		g_data.msgbuf.mtype = (long)INT_MAX + g_data.players[i].pid;
+		if (msgsnd(g_data.msgq_id, &g_data.msgbuf,
+				sizeof(g_data.msgbuf.mtext), 0) == -1)
 			perr_exit("players_move msgsnd");
 		sleep(1);
 		i++;
 	}
 	DBG == 1 ? printf("sdmsg to %d players\n", players_getnb(cells)) : (void)0;
-	gdata->msgbuf.mtype = INT_MAX;
-	if (msgrcv(gdata->msgq_id, &gdata->msgbuf, sizeof(gdata->msgbuf.mtext),
-			gdata->msgbuf.mtype, 0) == -1)
+	g_data.msgbuf.mtype = INT_MAX;
+	if (msgrcv(g_data.msgq_id, &g_data.msgbuf, sizeof(g_data.msgbuf.mtext),
+			g_data.msgbuf.mtype, 0) == -1)
 		perr_exit("players_move msgrcv");
 	DBG == 1 ? printf("turn finished\n") : (void)0;
 	map_fill(map_mem, cells);
 	map_print(cells, 0);
-	if (ft_strcmp(gdata->msgbuf.mtext, "EndOfGame") == 0)
+	if (ft_strcmp(g_data.msgbuf.mtext, "EndOfGame") == 0)
 	{
 		printf("[End of game]\nteam %u won !\n", lastteam_alive_name(cells));
 		exit(0);

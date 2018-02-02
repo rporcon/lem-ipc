@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 15:07:27 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/02 15:09:14 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/02 15:27:53 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <sys/msg.h>
 # include <limits.h>
 
-# define MAP_LEN 8
+# define MAP_LEN 3
 # define MAP_SIZE sizeof (t_cell) * (MAP_LEN * MAP_LEN)
 # define ENEMY_SIZE MAP_SIZE / 2
 

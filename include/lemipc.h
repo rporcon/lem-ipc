@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 15:05:32 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/02 15:07:11 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/02 15:59:06 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 # include "map.h"
 # include <assert.h>
-# define DBG 0
+# define DBG 1
 
 typedef struct	s_data {
 	uint32_t	team_id;

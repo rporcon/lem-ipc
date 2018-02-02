@@ -18,7 +18,7 @@ LEMIPC_SRC = $(addprefix $(SRCS_DIR), $(LEMIPC_SRC_FILE))
 
 LEMIPC_OBJ = $(LEMIPC_SRC:%.c=%.o)
 
-MAP_SRC_FILE = map_players.c map_print.c
+MAP_SRC_FILE = map_args.c map_players.c map_print.c
 
 MAP_SRC = $(addprefix $(SRCS_DIR), $(MAP_SRC_FILE))
 
