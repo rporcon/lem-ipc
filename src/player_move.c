@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 14:46:34 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/02 15:56:15 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/02 18:59:06 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,24 +22,24 @@ void	init_teamleader(t_cell *current)
 	current->enemy = enemy_chr(*current);
 	current->enemy_set = 1;
 	if (DBG == 1)
-	{
-		printf("[TL] g_data.pid: {%u} send ennemy[%lld][%lld](%u)", g_data.pid,
-			current->enemy.y, current->enemy.x, current->enemy.pid);
-	}
+		printf("[TL] g_data.pid: {%u} send ennemy[%lld][%lld] pid: %u\n",
+				g_data.pid, current->enemy.y, current->enemy.x,
+				current->enemy.pid);
 	send_target(current->enemy);
 }
 
 void	init_enemy(t_cell *current)
 {
+	if (DBG == 1)
+		printf("[non TL], pid: {%u} waiting for ennemy pid\n",
+			current->enemy.pid);
 	if (msgrcv(g_data.msgq_id, &g_data.msgbuf, sizeof(g_data.msgbuf.mtext),
 			g_data.team_id, 0) == -1)
 		perr_exit("move_player msgrcv");
 	current->enemy = *((t_enemy *)g_data.msgbuf.mtext);
 	if (DBG == 1)
-	{
-		printf("[non TL], pid: {%u} received ennemy: %d\n",
+		printf("[non TL], pid: {%u} received ennemy pid: %d\n",
 			g_data.pid, current->enemy.pid);
-	}
 	current->enemy_set = 1;
 }
 
@@ -78,6 +78,8 @@ void	clear_current(t_cell *current)
 		sleep(3);
 		ressources_erase();
 	}
+	if (sem_post(g_data.sem) == -1)
+		perr_exit("communicate sem_post");
 	exit(0);
 }
 
