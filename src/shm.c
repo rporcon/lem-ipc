@@ -159,6 +159,8 @@ void	map_fill(void)
 {
 	t_inc			inc;
 
+	if (DBG == 1)
+		printf("----------------\n");
 	ft_memset(&inc, 0, sizeof(inc));
 	while (inc.i < MAP_LEN)
 	{

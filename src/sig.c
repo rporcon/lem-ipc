@@ -21,6 +21,7 @@ void	sighandler(int sig)
 	current = NULL;
 	if (sig == SIGINT)
 	{
+		sem_post(g_data.sem);
 		map_fill();
 		map_currentcell(&current);
 		if (current != NULL)

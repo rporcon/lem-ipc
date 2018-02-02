@@ -106,7 +106,7 @@ void	move_player(void)
 	else
 		current->played = 1;
 	if (DBG == 1)
-		printf("{pid: %u} currentPos: [%lld][%lld], val: %llu\n",
-			g_data.pid, current->y, current->x, current->val);
+		printf("{pid: %u} currentPos: [%lld][%lld], val: %llu\n---------------"
+				"-\n", g_data.pid, current->y, current->x, current->val);
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 }

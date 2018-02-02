@@ -22,7 +22,7 @@
 # include <sys/msg.h>
 # include <limits.h>
 
-# define MAP_LEN 3
+# define MAP_LEN 4
 # define MAP_SIZE sizeof (t_cell) * (MAP_LEN * MAP_LEN)
 # define ENEMY_SIZE MAP_SIZE / 2
 
