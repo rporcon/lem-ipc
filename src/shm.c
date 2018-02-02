@@ -27,7 +27,7 @@ int		print_cells()
 {
 	t_inc			inc;
 
-	ft_memset(&inc, 0, sizeof inc);
+	ft_memset(&inc, 0, sizeof(inc));
 	while (inc.i < MAP_LEN)
 	{
 		inc.j = 0;
@@ -78,7 +78,8 @@ void	get_coords(t_coord *coords)
 	printf("Enter your coords (must be y, x) :\n");
 	while (1)
 	{
-		fgets(usercoord, sizeof usercoord, stdin);
+		if (fgets(usercoord, sizeof usercoord, stdin) == NULL)
+			err_exit("invalid coord", 1);
 		coords_str = strsplit(usercoord, ',');
 		if (sstrlen(coords_str) != 2) {
 			get_coords_err(1, usercoord, sizeof usercoord);
@@ -120,7 +121,7 @@ void	map_currentcell(t_cell **current_cell)
 {
 	t_inc		inc;
 
-	ft_memset(&inc, 0, sizeof inc);
+	ft_memset(&inc, 0, sizeof(inc));
 	while (inc.i < MAP_LEN)
 	{
 		inc.j = 0;
@@ -142,7 +143,7 @@ void	map_fill()
 {
 	t_inc			inc;
 
-	ft_memset(&inc, 0, sizeof inc);
+	ft_memset(&inc, 0, sizeof(inc));
 	while (inc.i < MAP_LEN)
 	{
 		inc.j = 0;
@@ -160,17 +161,10 @@ void	map_fill()
 
 void	ressources_erase()
 {
-	int				fd;
-	struct stat		st;
 	sem_t			*sem;
 	int 			msgq_id;
 	key_t			key;
 
-	if ((fd = shm_open("/shm-lemipc_map", O_RDONLY, 0644)) == -1)
-		perr_exit("ressources_erase shm_open");
-	fstat(fd, &st);
-	close(fd);
-	munmap(g_data.map_mem, st.st_size);
 	shm_unlink("/shm-lemipc_map");
     if ((sem = sem_open("/sem-lemipc_map", 0)) == SEM_FAILED)
         perr_exit("ressources_erase sem_open");

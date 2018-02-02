@@ -3,7 +3,7 @@
 
 #include "map.h"
 #include <assert.h>
-#define __DEBUG 0
+#define DBG 0
 
 typedef struct	s_data {
 	uint32_t	team_id;
@@ -34,17 +34,17 @@ void		ressources_erase();
 void		playersResetPlayed();
 t_enemy		enemy_chr(t_cell current);
 t_cell 		nearestPosToEnemy(t_cell current);
-void		setCurrentVal(t_cell current);
-void		setToEnemyVal(t_cell current);
-void		resetCellsVal();
-int			enemiesAlive();
+void		set_currentval(t_cell current);
+void		set_to_enemyval(t_cell current);
+void		reset_cells_val();
+int			enemies_alive();
 int			oneTeamAlive();
 uint32_t	playersNb();
-void		setNewEnemyPos(t_cell newPos);
+void		set_newenemy_pos(t_cell newPos);
 void		map_currentcell(t_cell **current_cell);
 int			allyNearEnemy();
-void		allyClearEnemySet();
-int			twoEnemiesNear();
+void		ally_clear_enemyset();
+int			two_enemies_near();
 void		send_target(t_enemy enemy);
 
 #endif

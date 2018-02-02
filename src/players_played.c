@@ -4,7 +4,7 @@ int 	playersPlayed()
 {
 	t_inc	inc;
 
-	ft_memset(&inc, 0, sizeof inc);
+	ft_memset(&inc, 0, sizeof(inc));
 	while (inc.i < MAP_LEN)
 	{
 		inc.j = 0;
@@ -17,7 +17,8 @@ int 	playersPlayed()
 		}
 		inc.i++;
 	}
-	printf("all players have played\n");
+	if (DBG == 1)
+		printf("all players have played\n");
 	return (1);
 }
 
@@ -26,7 +27,7 @@ void 	playersResetPlayed()
 	t_inc	inc;
 	size_t 	nb;
 
-	ft_memset(&inc, 0, sizeof inc);
+	ft_memset(&inc, 0, sizeof(inc));
 	nb = 0;
 	while (inc.i < MAP_LEN)
 	{
@@ -47,7 +48,7 @@ uint32_t	playersPlayedNb()
 	t_inc	inc;
 	size_t 	nb;
 
-	ft_memset(&inc, 0, sizeof inc);
+	ft_memset(&inc, 0, sizeof(inc));
 	nb = 0;
 	while (inc.i < MAP_LEN)
 	{

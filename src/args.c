@@ -1,11 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   args.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/02/02 12:54:26 by rporcon           #+#    #+#             */
+/*   Updated: 2018/02/02 14:32:53 by rporcon          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lemipc.h"
 
-void		print_help()
+void	print_help(void)
 {
 	printf("Usage: ./lemipc [team id] [options]\n"
-		"\t-h     print this help screen\n"
-		"\t-e     erase all ressources\n"
-	);
+			"\t-h     print this help screen\n"
+			"\t-e     erase all ressources\n");
 	exit(0);
 }
 
@@ -35,24 +46,20 @@ void	get_args(int ac, char **av)
 {
 	char	c;
 
-	while ((c = getopt(ac, av, "he")) != -1) {
-		switch (c)
+	while ((c = getopt(ac, av, "he")) != -1)
+	{
+		if (c == 'h')
+			print_help();
+		else if (c == 'e')
+			ressources_erase();
+		else if (c == '?')
 		{
-			case 'h':
-				print_help();
-				break ;
-			case 'e':
-				ressources_erase();
-				break ;
-			case '?':
-				if (ft_isprint(optopt))
-					fprintf(stderr, "Unknown option '-%c'.\n", optopt);
-				else
-					fprintf(stderr, "Unknown option character '%c'.\n",
-						optopt);
-				exit(1);
-			default:
-				break ;
+			if (ft_isprint(optopt))
+				fprintf(stderr, "Unknown option '-%c'.\n", optopt);
+			else
+				fprintf(stderr, "Unknown option character '%c'.\n",
+					optopt);
+			exit(1);
 		}
 	}
 	req_args(ac, av);

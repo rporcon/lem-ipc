@@ -5,7 +5,7 @@ int		oneTeamAlive()
 	t_inc		inc;
 	uint32_t	teamid;
 
-	ft_memset(&inc, 0, sizeof inc);
+	ft_memset(&inc, 0, sizeof(inc));
 	teamid = 0;
 	while (inc.i < MAP_LEN)
 	{
@@ -30,7 +30,7 @@ int		teamleader_exist()
 {
 	t_inc			inc;
 
-	ft_memset(&inc, 0, sizeof inc);
+	ft_memset(&inc, 0, sizeof(inc));
 	while (inc.i < MAP_LEN)
 	{
 		inc.j = 0;
@@ -52,7 +52,7 @@ uint32_t	playersNb()
 	t_inc			inc;
 	uint32_t		players_nb;
 
-	ft_memset(&inc, 0, sizeof inc);
+	ft_memset(&inc, 0, sizeof(inc));
 	players_nb = 0;
 	while (inc.i < MAP_LEN)
 	{

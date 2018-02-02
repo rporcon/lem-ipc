@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 16:38:57 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/01 17:13:18 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/02 14:24:18 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,6 @@ t_data	g_data;
 void	communicate(void)
 {
 	msgq_getid();
-	/* printf("pid: %u\n", g_data.pid); */
 	while (1)
 	{
 		if (msgrcv(g_data.msgq_id, &g_data.msgbuf, sizeof(g_data.msgbuf.mtext),
@@ -45,15 +44,15 @@ void	communicate(void)
 
 int		main(int ac, char **av)
 {
-	// clear map not working
 	ft_memset(&g_data, 0, sizeof(g_data));
 	g_data.pid = getpid();
-	map_init();
+	if (DBG == 1)
+		printf("pid: [%u]\n", g_data.pid);
 	get_args(ac, av);
+	map_init();
 	sighandle();
 	map_get();
 	map_fill();
-	// error if player on case already exist
 	map_addplayer();
 	communicate();
 	return (0);

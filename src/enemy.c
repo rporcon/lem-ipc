@@ -1,10 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   enemy.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/02/02 13:51:19 by rporcon           #+#    #+#             */
+/*   Updated: 2018/02/02 14:14:57 by rporcon          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lemipc.h"
 
-int 	enemiesAlive()
+int		enemies_alive(void)
 {
 	t_inc			inc;
 
-	ft_memset(&inc, 0, sizeof inc);
+	ft_memset(&inc, 0, sizeof(inc));
 	while (inc.i < MAP_LEN)
 	{
 		inc.j = 0;
@@ -21,57 +33,43 @@ int 	enemiesAlive()
 	return (0);
 }
 
-/* int		addSurroundedEnemy(t_enemy enemy, uint32_t enemies_team[8], */
-/* 			int64_t *k) */
-/* { */
-/* 	int		i; */
-
-/* 	i = 0; */
-/* 	while (i < 8) */
-/* 	{ */
-/* 		if (g_data.cells[enemy.y][enemy.x].team_id */
-/* 				== enemies_team[i]) */
-/* 			return (1); */
-/* 		i++; */
-/* 	} */
-/* 	enemies_team[*k] = g_data.cells[enemy.y][enemy.x].team_id; */
-/* 	(*k)++; */
-/* 	return (0); */
-/* } */
-
-int		twoEnemiesNear()
+int		surrounded_by_enemies(t_inc inc, uint32_t enemies_team[8])
 {
-	t_inc 		inc;
-	t_enemy 	enemy;
-	uint32_t	enemies_team[8];
 	int			i;
+	t_enemy		enemy;
 
-	ft_memset(&inc, 0, sizeof inc);
-	ft_memset(&enemies_team, 0, sizeof enemies_team);
+	i = 0;
+	enemy = g_data.cells[inc.i][inc.j].enemy;
+	if (enemy.pid == g_data.pid
+			&& g_data.cells[inc.i][inc.j].val == 1)
+	{
+		i = 0;
+		while (i < 8)
+		{
+			if (g_data.cells[enemy.y][enemy.x].team_id == enemies_team[i])
+				return (1);
+			i++;
+		}
+		enemies_team[inc.k] = g_data.cells[enemy.y][enemy.x].team_id;
+		inc.k++;
+	}
+	return (0);
+}
+
+int		two_enemies_near(void)
+{
+	t_inc		inc;
+	uint32_t	enemies_team[8];
+
+	ft_memset(&inc, 0, sizeof(inc));
+	ft_memset(&enemies_team, 0, sizeof(enemies_team));
 	while (inc.i < MAP_LEN)
 	{
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
-			/* printf("[%lld][%lld] val: %llu\n", inc.i, inc.j, */
-			/* 		g_data.cells[inc.i][inc.j].val); */
-			enemy = g_data.cells[inc.i][inc.j].enemy;
-			if (enemy.pid == g_data.pid
-					&& g_data.cells[inc.i][inc.j].val == 1)
-			{
-				i = 0;
-				/* printf("enemy[%lld][%lld] team_id: %u\n", enemy.y, enemy.x, */
-				/* 		g_data.cells[enemy.y][enemy.x].team_id); */
-				while (i < 8)
-				{
-					if (g_data.cells[enemy.y][enemy.x].team_id
-							== enemies_team[i])
-						return (1);
-					i++;
-				}
-				enemies_team[inc.k] = g_data.cells[enemy.y][enemy.x].team_id;
-				inc.k++;
-			}
+			if (surrounded_by_enemies(inc, enemies_team) == 1)
+				return (1);
 			inc.j++;
 		}
 		inc.i++;
@@ -79,11 +77,11 @@ int		twoEnemiesNear()
 	return (0);
 }
 
-void 	allyClearEnemySet()
+void	ally_clear_enemyset(void)
 {
-	t_inc 			inc;
+	t_inc	inc;
 
-	ft_memset(&inc, 0, sizeof inc);
+	ft_memset(&inc, 0, sizeof(inc));
 	while (inc.i < MAP_LEN)
 	{
 		inc.j = 0;
@@ -91,19 +89,17 @@ void 	allyClearEnemySet()
 		{
 			if (g_data.pid == g_data.cells[inc.i][inc.j].enemy.pid)
 				g_data.cells[inc.i][inc.j].enemy_set = 0;
-			/* if (g_data.cells[inc.i][inc.j].team_id == g_data.team_id */
-			/* 		&& enemy.pid == g_data.cells[inc.i][inc.j].enemy.pid) */
 			inc.j++;
 		}
 		inc.i++;
 	}
 }
 
-void	setNewEnemyPos(t_cell newPos)
+void	set_newenemy_pos(t_cell new_pos)
 {
 	t_inc			inc;
 
-	ft_memset(&inc, 0, sizeof inc);
+	ft_memset(&inc, 0, sizeof(inc));
 	while (inc.i < MAP_LEN)
 	{
 		inc.j = 0;
@@ -112,9 +108,8 @@ void	setNewEnemyPos(t_cell newPos)
 			if (g_data.cells[inc.i][inc.j].team_id > 0
 					&& g_data.cells[inc.i][inc.j].enemy.pid == g_data.pid)
 			{
-				fprintf(stderr, "setting new enemy pos\n");
-				g_data.cells[inc.i][inc.j].enemy.x = newPos.x;
-				g_data.cells[inc.i][inc.j].enemy.y = newPos.y;
+				g_data.cells[inc.i][inc.j].enemy.x = new_pos.x;
+				g_data.cells[inc.i][inc.j].enemy.y = new_pos.y;
 			}
 			inc.j++;
 		}

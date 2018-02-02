@@ -15,7 +15,7 @@ void	send_target(t_enemy enemy)
 	t_inc		inc;
 	t_msgbuf	msgbuf;
 
-	ft_memset(&inc, 0, sizeof inc);
+	ft_memset(&inc, 0, sizeof(inc));
 	ft_memset(&msgbuf, 0, sizeof msgbuf);
 	while (inc.i < MAP_LEN)
 	{
@@ -27,7 +27,8 @@ void	send_target(t_enemy enemy)
 			{
 				msgbuf.mtype = g_data.team_id;
 				ft_memcpy(msgbuf.mtext, &enemy, sizeof enemy);
-				printf(" to %d team players\n", g_data.team_id);
+				if (DBG == 1)
+					printf(" to %d team players\n", g_data.team_id);
 				if (msgsnd(g_data.msgq_id, &msgbuf, sizeof msgbuf.mtext, 0) == -1)
 					perr_exit("send_target msgsnd");
 			}

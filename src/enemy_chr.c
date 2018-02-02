@@ -3,7 +3,7 @@
 void 	fill_enemies(t_cell enemies[ENEMY_SIZE], t_cell current,
 			uint32_t *enemy_nb, t_inc inc)
 {
-	resetCellsVal();
+	reset_cells_val();
 	while (inc.i < MAP_LEN)
 	{
 		inc.j = 0;
@@ -47,7 +47,7 @@ t_enemy enemy_chr(t_cell current)
 	t_inc 			inc;
 
 	ft_memset(&c_enemies, 0, sizeof c_enemies);
-	ft_memset(&inc, 0, sizeof inc);
+	ft_memset(&inc, 0, sizeof(inc));
 	fill_enemies(c_enemies, current, &enemy_nb, inc);
 	assert(enemy_nb > 0); //
 	c_enemy = c_enemies[0];
@@ -59,6 +59,7 @@ t_enemy enemy_chr(t_cell current)
 		inc.i++;
 	}
 	enemy = cellToEnemy(c_enemy);
-	printf("common enemy is: %d\n", enemy.pid);
+	if (DBG == 1)
+		printf("common enemy is: %d\n", enemy.pid);
 	return (enemy);
 }
