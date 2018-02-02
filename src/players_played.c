@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   players_played.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/02/02 14:53:25 by rporcon           #+#    #+#             */
+/*   Updated: 2018/02/02 14:55:57 by rporcon          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lemipc.h"
 
-int 	playersPlayed()
+int			players_played(void)
 {
 	t_inc	inc;
 
@@ -22,10 +34,10 @@ int 	playersPlayed()
 	return (1);
 }
 
-void 	playersResetPlayed()
+void		players_reset_played(void)
 {
 	t_inc	inc;
-	size_t 	nb;
+	size_t	nb;
 
 	ft_memset(&inc, 0, sizeof(inc));
 	nb = 0;
@@ -43,10 +55,10 @@ void 	playersResetPlayed()
 	}
 }
 
-uint32_t	playersPlayedNb()
+uint32_t	players_played_nb(void)
 {
 	t_inc	inc;
-	size_t 	nb;
+	size_t	nb;
 
 	ft_memset(&inc, 0, sizeof(inc));
 	nb = 0;
@@ -64,4 +76,3 @@ uint32_t	playersPlayedNb()
 	}
 	return (nb);
 }
-

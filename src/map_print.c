@@ -1,19 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_print.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/02/02 14:42:05 by rporcon           #+#    #+#             */
+/*   Updated: 2018/02/02 14:44:45 by rporcon          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "map_print.h"
 
-void    map_get(void **map_mem)
+void	map_get(void **map_mem)
 {
-	int     fd;
+	int		fd;
 
 	while (1)
 	{
 		if ((fd = shm_open("/shm-lemipc_map", O_RDONLY, 0644)) != -1)
 			break ;
-		sleep (1);
+		sleep(1);
 	}
-    if ((*map_mem = mmap(NULL, next_powerchr(MAP_SIZE, getpagesize()), PROT_READ
-                , MAP_SHARED, fd, 0)) == MAP_FAILED)
-    	perr_exit("map_get mmap");
-    close(fd);
+	if ((*map_mem = mmap(NULL, next_powerchr(MAP_SIZE, getpagesize()),
+			PROT_READ, MAP_SHARED, fd, 0)) == MAP_FAILED)
+		perr_exit("map_get mmap");
+	close(fd);
 }
 
 void	map_fill(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
@@ -59,10 +71,10 @@ void	map_print(t_cell cells[MAP_LEN][MAP_LEN], int type)
 	}
 	printf("--------------------------------\n");
 	if (type == 1)
-			printf("Press enter to launch the game\n");
+		printf("Press enter to launch the game\n");
 }
 
-void	game_init (t_gamedata *gdata, t_cell cells[MAP_LEN][MAP_LEN])
+void	game_init(t_gamedata *gdata, t_cell cells[MAP_LEN][MAP_LEN])
 {
 	gdata->players_nb = players_getnb(cells);
 	if ((gdata->players = calloc(gdata->players_nb + 1, sizeof(t_players)))
@@ -76,21 +88,21 @@ void	game_init (t_gamedata *gdata, t_cell cells[MAP_LEN][MAP_LEN])
 	fcntl(0, F_SETFL, fcntl(0, F_GETFL) & ~(O_NONBLOCK));
 }
 
-void    game_launch(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
+void	game_launch(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 {
-	char            enter[8];
+	char			enter[8];
 	t_gamedata		gdata;
 
-	ft_memset(&gdata.msgbuf, 0, sizeof gdata.msgbuf);
-	read(0, enter, sizeof enter);
+	ft_memset(&gdata.msgbuf, 0, sizeof(gdata.msgbuf));
+	read(0, enter, sizeof(enter));
 	if (enter[0] == '\n')
 	{
 		game_init(&gdata, cells);
 		while (1)
 		{
 			printf("Press enter to play one turn\n");
-			ft_memset(enter, 0, sizeof enter);
-			fgets(enter, sizeof enter, stdin);
+			ft_memset(enter, 0, sizeof(enter));
+			fgets(enter, sizeof(enter), stdin);
 			if (enter[0] == '\n')
 				players_move(&gdata, map_mem, cells);
 			gdata.players_nb = players_getnb(cells);
@@ -99,11 +111,11 @@ void    game_launch(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 	}
 }
 
-int     main()
+int		main(void)
 {
-	void    *map_mem;
-	t_cell  cells[MAP_LEN][MAP_LEN];
-	t_cell  cells_tmp[MAP_LEN][MAP_LEN];
+	void	*map_mem;
+	t_cell	cells[MAP_LEN][MAP_LEN];
+	t_cell	cells_tmp[MAP_LEN][MAP_LEN];
 
 	map_mem = NULL;
 	ft_memset(cells, 0, MAP_SIZE);

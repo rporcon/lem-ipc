@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 16:38:57 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/02 14:24:18 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/02 15:10:35 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,21 +22,21 @@ void	communicate(void)
 		if (msgrcv(g_data.msgq_id, &g_data.msgbuf, sizeof(g_data.msgbuf.mtext),
 					(long)INT_MAX + g_data.pid, 0) == -1)
 			perr_exit("communicate msgrcv");
-		if (g_data.gameLaunched == 0)
-			g_data.gameLaunched = 1;
+		if (g_data.game_launched == 0)
+			g_data.game_launched = 1;
 		map_fill();
 		if (sem_wait(g_data.sem) == -1)
 			perr_exit("communicate sem_wait");
 		move_player();
 		if (sem_post(g_data.sem) == -1)
 			perr_exit("communicate sem_post");
-		if (playersPlayed() == 1)
+		if (players_played() == 1)
 		{
 			g_data.msgbuf.mtype = INT_MAX;
 			if (msgsnd(g_data.msgq_id, &g_data.msgbuf,
 						sizeof(g_data.msgbuf.mtext), 0) == -1)
 				perr_exit("communicate msgsnd");
-			playersResetPlayed();
+			players_reset_played();
 			ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 		}
 	}

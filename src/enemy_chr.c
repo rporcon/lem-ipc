@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   enemy_chr.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/02/02 14:36:07 by rporcon           #+#    #+#             */
+/*   Updated: 2018/02/02 14:39:21 by rporcon          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lemipc.h"
 
-void 	fill_enemies(t_cell enemies[ENEMY_SIZE], t_cell current,
+void		fill_enemies(t_cell enemies[ENEMY_SIZE], t_cell current,
 			uint32_t *enemy_nb, t_inc inc)
 {
 	reset_cells_val();
@@ -28,9 +40,9 @@ void 	fill_enemies(t_cell enemies[ENEMY_SIZE], t_cell current,
 	*enemy_nb = inc.k;
 }
 
-t_enemy 	cellToEnemy(t_cell c)
+t_enemy		cell_to_enemy(t_cell c)
 {
-	t_enemy enemy;
+	t_enemy		enemy;
 
 	enemy.x = c.x;
 	enemy.y = c.y;
@@ -38,18 +50,19 @@ t_enemy 	cellToEnemy(t_cell c)
 	return (enemy);
 }
 
-t_enemy enemy_chr(t_cell current)
+t_enemy		enemy_chr(t_cell current)
 {
 	t_cell			c_enemies[ENEMY_SIZE];
-	t_cell 			c_enemy;
+	t_cell			c_enemy;
 	t_enemy			enemy;
 	uint32_t		enemy_nb;
-	t_inc 			inc;
+	t_inc			inc;
 
-	ft_memset(&c_enemies, 0, sizeof c_enemies);
+	ft_memset(&c_enemies, 0, sizeof(c_enemies));
 	ft_memset(&inc, 0, sizeof(inc));
 	fill_enemies(c_enemies, current, &enemy_nb, inc);
-	assert(enemy_nb > 0); //
+	if (DBG == 1)
+		assert(enemy_nb > 0);
 	c_enemy = c_enemies[0];
 	inc.i = 1;
 	while (inc.i < enemy_nb)
@@ -58,7 +71,7 @@ t_enemy enemy_chr(t_cell current)
 			c_enemy = c_enemies[inc.i];
 		inc.i++;
 	}
-	enemy = cellToEnemy(c_enemy);
+	enemy = cell_to_enemy(c_enemy);
 	if (DBG == 1)
 		printf("common enemy is: %d\n", enemy.pid);
 	return (enemy);

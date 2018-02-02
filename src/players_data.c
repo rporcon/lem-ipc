@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   players_data.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/02/02 14:51:21 by rporcon           #+#    #+#             */
+/*   Updated: 2018/02/02 14:53:05 by rporcon          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lemipc.h"
 
-int		oneTeamAlive()
+int			oneteam_alive(void)
 {
 	t_inc		inc;
 	uint32_t	teamid;
@@ -26,7 +38,7 @@ int		oneTeamAlive()
 	return (1);
 }
 
-int		teamleader_exist()
+int			teamleader_exist(void)
 {
 	t_inc			inc;
 
@@ -47,7 +59,7 @@ int		teamleader_exist()
 	return (0);
 }
 
-uint32_t	playersNb()
+uint32_t	players_nb(void)
 {
 	t_inc			inc;
 	uint32_t		players_nb;

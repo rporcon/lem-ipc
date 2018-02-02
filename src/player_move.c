@@ -1,8 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   player_move.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2018/02/02 14:46:34 by rporcon           #+#    #+#             */
+/*   Updated: 2018/02/02 14:53:11 by rporcon          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "lemipc.h"
 
 void	init_teamleader(t_cell *current)
 {
-	while (enemies_alive() == 0) {
+	while (enemies_alive() == 0)
+	{
 		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 		usleep(100000);
 	}
@@ -16,9 +29,9 @@ void	init_teamleader(t_cell *current)
 	send_target(current->enemy);
 }
 
-void 	init_enemy(t_cell *current)
+void	init_enemy(t_cell *current)
 {
-	if (msgrcv(g_data.msgq_id, &g_data.msgbuf, sizeof g_data.msgbuf.mtext,
+	if (msgrcv(g_data.msgq_id, &g_data.msgbuf, sizeof(g_data.msgbuf.mtext),
 			g_data.team_id, 0) == -1)
 		perr_exit("move_player msgrcv");
 	current->enemy = *((t_enemy *)g_data.msgbuf.mtext);
@@ -30,36 +43,37 @@ void 	init_enemy(t_cell *current)
 	current->enemy_set = 1;
 }
 
-void	setNewCurrentPos(t_cell *current)
+void	set_new_currentpos(t_cell *current)
 {
-	t_cell 		newPos;
+	t_cell	new_pos;
 
-	newPos = nearestPosToEnemy(*current);
+	new_pos = nearest_pos_toenemy(*current);
 	if (DBG == 1)
 	{
-		printf("{pid: %u} newPos: [%lld][%lld], val: %llu\n",
-			g_data.pid, newPos.y, newPos.x, newPos.val);
+		printf("{pid: %u} new_pos: [%lld][%lld], val: %llu\n",
+			g_data.pid, new_pos.y, new_pos.x, new_pos.val);
 		printf("enemy: [%lld][%lld] (pid: %u)\n",
 			current->enemy.y, current->enemy.x, current->enemy.pid);
 	}
-	set_newenemy_pos(newPos);
-	g_data.cells[newPos.y][newPos.x] = newPos;
-	ft_memset(current, 0, sizeof *current); // clear old pos
-	g_data.cells[newPos.y][newPos.x].played = 1;
+	set_newenemy_pos(new_pos);
+	g_data.cells[new_pos.y][new_pos.x] = new_pos;
+	ft_memset(current, 0, sizeof(*current));
+	g_data.cells[new_pos.y][new_pos.x].played = 1;
 }
 
-void	clearCurrent(t_cell *current)
+void	clear_current(t_cell *current)
 {
 	if (DBG == 1)
 		printf("clear current: [%lld][%lld]\n", current->y, current->x);
-	ft_memset(current, 0, sizeof *current);
+	ft_memset(current, 0, sizeof(*current));
 	ally_clear_enemyset();
-	if (oneTeamAlive() == 1) {
+	if (oneteam_alive() == 1)
+	{
 		g_data.msgbuf.mtype = INT_MAX;
 		ft_strcpy(g_data.msgbuf.mtext, "EndOfGame");
 		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 		if (msgsnd(g_data.msgq_id, &g_data.msgbuf,
-				sizeof g_data.msgbuf.mtext, 0) == -1)
+				sizeof(g_data.msgbuf.mtext), 0) == -1)
 			perr_exit("[msgsnd] endOfGame");
 		sleep(3);
 		ressources_erase();
@@ -67,13 +81,14 @@ void	clearCurrent(t_cell *current)
 	exit(0);
 }
 
-void	move_player()
+void	move_player(void)
 {
 	t_cell		*current;
 
 	map_currentcell(&current);
-	if (teamleader_exist() == 0) {
-	 	current->team_leader = 1;
+	if (teamleader_exist() == 0)
+	{
+		current->team_leader = 1;
 		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 	}
 	if (current->enemy_set == 0 && current->team_leader == 1)
@@ -82,16 +97,14 @@ void	move_player()
 		init_enemy(current);
 	set_currentval(*current);
 	if (two_enemies_near(*current) == 1)
-		clearCurrent(current);
+		clear_current(current);
 	set_to_enemyval(*current);
 	if (current->val != 1)
-		setNewCurrentPos(current);
+		set_new_currentpos(current);
 	else
 		current->played = 1;
 	if (DBG == 1)
-	{
 		printf("{pid: %u} currentPos: [%lld][%lld], val: %llu\n",
 			g_data.pid, current->y, current->x, current->val);
-	}
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 }
