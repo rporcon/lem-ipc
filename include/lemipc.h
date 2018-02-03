@@ -42,6 +42,7 @@ int				players_played();
 uint32_t		players_played_nb();
 void			msgq_getid();
 int				teamleader_exist();
+void			munmap_map();
 void			ressources_erase();
 void			players_reset_played();
 t_enemy			enemy_chr(t_cell current);

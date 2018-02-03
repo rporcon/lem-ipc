@@ -121,7 +121,10 @@ void	map_addplayer(void)
 	printf("Enter your coords (must be y, x) :\n");
 	get_coords(&coords);
 	if (g_data.cells[coords.y][coords.x].team_id > 0)
+	{
+		munmap_map();
 		err_exit("player already exist on this coord", 1);
+	}
 	if (sem_wait(g_data.sem) == -1)
 		perr_exit("map_addplayer sem_wait");
 	g_data.cells[coords.y][coords.x].team_id = g_data.team_id;

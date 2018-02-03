@@ -12,11 +12,21 @@
 
 #include "lemipc.h"
 
+void 	munmap_map(void)
+{
+	int				fd;
+	struct stat		st;
+
+	if ((fd = shm_open("/shm-lemipc_map", O_RDONLY, 0644)) == -1)
+		perr_exit("ressources_erase shm_open");
+	fstat(fd, &st);
+	close(fd);
+	munmap(g_data.map_mem, st.st_size);
+}
+
 void	sighandler(int sig)
 {
 	t_cell			*current;
-	struct stat		st;
-	int				fd;
 
 	current = NULL;
 	if (sig == SIGINT)
@@ -27,11 +37,7 @@ void	sighandler(int sig)
 		if (current != NULL)
 			ft_memset(current, 0, sizeof(*current));
 		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
-		if ((fd = shm_open("/shm-lemipc_map", O_RDONLY, 0644)) == -1)
-			perr_exit("ressources_erase shm_open");
-		fstat(fd, &st);
-		close(fd);
-		munmap(g_data.map_mem, st.st_size);
+		munmap_map();
 		if (enemies_alive() == 0 && g_data.game_launched == 1)
 			ressources_erase();
 	}
