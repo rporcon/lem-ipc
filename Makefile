@@ -10,15 +10,15 @@ LFT_NAME = libft.a
 
 LFT_DIR = ./libft
 
-LEMIPC_SRC_FILE = args.c sig.c shm.c msg.c player_move.c players_data.c \
+LEMIPC_SRC_FILE = args.c sig.c msg.c player_move.c players_data.c \
 					players_played.c enemy.c cells_val.c enemy_chr.c \
-					enemy_moveto.c lemipc.c
+					enemy_moveto.c shm_mapinit.c shm_map.c lemipc.c
 
 LEMIPC_SRC = $(addprefix $(SRCS_DIR), $(LEMIPC_SRC_FILE))
 
 LEMIPC_OBJ = $(LEMIPC_SRC:%.c=%.o)
 
-MAP_SRC_FILE = map_args.c map_players.c map_print.c
+MAP_SRC_FILE = map_args.c map_players.c map_gamelaunch.c map_print.c
 
 MAP_SRC = $(addprefix $(SRCS_DIR), $(MAP_SRC_FILE))
 

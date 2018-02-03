@@ -6,13 +6,13 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 15:04:36 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/02 15:10:35 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/03 18:54:13 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "lemipc.h"
 
-void 	munmap_map(void)
+void	munmap_map(void)
 {
 	int				fd;
 	struct stat		st;

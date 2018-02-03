@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 15:05:32 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/02 15:59:06 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/03 19:00:52 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ extern t_data	g_data;
 
 void			get_args(int ac, char **av);
 void			sighandle();
+void			get_coords(t_coord *coords);
 void			map_init();
 void			map_fill();
 void			map_addplayer();
@@ -56,7 +57,7 @@ uint32_t		players_nb();
 void			set_newenemy_pos(t_cell new_pos);
 void			map_currentcell(t_cell **current_cell);
 int				ally_nearenemy();
-void			ally_clear_enemyset();
+void			ally_clear_tlenemyset();
 int				two_enemies_near();
 void			send_target(t_enemy enemy);
 

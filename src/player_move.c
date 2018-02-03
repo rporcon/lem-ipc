@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 14:46:34 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/02 18:59:06 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/03 18:27:28 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	clear_current(t_cell *current)
 	if (DBG == 1)
 		printf("clear current: [%lld][%lld]\n", current->y, current->x);
 	ft_memset(current, 0, sizeof(*current));
-	ally_clear_enemyset();
+	ally_clear_tlenemyset();
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 	if (oneteam_alive() == 1)
 	{
