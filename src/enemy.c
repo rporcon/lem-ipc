@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 13:51:19 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/02 14:14:57 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/03 18:26:14 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int		two_enemies_near(void)
 	return (0);
 }
 
-void	ally_clear_enemyset(void)
+void	ally_clear_tlenemyset(void)
 {
 	t_inc	inc;
 
@@ -88,7 +88,11 @@ void	ally_clear_enemyset(void)
 		while (inc.j < MAP_LEN)
 		{
 			if (g_data.pid == g_data.cells[inc.i][inc.j].enemy.pid)
+			{
 				g_data.cells[inc.i][inc.j].enemy_set = 0;
+				if (g_data.cells[inc.i][inc.j].team_leader == 1)
+					g_data.cells[inc.i][inc.j].team_leader = 0;
+			}
 			inc.j++;
 		}
 		inc.i++;
