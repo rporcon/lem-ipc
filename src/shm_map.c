@@ -16,7 +16,7 @@ void	map_addplayer(void)
 {
 	t_coord		coords;
 
-	if ((g_data.sem = sem_open("/sem-lemipc_map", S_IRUSR | S_IWUSR)) == SEM_FAILED)
+	if ((g_data.sem = sem_open("/sem-lemipc_map", 0)) == SEM_FAILED)
 		perr_exit("map_addplayer sem_open");
 	printf("Enter your coords (must be y, x) :\n");
 	get_coords(&coords);
@@ -25,15 +25,15 @@ void	map_addplayer(void)
 		munmap_map();
 		err_exit("player already exist on this coord", 1);
 	}
-	if (sem_wait(g_data.sem) == -1)
-		perr_exit("map_addplayer sem_wait");
 	g_data.cells[coords.y][coords.x].team_id = g_data.team_id;
 	g_data.cells[coords.y][coords.x].pid = getpid();
 	g_data.cells[coords.y][coords.x].x = coords.x;
 	g_data.cells[coords.y][coords.x].y = coords.y;
+	/* if (sem_wait(g_data.sem) == -1) */
+	/* 	perr_exit("map_addplayer sem_wait"); */
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
-	if (sem_post(g_data.sem) == -1)
-		perr_exit("map_addplayer sem_post");
+	/* if (sem_post(g_data.sem) == -1) */
+	/* 	perr_exit("map_addplayer sem_post"); */
 }
 
 void	map_currentcell(t_cell **current_cell)

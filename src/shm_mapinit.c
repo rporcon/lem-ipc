@@ -26,7 +26,7 @@ void	map_init(void)
 					PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0) == MAP_FAILED)
 			perr_exit("map_init mmap");
 		close(fd);
-		if (sem_open("/sem-lemipc_map", O_CREAT, S_IRUSR | S_IWUSR, 1) == SEM_FAILED)
+		if (sem_open("/sem-lemipc_map", O_CREAT, 0644, 1) == SEM_FAILED)
 			perr_exit("map_init sem_open");
 		if ((key = ftok("./src/msg.c", '*')) == -1)
 			perr_exit("map_init ftok");
@@ -92,7 +92,7 @@ void	get_coords(t_coord *coords)
 	while (1)
 	{
 		if (fgets(usercoord, sizeof(usercoord), stdin) == NULL)
-			err_exit("invalid coord", 1);
+			get_coords_err(1, usercoord, sizeof(usercoord));
 		coords_str = strsplit(usercoord, ',');
 		if (sstrlen(coords_str) != 2)
 		{

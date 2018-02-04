@@ -27,6 +27,7 @@ typedef struct	s_data {
 	int			msgq_id;
 	t_msgbuf	msgbuf;
 	uint8_t		game_launched:1;
+	uint32_t	dbg_i;
 }				t_data;
 
 extern t_data	g_data;
@@ -61,5 +62,6 @@ int				ally_nearenemy();
 void			ally_clear_tlenemyset();
 int				two_enemies_near();
 void			send_target(t_enemy enemy);
+void			end_of_turn();
 
 #endif

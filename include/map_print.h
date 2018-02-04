@@ -14,7 +14,7 @@
 # define MAP_PRINT_H
 
 # include "map.h"
-# define DBG 0
+# define DBG 1
 
 typedef struct		s_players {
 	uint32_t		pid;

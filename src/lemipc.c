@@ -14,6 +14,16 @@
 
 t_data	g_data;
 
+void	end_of_turn()
+{
+	g_data.msgbuf.mtype = INT_MAX;
+	if (msgsnd(g_data.msgq_id, &g_data.msgbuf,
+				sizeof(g_data.msgbuf.mtext), 0) == -1)
+		perr_exit("communicate msgsnd");
+	players_reset_played();
+	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
+}
+
 void	communicate(void)
 {
 	msgq_getid();
@@ -22,26 +32,23 @@ void	communicate(void)
 		if (msgrcv(g_data.msgq_id, &g_data.msgbuf, sizeof(g_data.msgbuf.mtext),
 					(long)INT_MAX + g_data.pid, 0) == -1)
 			perr_exit("communicate msgrcv");
+		printf("before wait\n");
+		if (sem_wait(g_data.sem) == -1)
+			perr_exit("communicate sem_wait");
+		printf("after wait\n");
 		if (g_data.game_launched == 0)
 			g_data.game_launched = 1;
 		map_fill();
-		if (sem_wait(g_data.sem) == -1)
-			perr_exit("communicate sem_wait");
-		printf("entering\n");
 		move_player();
-		printf("exit\n");
+		if (DBG == 1)
+			printf("players_played_nb: %d, players_nb: %d\n",
+				players_played_nb(), players_nb());
+		if (players_played() == 1)
+			end_of_turn();
 		if (sem_post(g_data.sem) == -1)
 			perr_exit("communicate sem_post");
-		printf("players_played_nb: %d\n", players_played_nb());
-		if (players_played() == 1)
-		{
-			g_data.msgbuf.mtype = INT_MAX;
-			if (msgsnd(g_data.msgq_id, &g_data.msgbuf,
-						sizeof(g_data.msgbuf.mtext), 0) == -1)
-				perr_exit("communicate msgsnd");
-			players_reset_played();
-			ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
-		}
+		if (DBG == 1)
+			printf("turn %d finished\n", ++g_data.dbg_i);
 	}
 }
 

@@ -78,8 +78,12 @@ void	clear_current(t_cell *current)
 		sleep(3);
 		ressources_erase();
 	}
-	if (sem_post(g_data.sem) == -1)
-		perr_exit("communicate sem_post");
+	else {
+		if (players_played() == 1)
+			end_of_turn();
+		if (sem_post(g_data.sem) == -1)
+			perr_exit("communicate sem_post");
+	}
 	exit(0);
 }
 
@@ -101,7 +105,6 @@ void	move_player(void)
 	if (two_enemies_near(*current) == 1)
 		clear_current(current);
 	set_to_enemyval(*current);
-	printf("playedNb==: %d\n", players_played_nb());
 	if (current->val != 1)
 		set_new_currentpos(current);
 	else
@@ -109,6 +112,5 @@ void	move_player(void)
 	if (DBG == 1)
 		printf("{pid: %u} currentPos: [%lld][%lld], val: %llu\n---------------"
 				"-\n", g_data.pid, current->y, current->x, current->val);
-	printf("playedNb==: %d\n", players_played_nb());
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 }
