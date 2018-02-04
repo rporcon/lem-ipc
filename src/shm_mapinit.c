@@ -26,7 +26,7 @@ void	map_init(void)
 					PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0) == MAP_FAILED)
 			perr_exit("map_init mmap");
 		close(fd);
-		if (sem_open("/sem-lemipc_map", O_CREAT, 0644, 1) == SEM_FAILED)
+		if (sem_open("/sem-lemipc_map", O_CREAT, S_IRUSR | S_IWUSR, 1) == SEM_FAILED)
 			perr_exit("map_init sem_open");
 		if ((key = ftok("./src/msg.c", '*')) == -1)
 			perr_exit("map_init ftok");

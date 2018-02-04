@@ -27,9 +27,12 @@ void	communicate(void)
 		map_fill();
 		if (sem_wait(g_data.sem) == -1)
 			perr_exit("communicate sem_wait");
+		printf("entering\n");
 		move_player();
+		printf("exit\n");
 		if (sem_post(g_data.sem) == -1)
 			perr_exit("communicate sem_post");
+		printf("players_played_nb: %d\n", players_played_nb());
 		if (players_played() == 1)
 		{
 			g_data.msgbuf.mtype = INT_MAX;

@@ -15,6 +15,7 @@
 
 # include "map.h"
 # include <assert.h>
+# include <time.h>
 # define DBG 1
 
 typedef struct	s_data {

@@ -101,6 +101,7 @@ void	move_player(void)
 	if (two_enemies_near(*current) == 1)
 		clear_current(current);
 	set_to_enemyval(*current);
+	printf("playedNb==: %d\n", players_played_nb());
 	if (current->val != 1)
 		set_new_currentpos(current);
 	else
@@ -108,5 +109,6 @@ void	move_player(void)
 	if (DBG == 1)
 		printf("{pid: %u} currentPos: [%lld][%lld], val: %llu\n---------------"
 				"-\n", g_data.pid, current->y, current->x, current->val);
+	printf("playedNb==: %d\n", players_played_nb());
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 }

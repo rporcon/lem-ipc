@@ -16,7 +16,7 @@ void	map_addplayer(void)
 {
 	t_coord		coords;
 
-	if ((g_data.sem = sem_open("/sem-lemipc_map", 0)) == SEM_FAILED)
+	if ((g_data.sem = sem_open("/sem-lemipc_map", S_IRUSR | S_IWUSR)) == SEM_FAILED)
 		perr_exit("map_addplayer sem_open");
 	printf("Enter your coords (must be y, x) :\n");
 	get_coords(&coords);

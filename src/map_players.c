@@ -90,7 +90,6 @@ void		players_move(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 		if (msgsnd(g_data.msgq_id, &g_data.msgbuf,
 				sizeof(g_data.msgbuf.mtext), 0) == -1)
 			perr_exit("players_move msgsnd");
-		sleep(1);
 		i++;
 	}
 	DBG == 1 ? printf("sdmsg to %d players\n", players_getnb(cells)) : (void)0;
