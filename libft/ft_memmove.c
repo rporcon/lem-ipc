@@ -6,7 +6,7 @@
 /*   By: rporcon <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/25 14:54:55 by rporcon           #+#    #+#             */
-/*   Updated: 2017/12/11 13:54:21 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/05 18:21:58 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,8 @@ void	*ft_memmove(void *dst, const void *src, size_t len)
 	i = 0;
 	c_src = (unsigned char *)src;
 	c_dst = (unsigned char *)dst;
-	/* if (dst < (src + len) && src < dst) */
 	if (dst > src)
 	{
-		ft_printf("aa\n");
 		while (i < len)
 		{
 			c_dst[len - 1] = c_src[len - 1];

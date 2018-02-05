@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 14:46:34 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/05 09:25:43 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/05 18:19:40 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,9 +111,6 @@ void	move_player(void)
 	else
 		current->played = 1;
 	if (DBG == 1)
-		printf("{pid: %u, tid: %u} curpos: [%lld][%lld], curenemy[%lld][%lld] "
-				"pid %u , val: %llu\n------\n", g_data.pid, g_data.team_id,
-				current->y, current->x, current->enemy.y, current->enemy.x,
-				current->enemy.pid, current->val);
+		dbg_moveplayer(current);
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 }

@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/03 18:56:43 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/03 18:56:44 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/05 18:16:17 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	game_init(t_cell cells[MAP_LEN][MAP_LEN])
 	if ((g_data.key = ftok("./src/msg.c", '*')) == -1)
 		perr_exit("game_init ftok");
 	if ((g_data.msgq_id = msgget(g_data.key, 0644)) == -1)
-		perr_exit("game_init msgget");
+		DBG == 1 ? perr_exit("game_init msgget") : exit(1);
 	fcntl(0, F_SETFL, fcntl(0, F_GETFL) & ~(O_NONBLOCK));
 }
 

@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 14:56:35 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/05 08:50:05 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/05 18:11:34 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	map_addplayer(void)
 	if ((g_data.sem = sem_open("/sem-lemipc_map", 0)) == SEM_FAILED)
 		perr_exit("map_addplayer sem_open");
 	printf("Enter your coords (must be y, x) :\n");
+	g_data.game_launched = 1;
 	get_coords(&coords);
 	if (g_data.cells[coords.y][coords.x].team_id > 0)
 	{
