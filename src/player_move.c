@@ -75,7 +75,7 @@ void	clear_current(t_cell *current)
 		if (msgsnd(g_data.msgq_id, &g_data.msgbuf,
 				sizeof(g_data.msgbuf.mtext), 0) == -1)
 			perr_exit("[msgsnd] endOfGame");
-		sleep(3);
+		sleep(1);
 		ressources_erase();
 	}
 	else

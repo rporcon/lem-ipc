@@ -42,6 +42,7 @@ typedef struct		s_cell {
 	uint8_t			team_leader:1;
 	uint8_t			enemy_set:1;
 	uint8_t			played:1;
+	uint8_t			map_quit:1;
 }					t_cell;
 
 typedef struct		s_msgbuf {

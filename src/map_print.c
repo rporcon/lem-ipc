@@ -96,6 +96,8 @@ int		main(int ac, char **av)
 	{
 		ft_memcpy(cells_tmp, cells, MAP_SIZE);
 		map_fill(map_mem, cells);
+		if (cells[0][0].map_quit == 1)
+			exit(0);
 		if (ft_memcmp(cells_tmp, cells, MAP_SIZE) != 0)
 			map_print(cells, 1);
 		game_launch(map_mem, cells);

@@ -44,7 +44,6 @@ $(MAP_NAME): $(MAP_OBJ)
 		$(LFT_DIR)/$(LFT_NAME)
 
 clean:
-	@make clean --no-print-directory -C $(LFT_DIR)
 	@rm -f $(LEMIPC_OBJ) $(MAP_OBJ)
 
 fclean: clean

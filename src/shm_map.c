@@ -83,6 +83,11 @@ void	ressources_erase(void)
 	int				msgq_id;
 	key_t			key;
 
+	g_data.msgbuf.mtype = INT_MAX;
+	ft_strcpy(g_data.msgbuf.mtext, "EndOfGame");
+	msgsnd(g_data.msgq_id, &g_data.msgbuf, sizeof(g_data.msgbuf.mtext), 0);
+	g_data.cells[0][0].map_quit = 1;
+	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 	shm_unlink("/shm-lemipc_map");
 	if ((sem = sem_open("/sem-lemipc_map", 0)) == SEM_FAILED && DBG == 1)
 		perr_exit("ressources_erase sem_open");
