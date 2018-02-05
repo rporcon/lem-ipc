@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 15:09:26 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/03 18:56:29 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/05 08:33:14 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define MAP_PRINT_H
 
 # include "map.h"
-# define DBG 1
+# define DBG 0
 
 typedef struct		s_players {
 	uint32_t		pid;

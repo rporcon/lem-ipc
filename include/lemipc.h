@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 15:05:32 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/03 19:00:52 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/05 09:33:27 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,6 @@ void			ally_clear_tlenemyset();
 int				two_enemies_near();
 void			send_target(t_enemy enemy);
 void			end_of_turn();
+void			dbg_moveplayer(t_cell *current);
 
 #endif

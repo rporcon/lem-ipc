@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 14:56:35 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/03 19:00:56 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/05 08:50:05 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,7 @@ void	map_addplayer(void)
 	g_data.cells[coords.y][coords.x].pid = getpid();
 	g_data.cells[coords.y][coords.x].x = coords.x;
 	g_data.cells[coords.y][coords.x].y = coords.y;
-	/* if (sem_wait(g_data.sem) == -1) */
-	/* 	perr_exit("map_addplayer sem_wait"); */
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
-	/* if (sem_post(g_data.sem) == -1) */
-	/* 	perr_exit("map_addplayer sem_post"); */
 }
 
 void	map_currentcell(t_cell **current_cell)
@@ -87,12 +83,12 @@ void	ressources_erase(void)
 	key_t			key;
 
 	shm_unlink("/shm-lemipc_map");
-	if ((sem = sem_open("/sem-lemipc_map", 0)) == SEM_FAILED)
+	if ((sem = sem_open("/sem-lemipc_map", 0)) == SEM_FAILED && DBG == 1)
 		perr_exit("ressources_erase sem_open");
 	sem_unlink("/sem-lemipc_map");
 	if ((key = ftok("./src/msg.c", '*')) == -1)
 		perr_exit("ressources_erase ftok");
-	if ((msgq_id = msgget(key, 0644 | IPC_CREAT)) == -1)
+	if ((msgq_id = msgget(key, 0644)) == -1 && DBG == 1)
 		perr_exit("ressources_erase msgget");
 	msgctl(g_data.msgq_id, IPC_RMID, NULL);
 	exit(0);

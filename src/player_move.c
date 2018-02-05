@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 14:46:34 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/03 18:27:28 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/05 09:25:43 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,8 @@ void	clear_current(t_cell *current)
 		sleep(3);
 		ressources_erase();
 	}
-	else {
+	else
+	{
 		if (players_played() == 1)
 			end_of_turn();
 		if (sem_post(g_data.sem) == -1)
@@ -110,7 +111,9 @@ void	move_player(void)
 	else
 		current->played = 1;
 	if (DBG == 1)
-		printf("{pid: %u} currentPos: [%lld][%lld], val: %llu\n---------------"
-				"-\n", g_data.pid, current->y, current->x, current->val);
+		printf("{pid: %u, tid: %u} curpos: [%lld][%lld], curenemy[%lld][%lld] "
+				"pid %u , val: %llu\n------\n", g_data.pid, g_data.team_id,
+				current->y, current->x, current->enemy.y, current->enemy.x,
+				current->enemy.pid, current->val);
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 }

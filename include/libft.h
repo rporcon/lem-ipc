@@ -6,7 +6,7 @@
 /*   By: rporcon <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2015/11/29 10:18:21 by rporcon           #+#    #+#             */
-/*   Updated: 2017/09/04 18:14:42 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/05 08:31:42 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@
 # include <fcntl.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
-
 
 /*
 ** ft_read_fd func
@@ -215,7 +214,5 @@ size_t				sstrlen(char **sstr);
 unsigned char		sstrchr(char **sstr, char *chr);
 void				perr_exit(const char *str);
 void				err_exit(const char *err_msg, int status_code);
-
-
 
 #endif

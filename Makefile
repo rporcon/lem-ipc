@@ -10,7 +10,7 @@ LFT_NAME = libft.a
 
 LFT_DIR = ./libft
 
-LEMIPC_SRC_FILE = args.c sig.c msg.c player_move.c players_data.c \
+LEMIPC_SRC_FILE = dbg.c args.c sig.c msg.c player_move.c players_data.c \
 					players_played.c enemy.c cells_val.c enemy_chr.c \
 					enemy_moveto.c shm_mapinit.c shm_map.c lemipc.c
 

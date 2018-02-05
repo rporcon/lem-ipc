@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 13:51:19 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/03 18:26:14 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/05 09:11:51 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,13 +38,12 @@ int		surrounded_by_enemies(t_inc inc, uint32_t enemies_team[8])
 	int			i;
 	t_enemy		enemy;
 
-	i = 0;
 	enemy = g_data.cells[inc.i][inc.j].enemy;
 	if (enemy.pid == g_data.pid
 			&& g_data.cells[inc.i][inc.j].val == 1)
 	{
 		i = 0;
-		while (i < 8)
+		while (i < inc.k)
 		{
 			if (g_data.cells[enemy.y][enemy.x].team_id == enemies_team[i])
 				return (1);
@@ -63,6 +62,7 @@ int		two_enemies_near(void)
 
 	ft_memset(&inc, 0, sizeof(inc));
 	ft_memset(&enemies_team, 0, sizeof(enemies_team));
+	print_cells();
 	while (inc.i < MAP_LEN)
 	{
 		inc.j = 0;

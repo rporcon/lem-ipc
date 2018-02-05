@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 15:04:36 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/03 18:54:13 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/05 08:45:54 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,10 @@ void	munmap_map(void)
 	int				fd;
 	struct stat		st;
 
-	if ((fd = shm_open("/shm-lemipc_map", O_RDONLY, 0644)) == -1)
-		perr_exit("ressources_erase shm_open");
+	if ((fd = shm_open("/shm-lemipc_map", O_RDWR, 0644)) == -1 && DBG == 1)
+		perr_exit("munmap_map shm_open");
+	else
+		return ;
 	fstat(fd, &st);
 	close(fd);
 	munmap(g_data.map_mem, st.st_size);
@@ -31,7 +33,6 @@ void	sighandler(int sig)
 	current = NULL;
 	if (sig == SIGINT)
 	{
-		/* sem_post(g_data.sem); */
 		map_fill();
 		map_currentcell(&current);
 		if (current != NULL)

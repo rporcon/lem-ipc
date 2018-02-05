@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 16:38:57 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/02 18:58:58 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/05 08:56:57 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 t_data	g_data;
 
-void	end_of_turn()
+void	end_of_turn(void)
 {
 	g_data.msgbuf.mtype = INT_MAX;
 	if (msgsnd(g_data.msgq_id, &g_data.msgbuf,
-				sizeof(g_data.msgbuf.mtext), 0) == -1)
-		perr_exit("communicate msgsnd");
+			sizeof(g_data.msgbuf.mtext), 0) == -1)
+		DBG == 1 ? perr_exit("communicate msgsnd") : exit(0);
 	players_reset_played();
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 }
@@ -30,8 +30,8 @@ void	communicate(void)
 	while (1)
 	{
 		if (msgrcv(g_data.msgq_id, &g_data.msgbuf, sizeof(g_data.msgbuf.mtext),
-					(long)INT_MAX + g_data.pid, 0) == -1)
-			perr_exit("communicate msgrcv");
+				(long)INT_MAX + g_data.pid, 0) == -1)
+			DBG == 1 ? perr_exit("communicate msgrcv") : exit(0);
 		if (sem_wait(g_data.sem) == -1)
 			perr_exit("communicate sem_wait");
 		if (g_data.game_launched == 0)
