@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 14:56:35 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/06 10:04:19 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/06 10:41:10 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,15 +79,28 @@ void	map_fill(void)
 
 void	players_quit()
 {
-	int		i;
+	t_inc			inc;
 
-	i = 0;
+	if (DBG == 1)
+		printf("----------------\n");
+	ft_memset(&inc, 0, sizeof(inc));
+	ft_strcpy(g_data.msgbuf, "playerquit");
+	while (inc.i < MAP_LEN)
+	{
+		inc.j = 0;
+		while (inc.j < MAP_LEN)
+		{
+			if (g_data.cells[inc.i][inc.j].pid > 0)
+				msgsnd(g_data.msgq_id, &g_data.msgbuf,
+					sizeof(g_data.msgbuf.mtext), 0);
+			inc.j++;
+		}
+		inc.i++;
+	}
+
 	while (i < players_getnb(cells))
 	{
 		g_data.msgbuf.mtype = (long)INT_MAX + g_data.players[i].pid;
-		if (msgsnd(g_data.msgq_id, &g_data.msgbuf,
-				sizeof(g_data.msgbuf.mtext), 0) == -1)
-			perr_exit("players_move msgsnd");
 		i++;
 	}
 
