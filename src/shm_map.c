@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 14:56:35 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/06 10:41:10 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/06 11:39:10 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,33 +77,26 @@ void	map_fill(void)
 	}
 }
 
-void	players_quit()
+void	players_quit(void)
 {
 	t_inc			inc;
 
-	if (DBG == 1)
-		printf("----------------\n");
 	ft_memset(&inc, 0, sizeof(inc));
-	ft_strcpy(g_data.msgbuf, "playerquit");
 	while (inc.i < MAP_LEN)
 	{
 		inc.j = 0;
 		while (inc.j < MAP_LEN)
 		{
-			if (g_data.cells[inc.i][inc.j].pid > 0)
-				msgsnd(g_data.msgq_id, &g_data.msgbuf,
-					sizeof(g_data.msgbuf.mtext), 0);
+			if (g_data.cells[inc.i][inc.j].pid > 0
+					&& g_data.cells[inc.i][inc.j].pid != g_data.pid)
+			{
+				if (kill(g_data.cells[inc.i][inc.j].pid, SIGTERM) == -1)
+					kill(g_data.cells[inc.i][inc.j].pid, SIGKILL);
+			}
 			inc.j++;
 		}
 		inc.i++;
 	}
-
-	while (i < players_getnb(cells))
-	{
-		g_data.msgbuf.mtype = (long)INT_MAX + g_data.players[i].pid;
-		i++;
-	}
-
 }
 
 void	ressources_erase(void)
@@ -112,6 +105,7 @@ void	ressources_erase(void)
 	int				msgq_id;
 	key_t			key;
 
+	players_quit();
 	g_data.msgbuf.mtype = INT_MAX;
 	ft_strcpy(g_data.msgbuf.mtext, "EndOfGame");
 	msgsnd(g_data.msgq_id, &g_data.msgbuf, sizeof(g_data.msgbuf.mtext), 0);

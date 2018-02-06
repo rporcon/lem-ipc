@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 14:46:34 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/05 18:19:40 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/06 11:36:49 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ void	clear_current(t_cell *current)
 		if (msgsnd(g_data.msgq_id, &g_data.msgbuf,
 				sizeof(g_data.msgbuf.mtext), 0) == -1)
 			perr_exit("[msgsnd] endOfGame");
-		sleep(1);
 		ressources_erase();
 	}
 	else
