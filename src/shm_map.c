@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 14:56:35 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/05 18:11:34 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/06 10:04:19 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,22 @@ void	map_fill(void)
 		}
 		inc.i++;
 	}
+}
+
+void	players_quit()
+{
+	int		i;
+
+	i = 0;
+	while (i < players_getnb(cells))
+	{
+		g_data.msgbuf.mtype = (long)INT_MAX + g_data.players[i].pid;
+		if (msgsnd(g_data.msgq_id, &g_data.msgbuf,
+				sizeof(g_data.msgbuf.mtext), 0) == -1)
+			perr_exit("players_move msgsnd");
+		i++;
+	}
+
 }
 
 void	ressources_erase(void)

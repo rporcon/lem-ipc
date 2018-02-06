@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 16:38:57 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/05 18:13:51 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/06 09:59:38 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,11 @@ void	communicate(void)
 	msgq_getid();
 	while (1)
 	{
+		printf("rcv\n");
 		if (msgrcv(g_data.msgq_id, &g_data.msgbuf, sizeof(g_data.msgbuf.mtext),
 				(long)INT_MAX + g_data.pid, 0) == -1)
 			DBG == 1 ? perr_exit("communicate msgrcv") : exit(0);
+		printf("rcv OK<-\n");
 		if (sem_wait(g_data.sem) == -1)
 			perr_exit("communicate sem_wait");
 		map_fill();
