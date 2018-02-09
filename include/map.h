@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 15:07:27 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/02 15:27:53 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/09 18:56:28 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 # include <sys/msg.h>
 # include <limits.h>
 
-# define MAP_LEN 4
+# define MAP_LEN 5
 # define MAP_SIZE sizeof (t_cell) * (MAP_LEN * MAP_LEN)
 # define ENEMY_SIZE MAP_SIZE / 2
 
@@ -43,6 +43,7 @@ typedef struct		s_cell {
 	uint8_t			enemy_set:1;
 	uint8_t			played:1;
 	uint8_t			map_quit:1;
+	uint8_t			game_launched:1;
 }					t_cell;
 
 typedef struct		s_msgbuf {

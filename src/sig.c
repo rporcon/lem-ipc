@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 15:04:36 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/05 18:00:17 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/09 18:38:39 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void	sighandler(int sig)
 			ft_memset(current, 0, sizeof(*current));
 		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 		munmap_map();
-		if (enemies_alive() == 0 && g_data.game_launched == 1)
+		if (enemies_alive() == 0 && g_data.player_init == 1)
 			ressources_erase();
 	}
 	exit(0);

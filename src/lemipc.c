@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 16:38:57 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/06 11:29:31 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/09 18:49:16 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,11 @@ void	communicate(void)
 			DBG == 1 ? perr_exit("communicate msgrcv") : exit(0);
 		if (sem_wait(g_data.sem) == -1)
 			perr_exit("communicate sem_wait");
+		if (g_data.cells[0][0].game_launched == 0)
+		{
+			g_data.cells[0][0].game_launched = 1;
+			ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
+		}
 		map_fill();
 		move_player();
 		if (DBG == 1)
@@ -59,7 +64,12 @@ int		main(int ac, char **av)
 	sighandle();
 	map_get();
 	map_fill();
-	map_addplayer();
-	communicate();
+	if (g_data.cells[0][0].game_launched == 0)
+	{
+		map_addplayer();
+		communicate();
+	}
+	else
+		err_exit("game already launched", 0);
 	return (0);
 }

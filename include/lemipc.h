@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 15:05:32 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/06 11:35:39 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/09 18:54:29 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@ typedef struct	s_data {
 	sem_t		*sem;
 	int			msgq_id;
 	t_msgbuf	msgbuf;
-	uint8_t		game_launched:1;
+	uint8_t		player_init:1;
+	uint8_t		ressources_erase_opt:1;
 	uint32_t	dbg_i;
 }				t_data;
 

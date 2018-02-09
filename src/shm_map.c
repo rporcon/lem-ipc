@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 14:56:35 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/06 11:39:10 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/09 18:39:16 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	map_addplayer(void)
 	if ((g_data.sem = sem_open("/sem-lemipc_map", 0)) == SEM_FAILED)
 		perr_exit("map_addplayer sem_open");
 	printf("Enter your coords (must be y, x) :\n");
-	g_data.game_launched = 1;
+	g_data.player_init = 1;
 	get_coords(&coords);
 	if (g_data.cells[coords.y][coords.x].team_id > 0)
 	{
@@ -109,8 +109,11 @@ void	ressources_erase(void)
 	g_data.msgbuf.mtype = INT_MAX;
 	ft_strcpy(g_data.msgbuf.mtext, "EndOfGame");
 	msgsnd(g_data.msgq_id, &g_data.msgbuf, sizeof(g_data.msgbuf.mtext), 0);
-	g_data.cells[0][0].map_quit = 1;
-	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
+	if (g_data.ressources_erase_opt == 0)
+	{
+		g_data.cells[0][0].map_quit = 1;
+		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
+	}
 	shm_unlink("/shm-lemipc_map");
 	if ((sem = sem_open("/sem-lemipc_map", 0)) == SEM_FAILED && DBG == 1)
 		perr_exit("ressources_erase sem_open");

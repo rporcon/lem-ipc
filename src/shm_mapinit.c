@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/03 19:02:37 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/03 19:02:40 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/09 18:55:53 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void	get_coords_err(int errtype, char usercoord[8], size_t usercoord_len)
 	else if (errtype == 2)
 	{
 		fprintf(stderr, "invalid coord (must be within 0 - %u"
-				" range\n", MAP_LEN);
+				" range)\n", MAP_LEN);
 	}
 	ft_memset(usercoord, 0, usercoord_len);
 }
