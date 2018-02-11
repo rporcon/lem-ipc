@@ -14,11 +14,6 @@
 
 void	init_teamleader(t_cell *current)
 {
-	while (enemies_alive() == 0)
-	{
-		ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
-		usleep(100000);
-	}
 	current->enemy = enemy_chr(*current);
 	current->enemy_set = 1;
 	if (DBG == 1)
@@ -69,14 +64,7 @@ void	clear_current(t_cell *current)
 	ally_clear_tlenemyset();
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 	if (oneteam_alive() == 1)
-	{
-		g_data.msgbuf.mtype = INT_MAX;
-		ft_strcpy(g_data.msgbuf.mtext, "EndOfGame");
-		if (msgsnd(g_data.msgq_id, &g_data.msgbuf,
-				sizeof(g_data.msgbuf.mtext), 0) == -1)
-			perr_exit("[msgsnd] endOfGame");
-		ressources_erase();
-	}
+		end_of_game();
 	else
 	{
 		if (players_played() == 1)

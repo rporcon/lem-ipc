@@ -31,6 +31,7 @@ void	map_addplayer(void)
 	g_data.cells[coords.y][coords.x].x = coords.x;
 	g_data.cells[coords.y][coords.x].y = coords.y;
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
+	map_fill();
 }
 
 void	map_currentcell(t_cell **current_cell)

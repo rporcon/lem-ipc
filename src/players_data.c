@@ -79,3 +79,13 @@ uint32_t	players_nb(void)
 	}
 	return (players_nb);
 }
+
+void		end_of_game()
+{
+	g_data.msgbuf.mtype = INT_MAX;
+	ft_strcpy(g_data.msgbuf.mtext, "EndOfGame");
+	if (msgsnd(g_data.msgq_id, &g_data.msgbuf,
+			sizeof(g_data.msgbuf.mtext), 0) == -1)
+		perr_exit("[msgsnd] endOfGame");
+	ressources_erase();
+}

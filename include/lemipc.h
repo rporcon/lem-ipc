@@ -64,6 +64,7 @@ void			ally_clear_tlenemyset();
 int				two_enemies_near();
 void			send_target(t_enemy enemy);
 void			end_of_turn();
+void			end_of_game();
 void			dbg_moveplayer(t_cell *current);
 
 #endif

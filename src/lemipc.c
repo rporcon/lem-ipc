@@ -36,10 +36,14 @@ void	communicate(void)
 			perr_exit("communicate sem_wait");
 		if (g_data.cells[0][0].game_launched == 0)
 		{
+			map_fill();
 			g_data.cells[0][0].game_launched = 1;
 			ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
+			if (enemies_alive() == 0)
+				end_of_game();
 		}
-		map_fill();
+		else
+			map_fill();
 		move_player();
 		if (DBG == 1)
 			printf("players_played_nb: %d, players_nb: %d\n",
