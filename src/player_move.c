@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 14:46:34 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/12 12:09:26 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/12 14:09:10 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,5 @@ void	move_player(void)
 		set_new_currentpos(current);
 	else
 		current->played = 1;
-	/* if (DBG == 1) */
-	/* 	dbg_moveplayer(current); */
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 }

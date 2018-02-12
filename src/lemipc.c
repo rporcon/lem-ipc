@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 16:38:57 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/12 12:00:08 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/12 14:08:51 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,15 @@ void	end_of_turn(void)
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 }
 
+void	init_first_turn(void)
+{
+	map_fill();
+	g_data.cells[0][0].game_launched = 1;
+	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
+	if (enemies_alive() == 0)
+		end_of_game();
+}
+
 void	communicate(void)
 {
 	msgq_getid();
@@ -35,13 +44,7 @@ void	communicate(void)
 		if (sem_wait(g_data.sem) == -1)
 			perr_exit("communicate sem_wait");
 		if (g_data.cells[0][0].game_launched == 0)
-		{
-			map_fill();
-			g_data.cells[0][0].game_launched = 1;
-			ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
-			if (enemies_alive() == 0)
-				end_of_game();
-		}
+			init_first_turn();
 		else
 			map_fill();
 		move_player();

@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 14:51:21 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/02 14:53:05 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/12 14:09:19 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ uint32_t	players_nb(void)
 	return (players_nb);
 }
 
-void		end_of_game()
+void		end_of_game(void)
 {
 	g_data.msgbuf.mtype = INT_MAX;
 	ft_strcpy(g_data.msgbuf.mtext, "EndOfGame");

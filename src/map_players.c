@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 15:10:41 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/09 18:53:40 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/12 14:11:42 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,10 +79,19 @@ uint32_t	lastteam_alive_name(t_cell cells[MAP_LEN][MAP_LEN])
 	return (team_id);
 }
 
+void		end_of_game(t_cell cells[MAP_LEN][MAP_LEN])
+{
+	uint32_t	winner_team;
+
+	printf("[End of game]\n");
+	if ((winner_team = lastteam_alive_name(cells)) != 0)
+		printf("team %u won !\n", winner_team);
+	exit(0);
+}
+
 void		players_move(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 {
 	size_t		i;
-	uint32_t	winner_team;
 
 	i = 0;
 	while (i < players_getnb(cells))
@@ -102,10 +111,5 @@ void		players_move(void *map_mem, t_cell cells[MAP_LEN][MAP_LEN])
 	map_fill(map_mem, cells);
 	map_print(cells, 0);
 	if (ft_strcmp(g_data.msgbuf.mtext, "EndOfGame") == 0)
-	{
-		printf("[End of game]\n");
-		if ((winner_team = lastteam_alive_name(cells)) != 0)
-			printf("team %u won !\n", winner_team);
-		exit(0);
-	}
+		end_of_game(cells);
 }
