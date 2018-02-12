@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 14:46:34 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/09 18:27:11 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/12 12:09:26 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ void	set_new_currentpos(t_cell *current)
 	new_pos = nearest_pos_toenemy(*current);
 	if (DBG == 1)
 	{
+		dbg_moveplayer(current);
 		printf("{pid: %u} new_pos: [%lld][%lld], val: %llu\n",
 			g_data.pid, new_pos.y, new_pos.x, new_pos.val);
 		printf("enemy: [%lld][%lld] (pid: %u)\n",
@@ -97,7 +98,7 @@ void	move_player(void)
 		set_new_currentpos(current);
 	else
 		current->played = 1;
-	if (DBG == 1)
-		dbg_moveplayer(current);
+	/* if (DBG == 1) */
+	/* 	dbg_moveplayer(current); */
 	ft_memcpy(g_data.map_mem, g_data.cells, MAP_SIZE);
 }

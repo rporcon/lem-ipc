@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/02 14:39:39 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/02 14:41:39 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/12 11:59:13 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,20 @@ void	set_newpos_toenemy(t_cell *new_pos, int y, int x)
 	t_cell	new_cell;
 
 	new_cell = g_data.cells[y][x];
-	if (new_cell.team_id == 0 && (*new_pos).val > new_cell.val)
+	if (new_cell.team_id == 0)
 	{
-		new_pos->val = new_cell.val;
-		new_pos->y = y;
-		new_pos->x = x;
+		if ((*new_pos).val > new_cell.val)
+		{
+			new_pos->val = new_cell.val;
+			new_pos->y = y;
+			new_pos->x = x;
+		}
+		else if ((*new_pos).val == new_cell.val && rand() % 2 == 0)
+		{
+			new_pos->val = new_cell.val;
+			new_pos->y = y;
+			new_pos->x = x;
+		}
 	}
 }
 

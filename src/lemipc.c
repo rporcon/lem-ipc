@@ -6,7 +6,7 @@
 /*   By: rporcon <rporcon@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/02/01 16:38:57 by rporcon           #+#    #+#             */
-/*   Updated: 2018/02/09 18:49:16 by rporcon          ###   ########.fr       */
+/*   Updated: 2018/02/12 12:00:08 by rporcon          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ void	communicate(void)
 int		main(int ac, char **av)
 {
 	ft_memset(&g_data, 0, sizeof(g_data));
+	srand(time(NULL));
 	g_data.pid = getpid();
 	if (DBG == 1)
 		printf("pid: [%u]\n", g_data.pid);
